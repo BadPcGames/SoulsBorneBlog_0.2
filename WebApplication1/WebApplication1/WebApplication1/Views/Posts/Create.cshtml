@@ -1,0 +1,161 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApplication1.DbModels.Post
+@{
+    ViewData["Title"] = "Create post";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</head>
+
+<h1>Редактор постов для блога: @Model.BlogId</h1>
+
+<form asp-action="Create" asp-route-blogId="@Model.BlogId" id="postForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="BlogId" asp-for="BlogId" />
+
+    <h2>Назва</h2>
+    <input name="Title" asp-for="Title" class="form-control" required />
+    <span asp-validation-for="Title" class="text-danger"></span>
+
+    <h2>Гра</h2>
+    <select id="gameSelect" name="Game" class="form-control" required>
+        <option value="">Оберіть гру...</option>
+    </select>
+    <span asp-validation-for="Game" class="text-danger"></span>
+
+    <h2>Контент</h2>
+    <div id="contentModules">
+        <!-- Модули контента -->
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="addTextModule">Добавить текст</button>
+        <button type="button" id="addImageModule">Добавить изображение</button>
+        <button type="button" id="addVideoModule">Добавить видео</button>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить пост</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("GetGames", "Posts")',
+            method: 'GET',
+            success: function (games) {
+                games.forEach(function (game) {
+                    $("#gameSelect").append(`<option value="${game.gameName}">${game.gameName}</option>`);
+                });
+            },
+            error: function () {
+                console.error("Не удалось загрузить список игр.");
+            }
+        });
+    });
+
+    $(document).on('change', 'input[type="file"]', function () {
+        const fileInput = this;
+        const file = fileInput.files[0];
+        if (file) {
+            const originalName = file.name;
+             if (/^\d/.test(originalName)) {
+                const newName = `file_${originalName}`;
+                const dataTransfer = new DataTransfer();
+                const renamedFile = new File([file], newName, { type: file.type });
+                dataTransfer.items.add(renamedFile);
+                fileInput.files = dataTransfer.files;
+                console.log(`Имя файла изменено: ${originalName} -> ${newName}`);
+             }
+        }
+    });
+
+    let moduleIndex = 0;
+
+    function addModule(contentType) {
+        const container = document.getElementById("contentModules");
+
+        let maxIndex = -1;
+        const modules = container.querySelectorAll(".content-module");
+        modules.forEach(module => {
+            const positionInput = module.querySelector(".position-input");
+            if (positionInput) {
+                const index = parseInt(positionInput.value, 10);
+                if (!isNaN(index)) {
+                    maxIndex = Math.max(maxIndex, index);
+                }
+            }
+        });
+
+        const newIndex = maxIndex + 1;
+
+        const newModule = document.createElement("div");
+        newModule.classList.add("content-module");
+
+        if (contentType === "Text") {
+            newModule.innerHTML = `
+            <div class="module-content">
+                <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                <label>Контент (${contentType}):</label>
+                <textarea name="contents[${newIndex}].Content" class="form-control" required></textarea>
+                <label>Позиция:</label>
+                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
+                <button type="button" onclick="removeModule(this)">Удалить</button>
+            </div>
+        `;
+        } else {
+            newModule.innerHTML = `
+            <div class="module-content">
+                <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                <label>Контент (${contentType}):</label>
+                <input type="file" name="contents[${newIndex}].FormFile" class="form-control" required />
+                <label>Позиция:</label>
+                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
+                <button type="button" onclick="removeModule(this)">Удалить</button>
+            </div>
+        `;
+        }
+
+        container.appendChild(newModule);
+    }
+
+    function removeModule(button) {
+        const module = button.closest(".content-module");
+        if (module) {
+            module.remove();
+            updateModuleIndices(); 
+        } else {
+            console.error("Не удалось найти родительский элемент .content-module.");
+        }
+    }
+
+    function updateModuleIndices() {
+        const modules = document.querySelectorAll("#contentModules .content-module");
+        modules.forEach((module, index) => {
+            const positionInput = module.querySelector(".position-input");
+            if (positionInput) {
+                positionInput.value = index; 
+            }
+            const hiddenInput = module.querySelector('input[type="hidden"]');
+            if (hiddenInput) {
+                hiddenInput.name = `Contents[${index}].ContentType`; 
+            }
+        });
+    }
+
+    document.getElementById("addTextModule").addEventListener("click", () => addModule("Text"));
+    document.getElementById("addImageModule").addEventListener("click", () => addModule("Image"));
+    document.getElementById("addVideoModule").addEventListener("click", () => addModule("Video"));
+
+    // Инициализация Sortable.js
+    const sortable = new Sortable(document.getElementById("contentModules"), {
+        animation: 150, // Анимация перемещения
+        onEnd: function () {
+            updateModuleIndices(); // Пересчет индексов после сортировки
+        },
+    });
+</script>

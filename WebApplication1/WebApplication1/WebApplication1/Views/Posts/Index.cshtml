@@ -1,0 +1,84 @@
+﻿@using WebApplication1.DbModels
+@model IEnumerable<PostViewModel>
+
+@{
+    ViewData["Title"] = "Posts of blog";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+    <style>
+        .posts{
+            border-radius: 5px;
+            border: solid 5px;
+            padding: 5px;
+            margin: 15px;
+        }
+    </style>
+</head>
+
+<h1>Posts</h1>
+
+@if (ViewBag.CanChange)
+{
+    <p>
+        <a asp-action="Create" asp-route-blogId="@ViewBag.BlogId">Create New</a>
+    </p>
+}
+@foreach (var posts in Model)
+{
+    <div class="posts">
+
+        <h1 class="text-black text-center">
+            <a asp-controller="Posts" asp-action="ReadPost" asp-route-id="@posts.Id">@posts.Title</a>
+        </h1>
+        <h3>Game - @posts.Game</h3>
+
+
+        @if (posts.Contents.Count>0)
+        {
+            var content = posts.Contents[0];
+            if (content.ContentType == "Image")
+            {
+                var base64Image = Convert.ToBase64String(content.Content);
+                var imageSrc = $"data:image/png;base64,{base64Image}"; 
+                <div>
+                    <img src="@imageSrc" alt="Image" class="img-fluid" />
+                </div>
+            }
+            else if (content.ContentType == "Video")
+            {
+                var base64Video = Convert.ToBase64String(content.Content);
+                var videoSrc = $"data:video/mp4;base64,{base64Video}"; 
+                <div>
+                    <video width="320" height="240" controls>
+                        <source src="@videoSrc" type="video/mp4">
+                    </video>
+
+                </div>
+            }
+            else
+            {
+                var textContent = System.Text.Encoding.UTF8.GetString(content.Content);
+                <div>
+                    <p>@textContent</p>
+                </div>
+            }
+        }
+        @if (ViewBag.CanChange)
+        {
+            <a asp-action="Edit" asp-route-id="@posts.Id">Edit</a>
+            <a asp-action="Delete" asp-route-id="@posts.Id">Delete</a>
+        }    
+    </div>
+}
+
+
+
+   

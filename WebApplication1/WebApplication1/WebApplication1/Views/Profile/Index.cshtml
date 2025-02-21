@@ -1,0 +1,121 @@
+﻿@using WebApplication1.DbModels
+@model IEnumerable<Blog>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+    <style>
+        #fileInput {
+            display: none;
+        }
+
+        #image {
+            cursor: pointer;
+            width: 200px; 
+            height: 200px; 
+            border: 2px solid #ccc; 
+            border-radius: 8px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h1>
+            Your data
+        </h1>
+        <div>
+            <form id="avatarForm" asp-controller="Profile" asp-action="ChangeAvatar" method="post" enctype="multipart/form-data">
+
+                @{
+                    var base64Image = Convert.ToBase64String(ViewBag.User.Avatar);
+                    var imageSrc = $"data:image/png;base64,{base64Image}";
+                }
+                <div>
+                    <img id="image" src="@imageSrc" alt="Click to select a file" class="img-fluid" />
+                </div>
+
+                <input type="file" id="fileInput" name="Avatar" accept="image/*">
+                <input type="submit" value="Submit">
+            </form>
+
+            <script>
+                const image = document.getElementById('image');
+                const fileInput = document.getElementById('fileInput');
+                const form = document.getElementById('avatarForm');
+
+                image.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            image.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                form.addEventListener('submit', (event) => {
+                    if (!fileInput.value) {
+                        event.preventDefault();
+                        alert('Please select a file before submitting the form.');
+                    }
+                });
+            </script>
+        </div>
+      
+        <br>
+        <br>
+        <br>
+        <form asp-action="Edit" asp-controller="Profile" method="post">
+            <input type="password" name="password"/>
+            <input type="submit" value="submit" />
+        </form>
+
+    </div>
+
+    <h1>Blogs</h1>
+
+    <p>
+        <a asp-controller="Blogs" asp-action="Create">Create New</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Theme</th>
+                <th>Author</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Theme</td>
+                    <td>
+                        <a asp-controller="Blogs" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a  asp-controller="Posts" asp-action="Index" asp-route-id="@item.Id">Posts</a> |
+                        <a asp-controller="Blogs" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+
+

@@ -1,0 +1,17 @@
+﻿@using WebApplication1.DbModels
+@model User
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<h1>Profile redactor @Model.Name</h1>
+
+
+<form asp-controller="Auth" asp-action="EditProfileData" method="post">
+    <h1>New Name(if you want)</h1>
+    <input type="text" name="Name" value="@Model.Name" />
+    <h1>New Email(if you want)</h1>
+    <input type="text" name="Email" value="@Model.Email" />
+    <h1>New Password(if you want)</h1>
+    <input type="password" name="Password" value="" />
+    <input type="submit" />
+</form>
