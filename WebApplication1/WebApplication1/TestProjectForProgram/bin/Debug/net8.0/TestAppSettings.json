@@ -1,0 +1,7 @@
+﻿{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=soulsborneblogstest;User=root;Password=;",
+    "MaximumPacketSize": "67108864;",
+    "DefaultCommandTimeout": "600;"
+  }
+}

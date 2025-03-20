@@ -6,6 +6,7 @@ using WebApplication1.Models;
 using System.Text;
 using WebApplication1.Services;
 using System.Security.Claims;
+using System.Reflection.Metadata;
 
 
 public class PostsController : Controller
@@ -57,7 +58,11 @@ public class PostsController : Controller
     // GET: One Post
     public async Task<IActionResult> ReadPost(int id)
     {
+        return View(getPost(id));
+    }
 
+    private PostViewModel getPost(int id)
+    {
         var post = _context.Posts.FirstOrDefault(post => post.Id == id);
         PostViewModel postToShow = new PostViewModel()
         {
@@ -71,10 +76,8 @@ public class PostsController : Controller
             BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId)?.Name ?? "Unknown",
             Contents = _context.Post_Contents.Where(postsContents => postsContents.PostId == post.Id).ToList()
         };
-
-        return View(postToShow);
+        return postToShow;
     }
-
 
     // GET: Posts/Create/5
     public IActionResult Create(int blogId)
@@ -85,6 +88,12 @@ public class PostsController : Controller
         };
         return View(model);
     }
+
+    public IActionResult Edit(int id)
+    {
+        return View(getPost(id));
+    }
+
 
     // POST: Posts/Create/5
     [HttpPost]
@@ -125,6 +134,50 @@ public class PostsController : Controller
         return RedirectToAction("Index", new { id = blogId });
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Edit([Bind("Title,Game")] Post post, List<PostContentViewModel> contents)
+    {
+       
+        post.Verify = false;
+        _context.Posts.Update(post);
+        await _context.SaveChangesAsync();
+
+        var oldContent = _context.Post_Contents.Where(con => con.PostId == post.Id);
+
+        foreach(var content in oldContent)
+        {
+            _context.Post_Contents.Remove(content);
+        }
+        await _context.SaveChangesAsync();
+
+        if (contents != null)
+        {
+            foreach (var content in contents)
+            {
+                var contentData = new byte[0];
+                switch (content.ContentType)
+                {
+                    case "Text":
+                        contentData = Encoding.UTF8.GetBytes(content.Content);
+                        break;
+                    default:
+                        contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
+                        break;
+                }
+
+                _context.Post_Contents.Add(new Post_Content
+                {
+                    PostId = post.Id,
+                    ContentType = content.ContentType,
+                    Content = contentData,
+                    Position = content.Position
+                });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        return RedirectToAction("Index", new { id = post.BlogId });
+    }
     // POST: Posts/Dlete/5
     public async Task<IActionResult> Delete(int? id)
     {
@@ -169,7 +222,6 @@ public class PostsController : Controller
         return Ok(likeCount);
     }
 
-
     [HttpGet]
     public async Task<IActionResult> GetDisLikes(int postId)
     {
@@ -178,7 +230,6 @@ public class PostsController : Controller
                                       .CountAsync();
         return Ok(likeCount);
     }
-
 
     [HttpPost]
     public async Task<IActionResult> MakeReactions(int value, int postId)
@@ -259,6 +310,29 @@ public class PostsController : Controller
         };
 
        _context.Coments.Add(newComent);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    //EditComment
+    public async Task<IActionResult> EditComment(int id,string text)
+    {
+        if (HttpContext.User == null)
+        {
+            return Unauthorized();
+        }
+
+
+        var existingComment = await _context.Coments.FindAsync(id);
+        if (existingComment == null)
+        {
+            return NotFound();
+        }
+
+        existingComment.Text= text;
+
+        _context.Update(existingComment);
         await _context.SaveChangesAsync();
 
         return Ok();

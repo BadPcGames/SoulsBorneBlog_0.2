@@ -30,7 +30,7 @@
 
     <h2>Контент</h2>
     <div id="contentModules">
-        <!-- Модули контента -->
+        
     </div>
 
     <div class="buttons">
@@ -151,11 +151,10 @@
     document.getElementById("addImageModule").addEventListener("click", () => addModule("Image"));
     document.getElementById("addVideoModule").addEventListener("click", () => addModule("Video"));
 
-    // Инициализация Sortable.js
     const sortable = new Sortable(document.getElementById("contentModules"), {
-        animation: 150, // Анимация перемещения
+        animation: 150, 
         onEnd: function () {
-            updateModuleIndices(); // Пересчет индексов после сортировки
+            updateModuleIndices(); 
         },
     });
 </script>

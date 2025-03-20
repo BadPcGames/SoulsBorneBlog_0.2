@@ -61,6 +61,11 @@
 
 <div class="fag">
 
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <p style="background-color:red">@ViewBag.Error</p>
+    }
+
     <div class="faq-item">
         <label class="faq-title" for="faq-login">Вхід</label>
         <input class="faq-input" type="radio" checked="checked"  name="faq" id="faq-login"></input>

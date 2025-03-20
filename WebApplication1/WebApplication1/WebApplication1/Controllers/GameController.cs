@@ -31,8 +31,6 @@ public class GameController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(string GameName,string Description,IFormFile GameCharacter,string Color)
     {
-        Console.WriteLine(GameCharacter);
-
         Game game = new Game()
         {
             GameName = GameName,
@@ -71,7 +69,8 @@ public class GameController : Controller
         }
         existingGame.GameName = GameName;
         existingGame.Description = Description;
-        if(GameCharacter!=null) existingGame.GameCharacter =  MyConvert.ConvertFileToByteArray(GameCharacter);
+        existingGame.GameCharacter = GameCharacter != null ? MyConvert.ConvertFileToByteArray(GameCharacter):null ;
+        //if (GameCharacter!=null) existingGame.GameCharacter =  MyConvert.ConvertFileToByteArray(GameCharacter);
         existingGame.Color = Color;
         _context.Update(existingGame);
         await _context.SaveChangesAsync();

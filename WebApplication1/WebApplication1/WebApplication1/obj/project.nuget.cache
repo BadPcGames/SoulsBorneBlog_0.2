@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3WIiaUJzbXQZFeeO8tzBw/tEdMAiTVHlecVGn6TTd4BcDqpWjinWlzcMvJ5NyHqESceIqY2CiYfZb7w5fe+gQw==",
+  "dgSpecHash": "fVs4Lsvnn3dGbs9SFUrDRXyqzqnMa3tmY/rCAY8h40VyHxW7eZC/OrCoTfhbyQLKLk9Ni5OPP5I/axLzn6vuwg==",
   "success": true,
-  "projectFilePath": "D:\\git\\ProjectWithSql\\WebApplication1\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+  "projectFilePath": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\8.0.3\\microsoft.aspnetcore.authentication.google.8.0.3.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\8.0.8\\microsoft.aspnetcore.cryptography.internal.8.0.8.nupkg.sha512",

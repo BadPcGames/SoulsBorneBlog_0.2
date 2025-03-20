@@ -8,6 +8,7 @@ using WebApplication1.DbModels;
 using WebApplication1.Models;
 using WebApplication1.Services;
 using MyConvert = WebApplication1.Services.MyConvert;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace WebApplication1.Controllers
@@ -22,19 +23,36 @@ namespace WebApplication1.Controllers
             _config = config;
         }
 
-
-        public IActionResult Index()
+        public IActionResult Index(string? message)
         {
+            ViewBag.Error = message;
             return View();
         }
 
         [HttpPost("register")]
-        public IActionResult Register([Bind("Name,Email,Password")] RegisterModel model)
+        public async Task<IActionResult> Register([Bind("Name,Email,Password")] RegisterModel model)
         {
+
+            if (model.Password == "" || model.Password == null ||
+                 model.Email == "" || model.Password == null ||
+                 model.Name == "" || model.Name == null)
+            {
+                return RedirectToAction("Index", new { message = "all data must be fielded" });
+            }
+
+            if (!IsValidEmail(model.Email))
+            {
+                return RedirectToAction("Index", new { message = "email is incorrect" });
+            }
 
             if (!_context.Users.Any(m => m.Email == model.Email))
             {
-                using (var stream = System.IO.File.OpenRead("./wwwroot/images/images.png"))
+                if (model.Password.Length < 6)
+                {
+                    return RedirectToAction("Index", new { message = "password is too short" });
+                }
+
+                using (var stream = System.IO.File.OpenRead("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png"))
                 {
                     User user = new User
                     {
@@ -47,6 +65,7 @@ namespace WebApplication1.Controllers
 
                     _context.Users.Add(user);
                     _context.SaveChanges();
+
                     Login(new LoginModel()
                     {
                         Email = model.Email,
@@ -57,47 +76,56 @@ namespace WebApplication1.Controllers
             }
             else
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index",new { message = "email is alredy used" });
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Login([Bind("Email,Password")] LoginModel model)
         {
-
-            if(!_context.Users.Any(m => m.Email == model.Email))
+            if (string.IsNullOrWhiteSpace(model.Password) || string.IsNullOrWhiteSpace(model.Email))
             {
-                //пользывателя нет с такой почтой
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { message = "all data must be fielded" });
             }
 
-            //проверка пароля пользывателя
-            User user= _context.Users.FirstAsync(m => m.Email == model.Email).Result;
+            if (!IsValidEmail(model.Email))
+            {
+                return RedirectToAction("Index", new { message = "email is incorrect" });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(m => m.Email == model.Email);
+            if (user == null)
+            {
+                return RedirectToAction("Index", new { message = "no account found with this email" });
+            }
+
             if (!ShifrService.DeHashPassword(user.PasswordHash, model.Password))
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { message = "password is incorrect" });
             }
 
-            await SingIn(user);
+            return await SignIn(user);
+        }
+
+        public async Task<IActionResult> SignIn(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
+                ClaimTypes.Name, ClaimTypes.Role);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
             return RedirectToAction("Index", "Profile");
-
         }
 
-        private async Task SingIn(User user)
-        {
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.System,user.Id.ToString()),
-                new Claim(ClaimTypes.Name,user.Name),
-                new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.Role,user.Role)
-            };
-            var claimsIdentyti = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
-                ClaimTypes.Name, ClaimTypes.Role);
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentyti);
-            await HttpContext.SignInAsync(claimsPrincipal);
-        }
 
         [Authorize]
         public async Task<IActionResult> EditProfileData(string? Name, string? Email, string? Password)
@@ -119,9 +147,7 @@ namespace WebApplication1.Controllers
             _context.Update(user);
             await _context.SaveChangesAsync();
 
-            SingIn(user);
-
-            return RedirectToAction("Index", "Profile");
+            return await SignIn(user);
         }
 
 
@@ -176,6 +202,11 @@ namespace WebApplication1.Controllers
                 return true;
             }
             return false;
+        }
+
+        public bool IsValidEmail(string email)
+        {
+            return new EmailAddressAttribute().IsValid(email);
         }
     }
 }

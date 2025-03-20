@@ -72,13 +72,11 @@
             <button id="submit-comment">Отправить комментарий</button>
         </div>
 
-
     </div>
-
-
 </body>
 
 <script type="module">
+
     const postId = @Model.Id;
     import { checkAccess,getUserId,getUserRole } from '/js/site.js';
     
@@ -125,11 +123,10 @@
             for (let comment of comments) {
                 let canChangeText = comment.canChange ? "Можно изменить" : "Невозможно изменить";
                 let commentHtml = `
-                    <div class="comment">
+                    <div class="comment" data-id="${comment.id}">
                         <p><strong>${comment.authorName}</strong> (${canChangeText}):</p>
-                        <p>${comment.text}</p>
+                        <p class="comment-text">${comment.text}</p>
                         <img src="data:image/png;base64,${comment.authorAvatar}" alt="Avatar" width="50" height="50">
-                    </div>
                 `;
 
                 let role = await getUserRole();
@@ -138,7 +135,12 @@
                 if (id == comment.authorId || role == "Admin" || role == "Moder") {
                     commentHtml += `<button class="delete-btn" data-id="${comment.id}" data-post-id="${postId}">Удалить</button>`;
                 }
-                commentHtml += "<hr>";
+
+                if (comment.canChange) {
+                    commentHtml += `<button class="edit-btn" data-id="${comment.id}">Изменить</button>`;
+                }
+
+                commentHtml += "<hr></div>";
                 $('#comments-container').append(commentHtml);
             }
         } catch (error) {
@@ -146,6 +148,49 @@
             console.error(error);
         }
     }
+
+    $(document).on('click', '.edit-btn', function () {
+        let commentDiv = $(this).closest('.comment');
+        let commentText = commentDiv.find('.comment-text').text();
+        let commentId = $(this).data('id');
+
+        let editForm = `
+            <textarea class="edit-text">${commentText}</textarea>
+            <button class="save-edit" data-id="${commentId}">Сохранить</button>
+            <button class="cancel-edit">Отмена</button>
+        `;
+
+        commentDiv.find('.comment-text').replaceWith(editForm);
+    });
+
+    $(document).on('click', '.save-edit', async function () {
+        let commentDiv = $(this).closest('.comment');
+        let newText = commentDiv.find('.edit-text').val();
+        let commentId = $(this).data('id');
+
+        try {
+            await $.ajax({
+                url: '/Posts/EditComment',
+                method: 'POST',
+                data: { id: commentId, text: newText }
+            });
+
+            commentDiv.find('.edit-text').replaceWith(`<p class="comment-text">${newText}</p>`);
+            commentDiv.find('.save-edit, .cancel-edit').remove();
+        } catch (error) {
+            alert('Ошибка изменения комментария');
+            console.error(error);
+        }
+    });
+
+    $(document).on('click', '.cancel-edit', function () {
+        let commentDiv = $(this).closest('.comment');
+        let originalText = commentDiv.find('.edit-text').text();
+        commentDiv.find('.edit-text').replaceWith(`<p class="comment-text">${originalText}</p>`);
+        commentDiv.find('.save-edit, .cancel-edit').remove();
+    });
+
+
 
     $(document).on('click', '.delete-btn', function () {
         let commentId = $(this).data('id');
