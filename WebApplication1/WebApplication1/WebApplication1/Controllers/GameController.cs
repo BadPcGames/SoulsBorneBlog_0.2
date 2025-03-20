@@ -22,15 +22,20 @@ public class GameController : Controller
         return View(games);
     }
   
-    public IActionResult Create()
+    public IActionResult Create(string? message)
     {
+        ViewBag.Error = message;
         return View();
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(string GameName,string Description,IFormFile GameCharacter,string Color)
+    public async Task<IActionResult> Create(string GameName,string Description,IFormFile? GameCharacter,string Color)
     {
+        if (GameName == "" || Description == "" || GameCharacter == null)
+        {
+            return RedirectToAction("Create", new { message = "all data must be fuiled" });
+        }
         Game game = new Game()
         {
             GameName = GameName,
@@ -44,8 +49,9 @@ public class GameController : Controller
     }
 
 
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(int? id,string? message)
     {
+        ViewBag.Error = message;
         if (id == null || _context.Blogs == null)
         {
             return NotFound();
@@ -62,6 +68,10 @@ public class GameController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id,string GameName, string Description, IFormFile? GameCharacter, string Color)
     {
+        if (GameName == "" || Description == "" || GameCharacter == null)
+        {
+            return RedirectToAction("Edit", new { id=id,message = "all data must be fuiled" });
+        }
         var existingGame = await _context.Games.FindAsync(id);
         if (existingGame == null)
         {

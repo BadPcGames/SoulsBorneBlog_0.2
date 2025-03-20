@@ -79,11 +79,12 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("Index",new { message = "email is alredy used" });
             }
         }
-
-        [HttpPost]
         public async Task<IActionResult> Login([Bind("Email,Password")] LoginModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Password) || string.IsNullOrWhiteSpace(model.Email))
+
+
+            if (model.Password == "" || model.Password == null ||
+                 model.Email == "" || model.Password == null )
             {
                 return RedirectToAction("Index", new { message = "all data must be fielded" });
             }
@@ -93,37 +94,37 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("Index", new { message = "email is incorrect" });
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.Email == model.Email);
-            if (user == null)
+            if (!_context.Users.Any(m => m.Email == model.Email))
             {
-                return RedirectToAction("Index", new { message = "no account found with this email" });
+                //пользывателя нет с такой почтой
+                return RedirectToAction("Index");
             }
 
+            //проверка пароля пользывателя
+            User user = _context.Users.FirstAsync(m => m.Email == model.Email).Result;
             if (!ShifrService.DeHashPassword(user.PasswordHash, model.Password))
             {
-                return RedirectToAction("Index", new { message = "password is incorrect" });
+                 return RedirectToAction("Index", new { message = "password is incorrect" });
             }
 
-            return await SignIn(user);
-        }
-
-        public async Task<IActionResult> SignIn(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
-                ClaimTypes.Name, ClaimTypes.Role);
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+            await SingIn(user);
 
             return RedirectToAction("Index", "Profile");
+        }
+
+        private async Task SingIn(User user)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.System,user.Id.ToString()),
+                new Claim(ClaimTypes.Name,user.Name),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Role,user.Role)
+            };
+            var claimsIdentyti = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
+                ClaimTypes.Name, ClaimTypes.Role);
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentyti);
+            await HttpContext.SignInAsync(claimsPrincipal);
         }
 
 
@@ -147,7 +148,9 @@ namespace WebApplication1.Controllers
             _context.Update(user);
             await _context.SaveChangesAsync();
 
-            return await SignIn(user);
+            await SingIn(user);
+
+            return RedirectToAction("Index", "Profile");
         }
 
 

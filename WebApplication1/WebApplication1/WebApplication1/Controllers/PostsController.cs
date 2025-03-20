@@ -80,8 +80,9 @@ public class PostsController : Controller
     }
 
     // GET: Posts/Create/5
-    public IActionResult Create(int blogId)
+    public IActionResult Create(int blogId,string? message)
     {
+        ViewBag.Error = message;
         var model = new Post
         {
             BlogId = blogId
@@ -89,8 +90,9 @@ public class PostsController : Controller
         return View(model);
     }
 
-    public IActionResult Edit(int id)
+    public IActionResult Edit(int id,string? message)
     {
+        ViewBag.Error = message;
         return View(getPost(id));
     }
 
@@ -99,6 +101,10 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(int blogId, [Bind("Title,Game")] Post post, List<PostContentViewModel> contents)
     {
+        if (post.Title == "" || post.Game == "")
+        {
+            return RedirectToAction("Create", new { id = blogId, message = "all data must be fuiled" });
+        }
         post.BlogId = blogId;
         post.CreatedAt = DateTime.Now;
         post.Verify = false;
@@ -137,7 +143,10 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit([Bind("Title,Game")] Post post, List<PostContentViewModel> contents)
     {
-       
+        if (post.Title == "" || post.Game == "")
+        {
+            return RedirectToAction("Edit", new { id = post.Id, message = "all data must be fuiled" });
+        }
         post.Verify = false;
         _context.Posts.Update(post);
         await _context.SaveChangesAsync();
