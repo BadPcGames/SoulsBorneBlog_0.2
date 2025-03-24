@@ -7,15 +7,38 @@ using System.Text;
 using WebApplication1.Services;
 using System.Security.Claims;
 using System.Reflection.Metadata;
+using WebApplication1.Controllers;
 
 
 public class PostsController : Controller
 {
     private readonly AppDbContext _context;
-
-    public PostsController(AppDbContext context)
+    private readonly UserService _userService;
+    public PostsController(AppDbContext context, UserService userService)
     {
         _context = context;
+        _userService = userService;
+    }
+
+    public async Task<IActionResult> GetPostsToVerify()
+    {
+        List<Post> posts = _context.Posts.Where(post => post.Verify != true).ToList();
+
+        List<PostViewModel> postViewModels = posts.Select(post => new PostViewModel
+        {
+            Id = post.Id,
+            Title = post.Title,
+            CreateAt = post.CreatedAt,
+            Game = post.Game,
+            Color = _context.Games.First(game => game.GameName == post.Game).Color,
+            BlogId = post.BlogId,
+            BlogName = _context.Blogs.Where(blog => blog.Id == post.BlogId).Select(blog => blog.Name).FirstOrDefault() ?? "Unknown",
+            AuthorName = _context.Users.Where(user => user.Id == _context.Blogs.Where(blog => blog.Id == post.BlogId).Select(blog => blog.AuthorId).FirstOrDefault())
+                               .Select(user => user.Name).FirstOrDefault() ?? "Unknown",
+            Contents = _context.Post_Contents.Where(postContents => postContents.PostId == post.Id).ToList(),
+            Verify = post.Verify
+        }).ToList();
+        return Json(postViewModels);
     }
 
     // GET: Posts
@@ -30,9 +53,9 @@ public class PostsController : Controller
                                   .ToListAsync();
         ViewBag.BlogId = id;
 
-        if (HttpContext.User.FindFirst(ClaimTypes.System)?.Value != null)
+        if (_userService.GetUserId() != null)
         {
-            ViewBag.CanChange= int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value) == _context.Blogs.First(blog => blog.Id == id).AuthorId;
+            ViewBag.CanChange= _userService.GetUserId() == _context.Blogs.First(blog => blog.Id == id).AuthorId;
         }
         else
         {
@@ -247,8 +270,14 @@ public class PostsController : Controller
         {
             return Unauthorized(); 
         }
+        bool access = await _userService.GetAccess();
+        if (!access)
+        {
+            var user = _context.Users.FirstOrDefault(user => user.Id == _userService.GetUserId());
+            return Json(new { success = true, message = $"Ви знаходетесь в бані до {user.BanTime}" }) ;
+        }
 
-        int clientId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value);
+        int clientId = (int)_userService.GetUserId();
 
         Reactions? existingReaction = _context.Reactions
                                               .FirstOrDefault(reaction => reaction.AuthorId == clientId && reaction.PostId == postId);
@@ -279,8 +308,7 @@ public class PostsController : Controller
                 await _context.SaveChangesAsync();
             }
         }
-
-        return Ok(); 
+        return Json(new { success = true, message = "" });
     }
 
     [HttpGet]
@@ -308,8 +336,17 @@ public class PostsController : Controller
         {
             return Unauthorized();
         }
-
-        int clientId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value);
+        bool access = await _userService.GetAccess();
+        if (!access)
+        {
+            var user = _context.Users.FirstOrDefault(user => user.Id == _userService.GetUserId());
+            return Json(new { success = true, message = $"Ви знаходетесь в бані до {user.BanTime}" });
+        }
+        if (text == "")
+        {
+            return Json(new { success = true, message = "Коментар не може бути пустим" });
+        }
+        int clientId = (int)_userService.GetUserId();
         Coments newComent = new Coments()
         {
             AuthorId = clientId,
@@ -331,8 +368,16 @@ public class PostsController : Controller
         {
             return Unauthorized();
         }
-
-
+        bool access = await _userService.GetAccess();
+        if (!access)
+        {
+            var user = _context.Users.FirstOrDefault(user => user.Id == _userService.GetUserId());
+            return Json(new { success = true, message = $"Ви знаходетесь в бані до {user.BanTime}" });
+        }
+        if (text == "")
+        {
+            return Json(new { success = true, message = "Коментар не може бути пустим" });
+        }
         var existingComment = await _context.Coments.FindAsync(id);
         if (existingComment == null)
         {

@@ -18,21 +18,46 @@ namespace WebApplication1.Controllers
 
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            var user = _context.Users.First(user => user.Id == int.Parse(HttpContext.User.FindFirst(ClaimTypes.System).Value));
+            int currentUserId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.System).Value);
+
+            if (id == null || id == currentUserId)
+            {
+                var user = _context.Users.First(u => u.Id == currentUserId);
+
+                ViewBag.User = new UserViewModel()
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    Avatar = user.Avatar
+                };
+
+                var yourBlogs = _context.Blogs.Where(blog => blog.AuthorId == currentUserId).ToList();
+                ViewBag.CanChange = true;
+                return View(yourBlogs);
+            }
+
+            var otherUser = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (otherUser == null)
+            {
+                return NotFound(); 
+            }
 
             ViewBag.User = new UserViewModel()
             {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Avatar = user.Avatar
+                Id = otherUser.Id,
+                Name = otherUser.Name,
+                Email = otherUser.Email,
+                Avatar = otherUser.Avatar
             };
-            var yourBlogs = _context.Blogs.Where(blog => blog.AuthorId ==
-                int.Parse(HttpContext.User.FindFirst(ClaimTypes.System).Value)).ToList();
-            return View(yourBlogs);
+
+            var otherBlogs = _context.Blogs.Where(blog => blog.AuthorId == id).ToList();
+            ViewBag.CanChange = false;
+            return View(otherBlogs);
         }
+
 
         [Authorize]
         public async Task<IActionResult> Edit(string password)

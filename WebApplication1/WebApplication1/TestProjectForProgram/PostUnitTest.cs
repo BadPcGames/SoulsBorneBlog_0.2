@@ -2,16 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WebApplication1;
-using WebApplication1.Controllers;
 using WebApplication1.Models;
 using WebApplication1.DbModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Moq;
-using Microsoft.AspNetCore.Mvc.Routing;
-using System.Security.Claims;
-using System.Security.Cryptography;
+
 
 namespace AuthUnitTest
 {
@@ -71,7 +66,6 @@ namespace AuthUnitTest
             };
 
             contents.Add(content);
-            //IFormFile file = CreateIFormFileFromPath("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png");
             var result = await _postsController.Create(17,post,contents) as RedirectToActionResult;
 
             // Assert
@@ -148,15 +142,6 @@ namespace AuthUnitTest
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.ActionName);
 
-            //int toDelete = 0;
-            //foreach (var posts in _dbContext.Posts)
-            //{
-            //    if (posts.Id > toDelete)
-            //    {
-            //        toDelete = posts.Id;
-            //    }
-            //}
-            //await _postsController.Delete(toDelete);
         }
         //TS07-4 -
         [Test, Order(4)]

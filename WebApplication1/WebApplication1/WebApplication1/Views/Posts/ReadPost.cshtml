@@ -86,12 +86,17 @@
                 url: '@Url.Action("MakeComent", "Posts")',
                 method: 'POST',
                 data: { text: text, postId: postId },
-                success: function () {
-                    $('#comment-text').val("");
-                    loadComments(postId);
+                success: function (response) {
+                    if (response.message != "")
+                        alert(response.message);
+                    if (response.success) {
+                        $('#comment-text').val("");
+                        loadComments(postId);
+                    }
                 },
-                error: function (xhr, status, error) {
-                    alert('Ошибка при отправке комментария');
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                    alert('Error setting reaction.');
                 }
             });
         }   
@@ -172,7 +177,20 @@
             await $.ajax({
                 url: '/Posts/EditComment',
                 method: 'POST',
-                data: { id: commentId, text: newText }
+                data: { id: commentId, text: newText },
+                success: function (response) {
+                    if (response.message != "")
+                        alert(response.message);
+                    if (response.success) {
+                        $('#comment-text').val("");
+                        loadComments(postId);
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                    alert('Error setting reaction.');
+                }
+
             });
 
             commentDiv.find('.edit-text').replaceWith(`<p class="comment-text">${newText}</p>`);
@@ -239,21 +257,22 @@
 
 
     async function makeReaction(value) {
-        if (checkAccess())
-        {
-            $.ajax({
-                url: '@Url.Action("MakeReactions", "Posts")',
-                method: 'POST',
-                data: { value: value, postId: postId },
-                success: function () {
+        $.ajax({
+            url: '@Url.Action("MakeReactions", "Posts")',
+            method: 'POST',
+            data: { value: value, postId: postId },
+            success: function (response) {
+                if (response.message!="")
+                    alert(response.message);
+                if (response.success) {
                     updateReactions();
-                },
-                error: function (xhr) {
-                    console.error(xhr.responseText);
-                    alert('Error setting reaction.');
                 }
-            });
-        }  
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                alert('Error setting reaction.');
+            }
+        });
     }
 
     $('#like-button').click(function () {

@@ -8,6 +8,7 @@ using WebApplication1.DbModels;
 using WebApplication1.Models;
 using WebApplication1.Services;
 using MyConvert = WebApplication1.Services.MyConvert;
+using UserService= WebApplication1.Services.UserService;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -17,10 +18,12 @@ namespace WebApplication1.Controllers
     {
         private readonly AppDbContext _context;
         private IConfiguration _config;
-        public AuthController(AppDbContext context, IConfiguration config)
+        private readonly UserService _userService;
+        public AuthController(AppDbContext context, IConfiguration config, UserService userService)
         {
             _context = context;
             _config = config;
+            _userService = userService;
         }
 
         public IActionResult Index(string? message)
@@ -96,11 +99,9 @@ namespace WebApplication1.Controllers
 
             if (!_context.Users.Any(m => m.Email == model.Email))
             {
-                //пользывателя нет с такой почтой
                 return RedirectToAction("Index");
             }
 
-            //проверка пароля пользывателя
             User user = _context.Users.FirstAsync(m => m.Email == model.Email).Result;
             if (!ShifrService.DeHashPassword(user.PasswordHash, model.Password))
             {
@@ -162,54 +163,44 @@ namespace WebApplication1.Controllers
 
         public int? GetUserId()
         {
-            if (HttpContext.User.FindFirst(ClaimTypes.System)?.Value!=null)
-            {
-                return int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value);
-            }
-            return null; 
+            return _userService.GetUserId();
         }
 
         public string? GetUserRole()
         {
-            if (GetUserId != null)
-            {
-                return HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            }
-            return null;
+            return _userService.GetUserRole();
         }
 
         public byte[]? GetUserAvatar()
         {
-            if (GetUserId() != null)
-            {
-                if (_context.Users.First(user => user.Id == GetUserId()).Avatar != null)
-                {
-                    return _context.Users.First(user => user.Id == GetUserId()).Avatar;
-                }
-            }
-            return null;
+            return _userService.GetUserAvatar();
         }
 
         public async Task<bool> getAccess()
         {
-            User user=_context.Users.First(user=>user.Id==GetUserId());
-            if (user.BanTime == null) return true;
-            Console.WriteLine(user.BanTime);
-            Console.WriteLine(DateTime.Now);
-            Console.WriteLine(user.BanTime < DateTime.Now);
-            if (user.BanTime < DateTime.Now)
-            {
-                user.BanTime = null;
-                _context.Update(user);
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
+            return _userService.GetAccess().Result;
         }
 
         public bool IsValidEmail(string email)
         {
             return new EmailAddressAttribute().IsValid(email);
+        }
+
+        public async Task<IActionResult> GetUsers()
+        {
+            List<User> users = _context.Users.ToList();
+
+            List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Avatar = user.Avatar,
+                BanTime = user.BanTime,
+                Warnings= user.Warnings
+            }).ToList();
+
+            return Json(usersViewModel);
         }
     }
 }

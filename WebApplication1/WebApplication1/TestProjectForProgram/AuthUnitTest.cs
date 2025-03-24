@@ -24,7 +24,7 @@ namespace AuthUnitTest
         public void Setup()
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)  // Указывает путь на bin\Debug\net8.0
+                .SetBasePath(AppContext.BaseDirectory) 
                 .AddJsonFile("TestAppSettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
@@ -40,9 +40,6 @@ namespace AuthUnitTest
             _dbContext = new AppDbContext(options);
             _authController = new AuthController(_dbContext, _config);
         }
-
-
-
 
         //TS02-1 -
         [Test]
@@ -178,7 +175,6 @@ namespace AuthUnitTest
                 Password = "123456"
             };
 
-            // 1. Мокаем HttpContext и сервисы
             var httpContextMock = new Mock<HttpContext>();
             var serviceProviderMock = new Mock<IServiceProvider>();
             var urlHelperMock = new Mock<IUrlHelper>();
@@ -201,17 +197,14 @@ namespace AuthUnitTest
 
             _authController.Url = urlHelperMock.Object;
 
-            // 4. Мокаем SignInAsync, чтобы избежать исключения
             authServiceMock.Setup(x => x.SignInAsync(It.IsAny<HttpContext>(),
                                                      It.IsAny<string>(),
                                                      It.IsAny<ClaimsPrincipal>(),
                                                      It.IsAny<AuthenticationProperties>()))
                            .Returns(Task.CompletedTask);
 
-            // Act
             var result = await _authController.Login(user);
 
-            // Assert
             Assert.IsInstanceOf<RedirectToActionResult>(result);
         }
         //TS03-3

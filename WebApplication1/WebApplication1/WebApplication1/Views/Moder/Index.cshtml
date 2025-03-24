@@ -26,23 +26,54 @@
 </head>
 <body>
     <h2>Список пользователей</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Имя</th>
-                <th>Email</th>
-                <th>Бан до</th>
-                <th>Блокировка</th>
-            </tr>
-        </thead>
-        <tbody id="usersTableBody"></tbody>
-    </table>
+
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Users
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Попереджень</th>
+                        <th>Бан до</th>
+                        <th>Блокировка</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Попереджень</th>
+                        <th>Бан до</th>
+                        <th>Блокировка</th>
+                    </tr>
+                </thead>
+                <tbody id="postsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
 
     <script>
         function loadUsers() {
             $.ajax({
-                url: '@Url.Action("GetUsers", "Moder")',
+                url: '@Url.Action("GetUsers", "Auth")',
                 method: 'GET',
                 success: function (users) {
                     let tableBody = $('#usersTableBody');
@@ -50,8 +81,9 @@
                     users.forEach(user => {
                         let row = `<tr>
                                     <td>${user.id}</td>
-                                    <td>${user.name}</td>
-                                    <td>${user.email}</td>                                  
+                                    <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
+                                    <td>${user.email}</td>
+                                    <td>${user.warnings}</td>
                                     <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Не заблокирован'}</td>
                                     <td>
                                         <input type="number" min="1" max="365" value="1" id="banDays-${user.id}" /> дней
@@ -76,9 +108,14 @@
                 data: 
                     { userId: userId, 
                     banTime: days },
-                success: function () {
-                    alert('Пользователь забанен!');
-                    loadUsers();
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        loadUsers();
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при разбане пользователя!');
                 }
             });
         }
@@ -87,13 +124,15 @@
             $.ajax({
                 url: '@Url.Action("DeleteBan", "Moder")',
                 method: 'POST',
-                data:
-                {
-                    userId: userId,
+                data: { userId: userId },
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        loadUsers();
+                    }
                 },
-                success: function () {
-                    alert('Пользователь разбанен!');
-                    loadUsers();
+                error: function () {
+                    alert('Ошибка при разбане пользователя!');
                 }
             });
         }

@@ -38,6 +38,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 64 * 1024 * 1024; // 30 MB
@@ -63,9 +65,6 @@ app.UseAuthorization();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-
-
 
 app.MapControllerRoute(
     name: "default",

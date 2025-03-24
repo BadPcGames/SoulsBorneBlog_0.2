@@ -28,59 +28,71 @@
 
     <div>
         <h1>
-            Your data
+            @ViewBag.User.Name
         </h1>
         <div>
-            <form id="avatarForm" asp-controller="Profile" asp-action="ChangeAvatar" method="post" enctype="multipart/form-data">
+            @{
+                var base64Image = Convert.ToBase64String(ViewBag.User.Avatar);
+                var imageSrc = $"data:image/png;base64,{base64Image}";
+            }
+            @if (ViewBag.CanChange)
+            {
+                <form id="avatarForm" asp-controller="Profile" asp-action="ChangeAvatar" method="post" enctype="multipart/form-data">
+                    <div>
+                        <img id="image" src="@imageSrc" alt="Click to select a file" class="img-fluid" />
+                    </div>
+                    <input type="file" id="fileInput" name="Avatar" accept="image/*">
+                    <input type="submit" value="Submit">
+                </form>
 
-                @{
-                    var base64Image = Convert.ToBase64String(ViewBag.User.Avatar);
-                    var imageSrc = $"data:image/png;base64,{base64Image}";
-                }
+                <script>
+                    const image = document.getElementById('image');
+                    const fileInput = document.getElementById('fileInput');
+                    const form = document.getElementById('avatarForm');
+
+                    image.addEventListener('click', () => {
+                        fileInput.click();
+                    });
+
+                    fileInput.addEventListener('change', (event) => {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                image.src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+
+                    form.addEventListener('submit', (event) => {
+                        if (!fileInput.value) {
+                            event.preventDefault();
+                            alert('Please select a file before submitting the form.');
+                        }
+                    });
+                </script>
+            }
+            else
+            {
                 <div>
                     <img id="image" src="@imageSrc" alt="Click to select a file" class="img-fluid" />
                 </div>
-
-                <input type="file" id="fileInput" name="Avatar" accept="image/*">
-                <input type="submit" value="Submit">
-            </form>
-
-            <script>
-                const image = document.getElementById('image');
-                const fileInput = document.getElementById('fileInput');
-                const form = document.getElementById('avatarForm');
-
-                image.addEventListener('click', () => {
-                    fileInput.click();
-                });
-
-                fileInput.addEventListener('change', (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            image.src = e.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-
-                form.addEventListener('submit', (event) => {
-                    if (!fileInput.value) {
-                        event.preventDefault();
-                        alert('Please select a file before submitting the form.');
-                    }
-                });
-            </script>
+            }
+         
         </div>
       
         <br>
         <br>
         <br>
-        <form asp-action="Edit" asp-controller="Profile" method="post">
-            <input type="password" name="password"/>
-            <input type="submit" value="submit" />
-        </form>
+        @if (ViewBag.CanChange)
+        {
+            <form asp-action="Edit" asp-controller="Profile" method="post">
+                <input type="password" name="password" />
+                <input type="submit" value="submit" />
+            </form>
+        }
+   
 
     </div>
 
@@ -96,7 +108,6 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Theme</th>
-                <th>Author</th>
                 <th></th>
             </tr>
         </thead>
@@ -107,11 +118,15 @@
                     <td>@item.Name</td>
                     <td>@item.Description</td>
                     <td>@item.Theme</td>
-                    <td>
-                        <a asp-controller="Blogs" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a  asp-controller="Posts" asp-action="Index" asp-route-id="@item.Id">Posts</a> |
-                        <a asp-controller="Blogs" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
+
+                        <td>
+                            <a asp-controller="Posts" asp-action="Index" asp-route-id="@item.Id">Posts</a>
+                        @if (ViewBag.CanChange)
+                        {
+                            <a asp-controller="Blogs" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a asp-controller="Blogs" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        }
+                        </td>
                 </tr>
             }
         </tbody>
