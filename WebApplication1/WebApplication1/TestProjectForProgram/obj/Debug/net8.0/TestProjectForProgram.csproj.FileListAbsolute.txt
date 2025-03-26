@@ -131,3 +131,10 @@ D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectFor
 D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\System.Formats.Asn1.dll
 D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\Google.Apis.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\Google.Apis.Auth.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\Google.Apis.Core.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\Google.Apis.Gmail.v1.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\System.CodeDom.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\System.Management.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll

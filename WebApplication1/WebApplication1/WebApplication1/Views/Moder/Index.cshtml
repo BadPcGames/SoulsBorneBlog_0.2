@@ -41,6 +41,7 @@
                         <th>Попереджень</th>
                         <th>Бан до</th>
                         <th>Блокировка</th>
+                        <th>Видалення</th>
                     </tr>
                 </thead>
                 <tbody id="usersTableBody"></tbody>
@@ -93,6 +94,10 @@
                                     </td>
                                     <td>
                                         <button onclick="deBanUser(${user.id})">Розбанити</button>
+                                    </td>
+                                    <td>
+                                        <input type="text"  id="reasonToBan-${user.id}" /> Причина
+                                        <button onclick="absoluteBanUser(${user.id})">Видалити</button>
                                     </td>
                                 </tr>`;
                         tableBody.append(row);
@@ -165,6 +170,30 @@
                 }
             });
         }
+
+
+        function absoluteBanUser(userId) {
+            let reason = $(`#reasonToBan-${userId}`).val();
+            $.ajax({
+                url: '@Url.Action("AbsoluteBanUser", "Moder")',
+                method: 'POST',
+                data:
+                {
+                    userId: userId,
+                    reason: reason
+                },
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        loadUsers();
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при удалении пользывателя');
+                }
+            });
+        }
+
 
         function postNotApproval(postId){
             let reason = $(`#postProblem-${postId}`).val();
