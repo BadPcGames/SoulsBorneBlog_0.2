@@ -125,3 +125,9 @@ D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectFor
 D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\obj\Debug\net8.0\TestProjectForProgram.genruntimeconfig.cache
 D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\obj\Debug\net8.0\ref\TestProjectForProgram.dll
 D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\TestAppSettings.json
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\MailKit.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\MimeKit.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\System.Formats.Asn1.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+D:\git\NewProjectWithSqlForDiplom\WebApplication1\WebApplication1\TestProjectForProgram\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll

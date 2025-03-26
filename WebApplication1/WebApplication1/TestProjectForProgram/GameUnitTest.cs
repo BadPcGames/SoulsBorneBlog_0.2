@@ -11,7 +11,7 @@ using Moq;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
 
-namespace AuthUnitTest
+namespace ModelUnitTest
 {
     [TestFixture]
     public class GameUnitTest

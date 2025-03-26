@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
+using WebApplication1.Services;
 
-namespace AuthUnitTest
+namespace ModelUnitTest
 {
     [TestFixture]
     public class AuthUnitTest
@@ -19,6 +20,8 @@ namespace AuthUnitTest
         private AuthController _authController;
         private AppDbContext _dbContext;
         private IConfiguration _config;
+        private UserService _userService;
+        private IHttpContextAccessor _contextAccessor;
 
         [SetUp]
         public void Setup()
@@ -37,8 +40,14 @@ namespace AuthUnitTest
                 )
                 .Options;
 
+            _contextAccessor = new HttpContextAccessor
+            {
+                HttpContext = new DefaultHttpContext()
+            };
+
             _dbContext = new AppDbContext(options);
-            _authController = new AuthController(_dbContext, _config);
+            _userService = new UserService(_dbContext,_contextAccessor );
+            _authController = new AuthController(_dbContext, _config,_userService);
         }
 
         //TS02-1 -

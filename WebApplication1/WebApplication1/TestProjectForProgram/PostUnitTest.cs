@@ -6,9 +6,10 @@ using WebApplication1.Models;
 using WebApplication1.DbModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using WebApplication1.Services;
 
 
-namespace AuthUnitTest
+namespace ModelUnitTest
 {
 
     [TestFixture]
@@ -24,6 +25,8 @@ namespace AuthUnitTest
         private PostsController _postsController;
         private AppDbContext _dbContext;
         private IConfiguration _config;
+        private UserService _userService;
+        private IHttpContextAccessor _contextAccessor;
 
         [SetUp]
         public void Setup()
@@ -42,8 +45,14 @@ namespace AuthUnitTest
                 )
                 .Options;
 
+            _contextAccessor = new HttpContextAccessor
+            {
+                HttpContext = new DefaultHttpContext()
+            };
+            _userService = new UserService(_dbContext, _contextAccessor);
+
             _dbContext = new AppDbContext(options);
-            _postsController = new PostsController(_dbContext);
+            _postsController = new PostsController(_dbContext,_userService,_config);
         }
 
 

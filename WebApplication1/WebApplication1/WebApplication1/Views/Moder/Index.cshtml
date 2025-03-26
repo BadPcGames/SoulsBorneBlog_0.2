@@ -57,11 +57,13 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Имя</th>
-                        <th>Email</th>
-                        <th>Попереджень</th>
-                        <th>Бан до</th>
-                        <th>Блокировка</th>
+                        <th>Назва</th>
+                        <th>Автор</th>
+                        <th>Гра</th>
+                        <th>Блог</th>
+                        <th>Одобрення</th>
+                        <th>Причина</th>
+                        <th>Видалення</th>
                     </tr>
                 </thead>
                 <tbody id="postsTableBody"></tbody>
@@ -99,6 +101,30 @@
             });
         }
 
+        function loadPosts() {
+            $.ajax({
+                url: '@Url.Action("GetPostsToVerify", "Posts")',
+                method: 'GET',
+                success: function (posts) {
+                    let tableBody = $('#postsTableBody');
+                    tableBody.empty();
+                    posts.forEach( post=> {
+                        let row = `<tr>
+                                            <td>${post.id}</td>
+                                            <td><a class="nav-link text-dark" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
+                                            <td>${post.authorName}</td>
+                                            <td>${post.game}</td>
+                                            <td><a class="nav-link text-dark" href="/Posts/Index?id=${post.blogId}">${post.blogName}</td>
+                                            <td><button onclick="postApproval(${post.id})">Одобрено</button></td>
+                                            <td><input type="text" id="postProblem-${post.id}" /></td>
+                                            <td><button onclick="postNotApproval(${post.id})">Не одобрено</button></td>
+                                        </tr>`;
+                        tableBody.append(row);
+                    });
+                }
+            });
+        }
+
         function banUser(userId) {
             let days = $(`#banDays-${userId}`).val();
 
@@ -116,6 +142,48 @@
                 },
                 error: function () {
                     alert('Ошибка при разбане пользователя!');
+                }
+            });
+        }
+
+        function postApproval(postId){
+            $.ajax({
+                url: '@Url.Action("PostApproval", "Posts")',
+                method: 'POST',
+                data:
+                {
+                    postId: postId
+                },
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        loadPosts();
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при изменении статуса публикации!');
+                }
+            });
+        }
+
+        function postNotApproval(postId){
+            let reason = $(`#postProblem-${postId}`).val();
+            $.ajax({
+                url: '@Url.Action("PostNotApproval", "Posts")',
+                method: 'POST',
+                data:
+                {
+                    postId: postId,
+                    reason: reason
+                },
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        loadPosts();
+                    }
+                },
+                error: function () {
+                    alert('Ошибка при изменении статуса публикации!');
                 }
             });
         }
@@ -139,6 +207,7 @@
 
         $(document).ready(function () {
             loadUsers();
+            loadPosts();
         });
     </script>
 </body>

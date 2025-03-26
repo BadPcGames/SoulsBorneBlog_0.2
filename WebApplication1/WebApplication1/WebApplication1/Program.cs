@@ -40,6 +40,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 64 * 1024 * 1024; // 30 MB

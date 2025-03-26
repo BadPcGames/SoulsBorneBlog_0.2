@@ -8,16 +8,21 @@ using WebApplication1.Services;
 using System.Security.Claims;
 using System.Reflection.Metadata;
 using WebApplication1.Controllers;
+using Microsoft.Extensions.Configuration;
 
 
 public class PostsController : Controller
 {
     private readonly AppDbContext _context;
     private readonly UserService _userService;
-    public PostsController(AppDbContext context, UserService userService)
+    private readonly IConfiguration _configuration;
+    private readonly EmailService _emailService;
+    public PostsController(AppDbContext context, UserService userService, IConfiguration configuration)
     {
         _context = context;
         _userService = userService;
+        _configuration = configuration;
+        _emailService = new EmailService();
     }
 
     public async Task<IActionResult> GetPostsToVerify()
@@ -39,6 +44,38 @@ public class PostsController : Controller
             Verify = post.Verify
         }).ToList();
         return Json(postViewModels);
+    }
+
+    public async Task<IActionResult> PostApproval(int postId)
+    {
+        var post=_context.Posts.FirstOrDefault(post => post.Id == postId);
+        post.Verify = true;
+        _context.Update(post);
+        _context.SaveChanges();
+
+
+        User user = _context.Users.FirstOrDefault(user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId);
+        _emailService.SendEmail(user.Email,"Публікація "+post.Title,"Була одобрена та опублікована");
+
+        return Ok();
+    }
+
+    public async Task<IActionResult> PostNotApproval(int postId, string? reason)
+    {
+        if (reason==null)
+        {
+            return Json(new { success = true, message = "Причина не написана" });
+        }
+        if (reason.Length<15)
+        {
+            return Json(new { success = true, message = "Опиши причину детальніше" });
+        }
+
+        var post = _context.Posts.FirstOrDefault(post => post.Id == postId);
+        User user = _context.Users.FirstOrDefault(user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId);
+        _emailService.SendEmail(user.Email, "Публікація " + post.Title, "Була одобрена скрита з причини:" +reason);
+
+        return Json(new { success = true, message = "Повідомлення відправлено" });
     }
 
     // GET: Posts
