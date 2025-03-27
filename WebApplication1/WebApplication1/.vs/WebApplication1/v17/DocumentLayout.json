@@ -3,40 +3,12 @@
   "WorkspaceRootPath": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\controllers\\modercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\modercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\views\\moder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\views\\moder\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\controllers\\blogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\blogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\integrationunittest\\pack2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\integrationunittest\\pack1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\modelunittest\\gameunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\gameunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\modelunittest\\postunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\postunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\modelunittest\\authunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\authunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\controllers\\modercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\modercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -65,124 +37,29 @@
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Moder\\Index.cshtml",
-              "RelativeDocumentMoniker": "WebApplication1\\Views\\Moder\\Index.cshtml",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Moder\\Index.cshtml",
-              "RelativeToolTip": "WebApplication1\\Views\\Moder\\Index.cshtml",
-              "ViewState": "AQIAAJkAAAAAAAAAAAAiwMEAAAAPAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-26T08:25:17.272Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BlogsController.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\BlogsController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\BlogsController.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\BlogsController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\BlogsController.cs",
-              "ViewState": "AQIAAGEAAAAAAAAAAAAcwHYAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T08:08:31.482Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "PostUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T08:00:54.185Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "GameUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\GameUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\GameUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\GameUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\GameUnitTest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T08:00:48.545Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Pack2.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "ViewState": "AQIAADgBAAAAAAAAAAAkwA0AAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T07:59:06.801Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Pack1.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T07:58:38.738Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AuthUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T07:57:42.355Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "PostsController.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\PostsController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\PostsController.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\PostsController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\PostsController.cs",
-              "ViewState": "AQIAABMAAAAAAAAAAAA1wD4AAABQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T07:54:24.961Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "ModerController.cs",
               "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\ModerController.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Controllers\\ModerController.cs",
               "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\ModerController.cs",
               "RelativeToolTip": "WebApplication1\\Controllers\\ModerController.cs",
-              "ViewState": "AQIAADAAAAAAAAAAAAAUwFsAAABFAAAA",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAQwBsAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T07:54:23.126Z",
+              "WhenOpened": "2025-03-26T17:09:03.973Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Moder\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebApplication1\\Views\\Moder\\Index.cshtml",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Moder\\Index.cshtml",
+              "RelativeToolTip": "WebApplication1\\Views\\Moder\\Index.cshtml",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAAACIAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-26T17:09:01.369Z",
               "EditorCaption": ""
             }
           ]

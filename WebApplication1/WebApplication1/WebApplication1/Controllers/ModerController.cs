@@ -7,6 +7,7 @@ using WebApplication1;
 using WebApplication1.DbModels;
 using WebApplication1.Models;
 using WebApplication1.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [Authorize(Roles = "Moder,Admin")]
 public class ModerController : Controller
@@ -23,15 +24,25 @@ public class ModerController : Controller
     {
         return View();
     }
-    public async Task<IActionResult> TemporaryBan(int userId,int banTime)
+    public async Task<IActionResult> TemporaryBan(int userId,string? time)
     {
-        User user = _context.Users.First(user => user.Id == userId);
-        user.BanTime = DateTime.Now.AddDays(banTime);
-        user.Warnings += 1;
-        _context.Update(user);
-        await _context.SaveChangesAsync();
-        _emailService.SendEmail(user.Email, "Тимчасовий бан на платформі SoulsBorneBlogs", "Дорогий користувач вам було надано тимчасове обмеження на додаванян реакцій до публікацій користувачів до: "+user.BanTime);
-        return Json(new { success = true, message = "Пользователь успешно забанен!" });
+        if (time == null || time == "")
+        {
+            return Json(new { success = true, message = "Час не вказано" });
+        }
+        int banTime = 0;
+        if (int.TryParse(time, out banTime))
+        {
+            User user = _context.Users.First(user => user.Id == userId);
+            user.BanTime = DateTime.Now.AddDays(banTime);
+            user.Warnings += 1;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            _emailService.SendEmail(user.Email, "Тимчасовий бан на платформі SoulsBorneBlogs", "Дорогий користувач вам було надано тимчасове обмеження на додаванян реакцій до публікацій користувачів до: " + user.BanTime);
+            return Json(new { success = true, message = "Пользователь успешно забанен!" });
+        }
+        return Json(new { success = true, message = "Час вказано не вірно" });
+
     }
     public async Task<IActionResult> DeleteBan(int userId)
     {

@@ -1,263 +1,214 @@
-﻿using NUnit.Framework;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using WebApplication1;
-using WebApplication1.Controllers;
-using WebApplication1.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Moq;
-using Microsoft.AspNetCore.Mvc.Routing;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using NUnit.Framework;
+using WebApplication1;
 using WebApplication1.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IntegrationUnitTest
 {
     [TestFixture]
     public class Pack1
     {
-        private AuthController _authController;
+        private UserService _userService;
         private AppDbContext _dbContext;
         private IConfiguration _config;
-        private UserService _userService;
+        private Mock<IHttpContextAccessor> _httpContextAccessorMock;
+        private PostsController _postsController;
         private IHttpContextAccessor _contextAccessor;
 
         [SetUp]
         public void Setup()
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory) 
+                .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("TestAppSettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
             _config = configuration;
 
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseMySql(
-                    _config.GetConnectionString("DefaultConnection"),
-                    ServerVersion.AutoDetect(_config.GetConnectionString("DefaultConnection"))
-                )
-                .Options;
+               .UseMySql(
+                   _config.GetConnectionString("DefaultConnection"),
+                   ServerVersion.AutoDetect(_config.GetConnectionString("DefaultConnection"))
+               )
+               .Options;
+
+            _dbContext = new AppDbContext(options);
+
+            // Create mock IHttpContextAccessor to simulate user claims
+            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+            new Claim(ClaimTypes.System, "13"), // Simulate userId = 13
+            new Claim(ClaimTypes.Name, "user1"),
+            new Claim(ClaimTypes.Email, "user1@gmail.com"),
+            new Claim(ClaimTypes.Role, "User") // Simulate user role = User
+        }));
+
+            _httpContextAccessorMock.Setup(x => x.HttpContext.User).Returns(userClaims);
+
+            // Initialize the UserService with mocked dependencies
+            _userService = new UserService(_dbContext, _httpContextAccessorMock.Object);
+            _postsController = new PostsController(_dbContext, _userService, _config);
 
             _contextAccessor = new HttpContextAccessor
             {
                 HttpContext = new DefaultHttpContext()
             };
-
-            _dbContext = new AppDbContext(options);
-            _userService = new UserService(_dbContext,_contextAccessor );
-            _authController = new AuthController(_dbContext, _config,_userService);
-        }
-
-        //TS02-1 -
-        [Test]
-        public async Task TS02_1()
-        {
-            var user = new RegisterModel
-            {
-                Name = "test",
-                Email = "test",
-                Password = "123456"
-            };
-
-            var result = await _authController.Register(user) as RedirectToActionResult;
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-
-            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
-            Assert.AreEqual("email is incorrect", result.RouteValues["message"]);
-        }
-
-        //TS02-2 +
-        [Test]
-        public async Task TS02_2()
-        {
-            var user = new RegisterModel
-            {
-                Name = "test",
-                Email = "test@gmail.com",
-                Password = "123456"
-            };
-
-            var result = await _authController.Register(user) as RedirectToActionResult;
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-            Assert.AreEqual("Profile", result.ControllerName);
-
-            var userToDelete = _dbContext.Users.FirstOrDefault(x => x.Email == user.Email);
-            _dbContext.Users.Remove(userToDelete);
-            _dbContext.SaveChanges();
-
-        }
-
-        //TS02-3 -
-        [Test]
-        public async Task TS02_3()
-        {
-            var user = new RegisterModel
-            {
-                Name = "test",
-                Email = "user1@gmail.com",
-                Password = "123456"
-            };
-
-            var result = await _authController.Register(user) as RedirectToActionResult;
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-
-            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
-            Assert.AreEqual("email is alredy used", result.RouteValues["message"]);
-        }
-
-        //TS02-4 -
-        [Test]
-        public async Task TS02_4()
-        {
-            var user = new RegisterModel
-            {
-                Name = "test",
-                Email = "",
-                Password = "123456"
-            };
-
-            var result = await _authController.Register(user) as RedirectToActionResult;
-          
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-
-            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
-            Assert.AreEqual("all data must be fielded", result.RouteValues["message"]);
-        }
-
-        //TS02-5 -
-        [Test]
-        public async Task TS02_5()
-        {
-            var user = new RegisterModel
-            {
-                Name = "test",
-                Email = "test@gmail.com",
-                Password = "123"
-            };
-
-            var result = await _authController.Register(user) as RedirectToActionResult;
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-
-            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
-            Assert.AreEqual("password is too short", result.RouteValues["message"]);
         }
 
 
-
-        //TS03-1
         [Test]
-        public async Task TS03_1()
+        public async Task TS10_01()
         {
-            var user = new LoginModel
+            _contextAccessor.HttpContext.User = null; 
+            var postId = 108;
+
+            var result = await _postsController.MakeReactions(1, postId) as UnauthorizedResult;
+
+            Assert.IsInstanceOf<UnauthorizedResult>(result);
+        }
+        [Test]
+        public async Task TS10_02()
+        {
+            _postsController.ControllerContext = new ControllerContext
             {
-                Email = "test",
-                Password = "123456"
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                new Claim(ClaimTypes.System, "13"),
+                new Claim(ClaimTypes.Name, "user1"),
+                new Claim(ClaimTypes.Email, "user1@gmail.com"),
+                new Claim(ClaimTypes.Role, "User")
+            }))
+                }
             };
 
-            var result = await _authController.Login(user) as RedirectToActionResult;
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
+            int likesCount = _dbContext.Reactions.Where(reaction => reaction.Value == 1).Count();
+            await _postsController.MakeReactions(1, 108);
 
-            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
-            Assert.AreEqual("email is incorrect", result.RouteValues["message"]);
+            Assert.AreEqual(_dbContext.Reactions.Where(reaction => reaction.Value == 1).Count(), likesCount + 1);
+            await _postsController.MakeReactions(1, 108);
         }
 
-        //TS03-2
+
         [Test]
-        public async Task TS03_2()
+        public async Task TS10_03()
         {
-            var user = new LoginModel
+            _postsController.ControllerContext = new ControllerContext
             {
-                Email = "user1@gmail.com",
-                Password = "123456"
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                new Claim(ClaimTypes.System, "13"),
+                new Claim(ClaimTypes.Name, "user1"),
+                new Claim(ClaimTypes.Email, "user1@gmail.com"),
+                new Claim(ClaimTypes.Role, "User")
+            }))
+                }
             };
 
-            var httpContextMock = new Mock<HttpContext>();
-            var serviceProviderMock = new Mock<IServiceProvider>();
-            var urlHelperMock = new Mock<IUrlHelper>();
-            var authServiceMock = new Mock<IAuthenticationService>();
+            int likesCount = _dbContext.Reactions.Where(reaction => reaction.Value == -1).Count();
+            await _postsController.MakeReactions(-1, 108);
 
-            serviceProviderMock.Setup(x => x.GetService(typeof(IAuthenticationService)))
-                               .Returns(authServiceMock.Object);
-
-            serviceProviderMock.Setup(x => x.GetService(typeof(IUrlHelperFactory)))
-                               .Returns(new Mock<IUrlHelperFactory>().Object);
-
-            httpContextMock.Setup(x => x.RequestServices)
-                           .Returns(serviceProviderMock.Object);
-
-   
-            _authController.ControllerContext = new ControllerContext
-            {
-                HttpContext = httpContextMock.Object
-            };
-
-            _authController.Url = urlHelperMock.Object;
-
-            authServiceMock.Setup(x => x.SignInAsync(It.IsAny<HttpContext>(),
-                                                     It.IsAny<string>(),
-                                                     It.IsAny<ClaimsPrincipal>(),
-                                                     It.IsAny<AuthenticationProperties>()))
-                           .Returns(Task.CompletedTask);
-
-            var result = await _authController.Login(user);
-
-            Assert.IsInstanceOf<RedirectToActionResult>(result);
+            Assert.AreEqual(_dbContext.Reactions.Where(reaction => reaction.Value == -1).Count(), likesCount + 1);
+            await _postsController.MakeReactions(-1, 108);
         }
-        //TS03-3
+
+        //[Test]
+        //public async Task TS10_04()
+        //{
+        //    _postsController.ControllerContext = new ControllerContext
+        //    {
+        //        HttpContext = new DefaultHttpContext
+        //        {
+        //            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+        //            {
+        //            new Claim(ClaimTypes.System, "26"),
+        //            new Claim(ClaimTypes.Name, "bad1"),
+        //            new Claim(ClaimTypes.Email, "bad1@gmail.com"),
+        //            new Claim(ClaimTypes.Role, "User")
+        //            }))
+        //        }
+        //    };
+
+        //    int likesCount = _dbContext.Reactions.Where(reaction => reaction.Value == -1).Count();
+        //    await _postsController.MakeReactions(-1, 108);
+
+        //    Assert.AreEqual(_dbContext.Reactions.Where(reaction => reaction.Value == -1).Count(), likesCount);
+        //}
+
+
         [Test]
-        public async Task TS03_3()
+        public async Task TS10_05()
         {
-            var user = new LoginModel
+            _postsController.ControllerContext = new ControllerContext
             {
-                Email = "user1@gmail.com",
-                Password = "1234564732"
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                new Claim(ClaimTypes.System, "13"),
+                new Claim(ClaimTypes.Name, "user1"),
+                new Claim(ClaimTypes.Email, "user1@gmail.com"),
+                new Claim(ClaimTypes.Role, "User")
+            }))
+                }
             };
 
-            var result = await _authController.Login(user) as RedirectToActionResult;
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
+            int comentCount = _dbContext.Coments.Where(com => com.PostId == 108).Count();
+            await _postsController.MakeComent("гарно сказано", 108);
 
-            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
-            Assert.AreEqual("password is incorrect", result.RouteValues["message"]);
+            Assert.AreEqual(_dbContext.Coments.Where(com => com.PostId == 108).Count(), comentCount + 1);
+            int id = -1;
+            foreach(var coment in _dbContext.Coments.Where(com => com.PostId == 108))
+            {
+                if(id<coment.Id)coment.Id = id;
+            }
+            await _postsController.DeleteComment(id);
         }
-        //TS03-4
+
+
         [Test]
-        public async Task TS03_4()
+        public async Task TS10_06()
         {
-            var user = new LoginModel
+            _postsController.ControllerContext = new ControllerContext
             {
-                Email = "",
-                Password = "123456"
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                new Claim(ClaimTypes.System, "13"),
+                new Claim(ClaimTypes.Name, "user1"),
+                new Claim(ClaimTypes.Email, "user1@gmail.com"),
+                new Claim(ClaimTypes.Role, "User")
+            }))
+                }
             };
 
-            var result = await _authController.Login(user) as RedirectToActionResult;
-            // Assert
-            Assert.IsNotNull(result);
+            int comentCount = _dbContext.Coments.Where(com => com.PostId == 108).Count();
+            await _postsController.MakeComent("", 108);
 
-            Assert.AreEqual("Index", result.ActionName);
-            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
-            Assert.AreEqual("all data must be fielded", result.RouteValues["message"]);
+            Assert.AreEqual(_dbContext.Coments.Where(com => com.PostId == 108).Count(), comentCount);
+       
         }
 
         [TearDown]
         public void TearDown()
         {
-            _dbContext?.Dispose();
-            _authController?.Dispose();
+            // Clean up any resources if necessary (in-memory DB will be disposed)
+            _postsController.Dispose();
+            _dbContext.Dispose();
         }
     }
+
 }

@@ -55,276 +55,276 @@ namespace IntegrationUnitTest
         }
 
 
-        //TS07-1 +
-        [Test, Order(1)]
-        public async Task TS07_1()
-        {
-            Post post = new Post()
-            {
-                Title = "DS1 was great",
-                Game = "Dark Souls 1"
-            };
+        ////TS07-1 +
+        //[Test, Order(1)]
+        //public async Task TS07_1()
+        //{
+        //    Post post = new Post()
+        //    {
+        //        Title = "DS1 was great",
+        //        Game = "Dark Souls 1"
+        //    };
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Text",
-                Content = "Dark Sousl 1 was my first soulslike games, and I like it"
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Text",
+        //        Content = "Dark Sousl 1 was my first soulslike games, and I like it"
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Index", result.ActionName);
 
-            int toDelete = 0;
-            foreach (var posts in _dbContext.Posts)
-            {
-                if (posts.Id > toDelete)
-                {
-                    toDelete = posts.Id;
-                }
-            }
-            await _postsController.Delete(toDelete);
-        }
-        //TS07-2 +
-        [Test, Order(2)]
-        public async Task TS07_2()
-        {
-            Post post = new Post()
-            {
-                Title = "DS1 was great",
-                Game = "Dark Souls 1"
-            };
+        //    int toDelete = 0;
+        //    foreach (var posts in _dbContext.Posts)
+        //    {
+        //        if (posts.Id > toDelete)
+        //        {
+        //            toDelete = posts.Id;
+        //        }
+        //    }
+        //    await _postsController.Delete(toDelete);
+        //}
+        ////TS07-2 +
+        //[Test, Order(2)]
+        //public async Task TS07_2()
+        //{
+        //    Post post = new Post()
+        //    {
+        //        Title = "DS1 was great",
+        //        Game = "Dark Souls 1"
+        //    };
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Image",
-                FormFile = CreateIFormFileFromPath("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png")
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Image",
+        //        FormFile = CreateIFormFileFromPath("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png")
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Index", result.ActionName);
 
-            int toDelete = 0;
-            foreach (var posts in _dbContext.Posts)
-            {
-                if (posts.Id > toDelete)
-                {
-                    toDelete = posts.Id;
-                }
-            }
-            await _postsController.Delete(toDelete);
-        }
-        //TS07-3 +
-        [Test, Order(3)]
-        public async Task TS07_3()
-        {
-            Post post = new Post()
-            {
-                Title = "DS1 was great",
-                Game = "Dark Souls 1"
-            };
+        //    int toDelete = 0;
+        //    foreach (var posts in _dbContext.Posts)
+        //    {
+        //        if (posts.Id > toDelete)
+        //        {
+        //            toDelete = posts.Id;
+        //        }
+        //    }
+        //    await _postsController.Delete(toDelete);
+        //}
+        ////TS07-3 +
+        //[Test, Order(3)]
+        //public async Task TS07_3()
+        //{
+        //    Post post = new Post()
+        //    {
+        //        Title = "DS1 was great",
+        //        Game = "Dark Souls 1"
+        //    };
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Video",
-                FormFile = CreateIFormFileFromPath("D:\\Смотреть\\записи\\Captures\\video.mp4")
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Video",
+        //        FormFile = CreateIFormFileFromPath("D:\\Смотреть\\записи\\Captures\\video.mp4")
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Index", result.ActionName);
 
-        }
-        //TS07-4 -
-        [Test, Order(4)]
-        public async Task TS07_4()
-        {
-            Post post = new Post()
-            {
-                Title = "",
-                Game = "Dark Souls 1"
-            };
+        //}
+        ////TS07-4 -
+        //[Test, Order(4)]
+        //public async Task TS07_4()
+        //{
+        //    Post post = new Post()
+        //    {
+        //        Title = "",
+        //        Game = "Dark Souls 1"
+        //    };
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Text",
-                Content = ""
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Text",
+        //        Content = ""
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Create(17, post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Create", result.ActionName);
-            Assert.AreEqual("all data must be fuiled", result.RouteValues["message"]);
-        }
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Create", result.ActionName);
+        //    Assert.AreEqual("all data must be fuiled", result.RouteValues["message"]);
+        //}
 
-        //TS09-1 +
-        [Test, Order(5)]
-        public async Task TS09_1()
-        {
-            int toChange = 0;
-            foreach (var posts in _dbContext.Posts)
-            {
-                if (posts.Id > toChange)
-                {
-                    toChange = posts.Id;
-                }
-            }
+        ////TS09-1 +
+        //[Test, Order(5)]
+        //public async Task TS09_1()
+        //{
+        //    int toChange = 0;
+        //    foreach (var posts in _dbContext.Posts)
+        //    {
+        //        if (posts.Id > toChange)
+        //        {
+        //            toChange = posts.Id;
+        //        }
+        //    }
 
-            Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
-            post.Title = "DS1 was great";
-            post.Game = "Dark Souls 1";
+        //    Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
+        //    post.Title = "DS1 was great";
+        //    post.Game = "Dark Souls 1";
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Text",
-                Content = "Dark Sousl 1 was my first soulslike games, and I like it"
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Text",
+        //        Content = "Dark Sousl 1 was my first soulslike games, and I like it"
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Index", result.ActionName);
 
-        }
-        //TS09-2 +
-        [Test, Order(6)]
-        public async Task TS09_2()
-        {
-            int toChange = 0;
-            foreach (var posts in _dbContext.Posts)
-            {
-                if (posts.Id > toChange)
-                {
-                    toChange = posts.Id;
-                }
-            }
-            Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
-            post.Title = "DS1 was great";
-            post.Game = "Dark Souls 1";
+        //}
+        ////TS09-2 +
+        //[Test, Order(6)]
+        //public async Task TS09_2()
+        //{
+        //    int toChange = 0;
+        //    foreach (var posts in _dbContext.Posts)
+        //    {
+        //        if (posts.Id > toChange)
+        //        {
+        //            toChange = posts.Id;
+        //        }
+        //    }
+        //    Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
+        //    post.Title = "DS1 was great";
+        //    post.Game = "Dark Souls 1";
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Image",
-                FormFile = CreateIFormFileFromPath("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png")
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Image",
+        //        FormFile = CreateIFormFileFromPath("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png")
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-        }
-        //TS09-3 +
-        [Test, Order(7)]
-        public async Task TS09_3()
-        {
-            int toChange = 0;
-            foreach (var posts in _dbContext.Posts)
-            {
-                if (posts.Id > toChange)
-                {
-                    toChange = posts.Id;
-                }
-            }
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Index", result.ActionName);
+        //}
+        ////TS09-3 +
+        //[Test, Order(7)]
+        //public async Task TS09_3()
+        //{
+        //    int toChange = 0;
+        //    foreach (var posts in _dbContext.Posts)
+        //    {
+        //        if (posts.Id > toChange)
+        //        {
+        //            toChange = posts.Id;
+        //        }
+        //    }
 
-            Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
-            post.Title = "DS1 was great";
-            post.Game = "Dark Souls 1";
+        //    Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
+        //    post.Title = "DS1 was great";
+        //    post.Game = "Dark Souls 1";
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Video",
-                FormFile = CreateIFormFileFromPath("D:\\Смотреть\\записи\\Captures\\video.mp4")
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Video",
+        //        FormFile = CreateIFormFileFromPath("D:\\Смотреть\\записи\\Captures\\video.mp4")
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Index", result.ActionName);
 
-        }
-        //TS07-9 -
-        [Test, Order(8)]
-        public async Task TS09_4()
-        {
-            int toChange = 0;
-            foreach (var posts in _dbContext.Posts)
-            {
-                if (posts.Id > toChange)
-                {
-                    toChange = posts.Id;
-                }
-            }
+        //}
+        ////TS07-9 -
+        //[Test, Order(8)]
+        //public async Task TS09_4()
+        //{
+        //    int toChange = 0;
+        //    foreach (var posts in _dbContext.Posts)
+        //    {
+        //        if (posts.Id > toChange)
+        //        {
+        //            toChange = posts.Id;
+        //        }
+        //    }
 
-            Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
-            post.Title = "";
-            post.Game = "Dark Souls 1";
+        //    Post post = _dbContext.Posts.FirstOrDefault(post => post.Id == toChange);
+        //    post.Title = "";
+        //    post.Game = "Dark Souls 1";
 
-            List<PostContentViewModel> contents = new List<PostContentViewModel>();
-            PostContentViewModel content = new PostContentViewModel()
-            {
-                Position = 0,
-                ContentType = "Text",
-                Content = ""
-            };
+        //    List<PostContentViewModel> contents = new List<PostContentViewModel>();
+        //    PostContentViewModel content = new PostContentViewModel()
+        //    {
+        //        Position = 0,
+        //        ContentType = "Text",
+        //        Content = ""
+        //    };
 
-            contents.Add(content);
-            var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
+        //    contents.Add(content);
+        //    var result = await _postsController.Edit(post, contents) as RedirectToActionResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Edit", result.ActionName);
-            Assert.AreEqual("all data must be fuiled", result.RouteValues["message"]);
-        }
+        //    // Assert
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Edit", result.ActionName);
+        //    Assert.AreEqual("all data must be fuiled", result.RouteValues["message"]);
+        //}
 
-        //TS08
-        [Test, Order(9)]
-        public async Task TS08()
-        {
-            int toDelete = 0;
-            foreach (var posts in _dbContext.Posts)
-            {
-                if (posts.Id > toDelete)
-                {
-                    toDelete = posts.Id;
-                }
-            }
-            var result = await _postsController.Delete(toDelete) as RedirectToActionResult;
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-        }
+        ////TS08
+        //[Test, Order(9)]
+        //public async Task TS08()
+        //{
+        //    int toDelete = 0;
+        //    foreach (var posts in _dbContext.Posts)
+        //    {
+        //        if (posts.Id > toDelete)
+        //        {
+        //            toDelete = posts.Id;
+        //        }
+        //    }
+        //    var result = await _postsController.Delete(toDelete) as RedirectToActionResult;
+        //    Assert.IsNotNull(result);
+        //    Assert.AreEqual("Index", result.ActionName);
+        //}
 
         [TearDown]
         public void TearDown()

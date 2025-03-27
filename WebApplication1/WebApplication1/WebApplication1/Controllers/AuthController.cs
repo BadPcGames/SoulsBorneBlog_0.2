@@ -128,6 +128,12 @@ namespace WebApplication1.Controllers
             await HttpContext.SignInAsync(claimsPrincipal);
         }
 
+        public async Task<IActionResult> SingOut()
+        {
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
 
         [Authorize]
         public async Task<IActionResult> EditProfileData(string? Name, string? Email, string? Password)
@@ -155,11 +161,7 @@ namespace WebApplication1.Controllers
         }
 
 
-        public async Task<IActionResult> SingOut()
-        {
-            HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
-        }
+    
 
         public int? GetUserId()
         {
@@ -199,6 +201,12 @@ namespace WebApplication1.Controllers
                 BanTime = user.BanTime,
                 Warnings= user.Warnings
             }).ToList();
+
+
+            if (usersViewModel.Count()==0)
+            {
+                return Json(new { success = true, message = "Не знайдено доступних користувачів" });
+            }
 
             return Json(usersViewModel);
         }

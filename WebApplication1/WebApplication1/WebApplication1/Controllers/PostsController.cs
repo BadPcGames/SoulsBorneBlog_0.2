@@ -43,6 +43,12 @@ public class PostsController : Controller
             Contents = _context.Post_Contents.Where(postContents => postContents.PostId == post.Id).ToList(),
             Verify = post.Verify
         }).ToList();
+
+        if (postViewModels.Count() == 0)
+        {
+            return Json(new { success = true, message = "ѕубл≥кац≥й не знайдено" });
+        }
+
         return Json(postViewModels);
     }
 
@@ -303,7 +309,7 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> MakeReactions(int value, int postId)
     {
-        if (HttpContext.User == null)
+        if (HttpContext == null)
         {
             return Unauthorized(); 
         }
@@ -348,24 +354,7 @@ public class PostsController : Controller
         return Json(new { success = true, message = "" });
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetComents(int postId)
-    {
-        var coments = await _context.Coments.Where(coment=>coment.PostId==postId).ToListAsync();
-        var users = await _context.Users.ToListAsync();
-        List<ComentViewModel> comentsToShow = coments.Select(coment => new ComentViewModel
-        {
-           Id = coment.Id,
-           Text= coment.Text,
-           PostId= coment.PostId,
-           CanChange=coment.CreateAt.AddMinutes(15)>DateTime.Now,
-           AuthorId= coment.AuthorId,
-           AuthorName=users.FirstOrDefault(user=>user.Id==coment.AuthorId).Name,
-           AuthorAvatar = users.FirstOrDefault(user => user.Id == coment.AuthorId).Avatar
-        }).ToList();
-        return Json(comentsToShow);
-    }
-
+ 
     [HttpPost]
     public async Task<IActionResult> MakeComent(string text,int postId)
     {
@@ -396,6 +385,24 @@ public class PostsController : Controller
         await _context.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetComents(int postId)
+    {
+        var coments = await _context.Coments.Where(coment => coment.PostId == postId).ToListAsync();
+        var users = await _context.Users.ToListAsync();
+        List<ComentViewModel> comentsToShow = coments.Select(coment => new ComentViewModel
+        {
+            Id = coment.Id,
+            Text = coment.Text,
+            PostId = coment.PostId,
+            CanChange = coment.CreateAt.AddMinutes(15) > DateTime.Now,
+            AuthorId = coment.AuthorId,
+            AuthorName = users.FirstOrDefault(user => user.Id == coment.AuthorId).Name,
+            AuthorAvatar = users.FirstOrDefault(user => user.Id == coment.AuthorId).Avatar
+        }).ToList();
+        return Json(comentsToShow);
     }
 
     //EditComment

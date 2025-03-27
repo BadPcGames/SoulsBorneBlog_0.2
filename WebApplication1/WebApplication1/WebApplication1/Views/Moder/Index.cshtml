@@ -25,13 +25,12 @@
     </style>
 </head>
 <body>
-    <h2>Список пользователей</h2>
+    <h2>Меню модерації</h2>
 
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Users
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+     <input type="button" id="showUsers" value="Список користувачів" />
+      <input type="button" id="showPosts" value="Список постів на верифікацію" />
+
+        <div id="users">
             <table border="1">
                 <thead>
                     <tr>
@@ -47,13 +46,9 @@
                 <tbody id="usersTableBody"></tbody>
             </table>
         </div>
-    </div>
 
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+        <div id="posts">
             <table border="1">
                 <thead>
                     <tr>
@@ -70,18 +65,36 @@
                 <tbody id="postsTableBody"></tbody>
             </table>
         </div>
-    </div>
 
 
     <script>
+
+       document.getElementById('showUsers').onclick = function() {
+            document.getElementById('users').hidden = false;
+            document.getElementById('posts').hidden = true;
+       }
+
+          document.getElementById('showPosts').onclick = function() {
+            document.getElementById('users').hidden = true;
+            document.getElementById('posts').hidden = false;
+       }
+
+
+
         function loadUsers() {
             $.ajax({
                 url: '@Url.Action("GetUsers", "Auth")',
                 method: 'GET',
-                success: function (users) {
+                success: function (response) {
+
+                    if (response.success && response.message) {
+                        alert(response.message);
+                        return;
+                    }
+
                     let tableBody = $('#usersTableBody');
                     tableBody.empty();
-                    users.forEach(user => {
+                    response.forEach(user => {
                         let row = `<tr>
                                     <td>${user.id}</td>
                                     <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
@@ -89,7 +102,7 @@
                                     <td>${user.warnings}</td>
                                     <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Не заблокирован'}</td>
                                     <td>
-                                        <input type="number" min="1" max="365" value="1" id="banDays-${user.id}" /> дней
+                                        <input type="text"  value="1" id="banDays-${user.id}" /> дней
                                         <button onclick="banUser(${user.id})">Забанить</button>
                                     </td>
                                     <td>
@@ -110,20 +123,26 @@
             $.ajax({
                 url: '@Url.Action("GetPostsToVerify", "Posts")',
                 method: 'GET',
-                success: function (posts) {
+                success: function (response) {
                     let tableBody = $('#postsTableBody');
                     tableBody.empty();
-                    posts.forEach( post=> {
+
+                    if (response.success && response.message) {
+                        alert(response.message); 
+                        return;
+                    }
+
+                    response.forEach(post => {
                         let row = `<tr>
-                                            <td>${post.id}</td>
-                                            <td><a class="nav-link text-dark" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
-                                            <td>${post.authorName}</td>
-                                            <td>${post.game}</td>
-                                            <td><a class="nav-link text-dark" href="/Posts/Index?id=${post.blogId}">${post.blogName}</td>
-                                            <td><button onclick="postApproval(${post.id})">Одобрено</button></td>
-                                            <td><input type="text" id="postProblem-${post.id}" /></td>
-                                            <td><button onclick="postNotApproval(${post.id})">Не одобрено</button></td>
-                                        </tr>`;
+                                        <td>${post.id}</td>
+                                        <td><a class="nav-link text-dark" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
+                                        <td>${post.authorName}</td>
+                                        <td>${post.game}</td>
+                                        <td><a class="nav-link text-dark" href="/Posts/Index?id=${post.blogId}">${post.blogName}</a></td>
+                                        <td><button onclick="postApproval(${post.id})">Одобрено</button></td>
+                                        <td><input type="text" id="postProblem-${post.id}" /></td>
+                                        <td><button onclick="postNotApproval(${post.id})">Не одобрено</button></td>
+                                    </tr>`;
                         tableBody.append(row);
                     });
                 }
@@ -138,7 +157,7 @@
                 method: 'POST',
                 data: 
                     { userId: userId, 
-                    banTime: days },
+                    time: days },
                 success: function (response) {
                     alert(response.message);
                     if (response.success) {
@@ -237,6 +256,7 @@
         $(document).ready(function () {
             loadUsers();
             loadPosts();
+            document.getElementById('posts').hidden = true;
         });
     </script>
 </body>
