@@ -190,7 +190,7 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> GetUsers()
         {
-            List<User> users = _context.Users.ToList();
+            List<User> users = _context.Users.Where(user=>user.Role=="User").ToList();
 
             List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
             {
@@ -207,6 +207,28 @@ namespace WebApplication1.Controllers
             {
                 return Json(new { success = true, message = "Не знайдено доступних користувачів" });
             }
+
+            return Json(usersViewModel);
+        }
+
+        public async Task<IActionResult> GetUsersForBunDelete()
+        {
+            List<User> users = _context.Users.Where(user => user.BanTime!= null).ToList();
+
+            if (users.Count() == 0)
+            {
+                return Json(new { success = true, message = "Користувачів з обмеженями немає" });
+            }
+
+            List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Avatar = user.Avatar,
+                BanTime = user.BanTime,
+                Warnings = user.Warnings
+            }).ToList();
 
             return Json(usersViewModel);
         }

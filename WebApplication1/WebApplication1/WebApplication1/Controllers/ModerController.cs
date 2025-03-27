@@ -33,13 +33,17 @@ public class ModerController : Controller
         int banTime = 0;
         if (int.TryParse(time, out banTime))
         {
+            if (banTime == 0)
+            {
+                return Json(new { success = true, message = "Час не вказано" });
+            }
             User user = _context.Users.First(user => user.Id == userId);
             user.BanTime = DateTime.Now.AddDays(banTime);
             user.Warnings += 1;
             _context.Update(user);
             await _context.SaveChangesAsync();
             _emailService.SendEmail(user.Email, "Тимчасовий бан на платформі SoulsBorneBlogs", "Дорогий користувач вам було надано тимчасове обмеження на додаванян реакцій до публікацій користувачів до: " + user.BanTime);
-            return Json(new { success = true, message = "Пользователь успешно забанен!" });
+            return Json(new { success = true, message = "Користувач успішно забанин!" });
         }
         return Json(new { success = true, message = "Час вказано не вірно" });
 
@@ -55,9 +59,9 @@ public class ModerController : Controller
         return Json(new { success = true, message = "Пользователь успешно разбанен!" });
     }
 
-    public async Task<IActionResult> AbsoluteBanUser(int userId,string reason)
+    public async Task<IActionResult> AbsoluteBanUser(int userId,string? reason)
     {
-        if (reason == null)
+        if (reason == null||reason=="")
         {
             return Json(new { success = true, message = "Причина не вказана" });
         }
@@ -138,6 +142,6 @@ public class ModerController : Controller
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
-        return Json(new { success = true, message = "Пользователь успешно удалён с платформы!" });
+        return Json(new { success = true, message = "Куристувач був видалений з платворми!" });
     }
 }

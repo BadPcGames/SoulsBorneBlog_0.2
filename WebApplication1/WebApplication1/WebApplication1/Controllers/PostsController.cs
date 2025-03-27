@@ -68,7 +68,7 @@ public class PostsController : Controller
 
     public async Task<IActionResult> PostNotApproval(int postId, string? reason)
     {
-        if (reason==null)
+        if (reason==null||reason=="")
         {
             return Json(new { success = true, message = "Причина не написана" });
         }

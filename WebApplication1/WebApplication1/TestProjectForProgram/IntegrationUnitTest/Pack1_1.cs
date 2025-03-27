@@ -21,7 +21,8 @@ namespace IntegrationUnitTest
         private IConfiguration _config;
         private Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private PostsController _postsController;
-        private IHttpContextAccessor _contextAccessor;
+        private ModerController _moderController;
+        private EmailService _emailService;
 
         [SetUp]
         public void Setup()
@@ -57,11 +58,8 @@ namespace IntegrationUnitTest
             // Initialize the UserService with mocked dependencies
             _userService = new UserService(_dbContext, _httpContextAccessorMock.Object);
             _postsController = new PostsController(_dbContext, _userService, _config);
-
-            _contextAccessor = new HttpContextAccessor
-            {
-                HttpContext = new DefaultHttpContext()
-            };
+            _emailService = new EmailService();
+            _moderController = new ModerController(_dbContext, _emailService);
         }
 
 
@@ -84,10 +82,13 @@ namespace IntegrationUnitTest
                 }
             };
 
+            await _moderController.TemporaryBan(26, "1");
+
             int likesCount = _dbContext.Reactions.Where(reaction => reaction.Value == -1).Count();
             await _postsController.MakeReactions(-1, 108);
 
             Assert.AreEqual(_dbContext.Reactions.Where(reaction => reaction.Value == -1).Count(), likesCount);
+            await _moderController.DeleteBan(26);
         }
 
 
@@ -96,7 +97,7 @@ namespace IntegrationUnitTest
         [TearDown]
         public void TearDown()
         {
-            // Clean up any resources if necessary (in-memory DB will be disposed)
+            _moderController?.Dispose();
             _postsController.Dispose();
             _dbContext.Dispose();
         }
