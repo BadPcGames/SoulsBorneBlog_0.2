@@ -167,9 +167,17 @@
               "target": "Package",
               "version": "[8.3.0, )"
             },
+            "NPOI": {
+              "target": "Package",
+              "version": "[2.7.3, )"
+            },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2025.1.7, )"
             }
           },
           "imports": [

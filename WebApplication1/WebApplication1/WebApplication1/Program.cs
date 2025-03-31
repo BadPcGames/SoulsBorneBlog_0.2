@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApplication1;
 using WebApplication1.Services;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,8 @@ builder.WebHost.ConfigureKestrel(options =>
     options.Limits.MaxRequestBodySize = 64 * 1024 * 1024; // 64 MB
 });
 
+
+QuestPDF.Settings.License = LicenseType.Community;
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

@@ -32,6 +32,7 @@ namespace WebApplication1.Models
         public int LikeCount { get; set;}
         public int NotLikeCount { get; set;}
         public  int ComentsCount { get; set; }
+        public bool Verify {  get; set; }
     }
 
 }

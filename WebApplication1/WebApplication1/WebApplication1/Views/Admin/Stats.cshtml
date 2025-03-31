@@ -25,22 +25,48 @@
     </style>
 </head>
 <body>
-        <a asp-action="Index" asp-controller="Admin">Назад</a>
+    <a asp-action="Index" asp-controller="Admin">Назад</a>
+    <br>
+    <input type="text" id="from" value="01.01.2024">
+    <input type="text" id="to" value="31.03.2025">
 
-        <input type="text"id="from">
-        <input type="text" id="to">
+    <input type="button" id="showStats" value="stat">
 
+    <form id="pdfForm" method="post" asp-action="GetFileStats" asp-controller="Admin">
+        <input type="hidden" name="TimeStart" id="pdfFrom">
+        <input type="hidden" name="TimeEnd" id="pdfTo">
+        <input type="hidden" name="type" value="pdf">
+        <input type="submit" id="statsPdf" value="pdf">
+    </form>
 
-    <input type="button" id="showStats"></input>
-        <div id="stats-container"></div>
+    <form id="excelForm" method="post" asp-action="GetFileStats" asp-controller="Admin">
+        <input type="hidden" name="TimeStart" id="excelFrom">
+        <input type="hidden" name="TimeEnd" id="excelTo">
+        <input type="hidden" name="type" value="ex">
+        <input type="submit" id="statsExcel" value="excel">
+    </form>
+
+    <div id="stats-container"></div>
 </body>
 
-
 <script>
-
     $(document).ready(function () {
         $('#showStats').click(function () {
             loadStats();
+        });
+
+        $('#statsPdf').click(function (event) {
+            event.preventDefault();
+            $('#pdfFrom').val($('#from').val());
+            $('#pdfTo').val($('#to').val());
+            $('#pdfForm').submit();
+        });
+
+        $('#statsExcel').click(function (event) {
+            event.preventDefault();
+            $('#excelFrom').val($('#from').val());
+            $('#excelTo').val($('#to').val());
+            $('#excelForm').submit();
         });
 
         function loadStats() {
@@ -101,7 +127,6 @@
             });
         }
     });
-
 </script>
 
 
