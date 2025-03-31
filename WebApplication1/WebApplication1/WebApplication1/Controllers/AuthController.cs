@@ -160,9 +160,6 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
-
-    
-
         public int? GetUserId()
         {
             return _userService.GetUserId();

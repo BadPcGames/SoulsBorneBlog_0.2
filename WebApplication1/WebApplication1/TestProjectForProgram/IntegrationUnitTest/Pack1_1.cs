@@ -43,25 +43,24 @@ namespace IntegrationUnitTest
 
             _dbContext = new AppDbContext(options);
 
-            // Create mock IHttpContextAccessor to simulate user claims
+      
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
-            new Claim(ClaimTypes.System, "26"), // Simulate userId = 13
+            new Claim(ClaimTypes.System, "26"), 
             new Claim(ClaimTypes.Name, "bad1"),
             new Claim(ClaimTypes.Email, "bad1@gmail.com"),
-            new Claim(ClaimTypes.Role, "User") // Simulate user role = User
+            new Claim(ClaimTypes.Role, "User") 
         }));
 
             _httpContextAccessorMock.Setup(x => x.HttpContext.User).Returns(userClaims);
 
-            // Initialize the UserService with mocked dependencies
+ 
             _userService = new UserService(_dbContext, _httpContextAccessorMock.Object);
             _postsController = new PostsController(_dbContext, _userService, _config);
             _emailService = new EmailService();
             _moderController = new ModerController(_dbContext, _emailService);
         }
-
 
 
 
@@ -90,8 +89,6 @@ namespace IntegrationUnitTest
             Assert.AreEqual(_dbContext.Reactions.Where(reaction => reaction.Value == -1).Count(), likesCount);
             await _moderController.DeleteBan(26);
         }
-
-
 
 
         [TearDown]

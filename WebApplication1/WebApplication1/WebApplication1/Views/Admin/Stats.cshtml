@@ -1,0 +1,107 @@
+﻿@using WebApplication1.DbModels
+@model IEnumerable<Blog>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+    <style>
+        #fileInput {
+            display: none;
+        }
+
+        #image {
+            cursor: pointer;
+            width: 200px; 
+            height: 200px; 
+            border: 2px solid #ccc; 
+            border-radius: 8px; 
+        }
+    </style>
+</head>
+<body>
+        <a asp-action="Index" asp-controller="Admin">Назад</a>
+
+        <input type="text"id="from">
+        <input type="text" id="to">
+
+
+    <input type="button" id="showStats"></input>
+        <div id="stats-container"></div>
+</body>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#showStats').click(function () {
+            loadStats();
+        });
+
+        function loadStats() {
+            let from = $('#from').val();
+            let to = $('#to').val();
+
+            $.ajax({
+                url: '/Admin/GetStats',
+                method: 'GET',
+                data: {
+                    TimeStart: from,
+                    TimeEnd: to
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.success && data.message) {
+                        alert(data.message);
+                        return;
+                    }
+
+                    $('#stats-container').empty();
+
+                    $('#stats-container').append(`<p>Name: ${data.name}</p>`);
+                    $('#stats-container').append(`<p>Post Count: ${data.postCount}</p>`);
+                    $('#stats-container').append(`<p>Verified Posts: ${data.verifyPostCount}</p>`);
+                    $('#stats-container').append(`<p>Not Verified Posts: ${data.notVerifyPostCount}</p>`);
+
+                    if (data.gameStats && data.gameStats.length) {
+                        let gameTable = `<table class='table table-bordered'><thead><tr><th>Game Name</th><th>Post Count</th></tr></thead><tbody>`;
+                        data.gameStats.forEach(game => {
+                            gameTable += `<tr><td>${game.name}</td><td>${game.postsCount}</td></tr>`;
+                        });
+                        gameTable += `</tbody></table>`;
+                        $('#stats-container').append(gameTable);
+                    }
+
+                    if (data.themesStats && data.themesStats.length) {
+                        let themeTable = `<table class='table table-bordered'><thead><tr><th>Theme Name</th><th>Post Count</th></tr></thead><tbody>`;
+                        data.themesStats.forEach(theme => {
+                            themeTable += `<tr><td>${theme.name}</td><td>${theme.postsCount}</td></tr>`;
+                        });
+                        themeTable += `</tbody></table>`;
+                        $('#stats-container').append(themeTable);
+                    }
+
+                    if (data.postShortStats && data.postShortStats.length) {
+                        let postTable = `<table class='table table-bordered'><thead><tr><th>ID</th><th>Name</th><th>Likes</th><th>Dislikes</th><th>Comments</th></tr></thead><tbody>`;
+                        data.postShortStats.forEach(post => {
+                            postTable += `<tr><td>${post.id}</td><td>${post.name}</td><td>${post.likeCount}</td><td>${post.notLikeCount}</td><td>${post.comentsCount}</td></tr>`;
+                        });
+                        postTable += `</tbody></table>`;
+                        $('#stats-container').append(postTable);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching data', error);
+                }
+            });
+        }
+    });
+
+</script>
+
+

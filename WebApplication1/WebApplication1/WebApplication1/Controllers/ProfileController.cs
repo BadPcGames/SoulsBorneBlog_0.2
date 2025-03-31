@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
         }
 
 
-        [Authorize]
+    
         public async Task<IActionResult> Index(int? id)
         {
             int currentUserId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.System).Value);
@@ -59,7 +59,6 @@ namespace WebApplication1.Controllers
         }
 
 
-        [Authorize]
         public async Task<IActionResult> Edit(string password)
         {
             var user = _context.Users.First(user => user.Id == int.Parse(HttpContext.User.FindFirst(ClaimTypes.System).Value));
@@ -70,7 +69,6 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangeAvatar(IFormFile? Avatar)
         {
