@@ -65,7 +65,7 @@
         <div class="d-flex justify-content-between align-items-center position-absolute start-0 end-0 p-3">
             <button class="btn btn-dark text-white" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-                Filters
+            Filters
             </button>
             <button class="btn btn-dark text-white" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
@@ -101,9 +101,9 @@
            
 
         <div class="offcanvas-body bg-dark bg-opacity-25">
-            <p>Try scrolling the rest of the page to see this option in action.</p>
-            <h1>Filter Posts</h1>
-            <h1>Theme</h1>
+            <h2>Name</h2>
+            <input id="nameOfPost" value="" />
+            <h2>Theme</h2>
             <select id="themeSelect" name="theme">
                 <option value="">Оберіть тему...</option>
             </select>
@@ -132,12 +132,107 @@
             <h5 id="offcanvasRightLabel">Offcanvas right</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
-            <p>Try scrolling the rest of the page to see this option in action.</p>
-        </div>
+        <input type="type" id="nameOfBlog" value="" />
+        <button id="findBlogButton" value="">Find</button>
+        <br>
+        <button id="loadOldButton" value="">Back</button>
+        <button id="loadNewButton" value="">Next</button>
+        <br>
+        <div id="blogContainer"></div>
     </div>
 
 </body>
+
+<script>
+    $(document).ready(function () {
+        let currentPage = 1;
+        const blogsPerPage = 2;
+        let blogNameForSearch = null;
+
+        function loadBlogs() {
+            $.ajax({
+                url: '/Blogs/GetBlogsForRecomendation',
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    currentPage: currentPage,
+                    blogsPerPage: blogsPerPage,
+                    blogName: blogNameForSearch
+                },
+                success: function (blogs) {
+                    const container = document.getElementById('blogContainer');
+                    const loadMoreButton = document.getElementById('loadNewButton');
+                    const loadOldButton = document.getElementById('loadOldButton');
+
+                    container.innerHTML = ''; 
+
+                    if (blogs.length === 0) {
+                        container.innerHTML = '<p>No blogs.</p>';
+                        loadMoreButton.disabled = true;
+                        loadOldButton.disabled = true;
+                        return;
+                    }
+                    if (blogs.length <= blogsPerPage){
+                        loadMoreButton.disabled = true;
+                    }
+                    else{
+                        blogs = blogs.slice(0, blogsPerPage);
+                        loadMoreButton.disabled=false;
+                    }
+
+
+                    let htmlContent = '';
+                    blogs.forEach(blog => {
+                        htmlContent += `
+                                <div class="content">
+                                    <h2 class="text-black text-center">
+                                        <a href="/Posts/Index/${blog.id}">${blog.name}</a>
+                                    </h2>
+                                    <br>
+                                    <p>Author: ${blog.authorName} | Theme: ${blog.theme}</p>
+                                </div>
+                                <br>
+                            `;
+                    });
+
+                    container.innerHTML = htmlContent; 
+                    loadOldButton.disabled = currentPage > 1 ? false : true;
+                },
+                error: function () {
+                    alert('Error loading posts.');
+                }
+            });
+        }
+
+        document.getElementById('loadNewButton').addEventListener('click', function () {
+            currentPage++;
+            loadBlogs();
+        });
+
+        document.getElementById('loadOldButton').addEventListener('click', function () {
+            if (currentPage > 1) {
+                currentPage--;
+                loadBlogs();
+            }
+        });
+
+        document.getElementById('findBlogButton').addEventListener('click', function () {
+            const blogName = $('#nameOfBlog').val()
+            
+            if (blogName == null||blogName==""){
+                blogNameForSearch = null;
+            }
+            else{
+                blogNameForSearch = blogName;
+            }
+            currentPage = 1;
+            loadBlogs();
+        });
+
+
+        loadBlogs();
+    });
+</script>
 
 <script>
     $.ajax({
@@ -177,31 +272,33 @@
         function loadPosts() {
             const filterGame = $('#gameSelect').val();
             const filterTheme = $('#themeSelect').val();
+            const filterName = $('#nameOfPost').val();
 
-            if (filterGame != "" & filterGame != null) {
+            const character = document.getElementById('character');
+
+            if (filterGame !== "") {
                 $.ajax({
-                    url: '@Url.Action("GetGame", "Game")',
+                    url: '/Game/GetGame',
                     method: 'GET',
                     dataType: 'json',
-                    data: {
-                        gameName: filterGame
-                    },
+                    data: { gameName: filterGame },
                     success: function (game) {
                         $('.parallelogram').css('background-color', game.color);
-                        const character = document.getElementById('character');
-                        character.src = `data:image/png;base64,${game.gameCharacter}`;
+                        if (game.gameCharacter) {
+                            character.src = `data:image/png;base64,${game.gameCharacter}`;
+                        } else {
+                            character.src = '/images/image-removebg-preview.png';
+                        }
                     },
                     error: function () {
-                        alert('Error loading posts.');
+                        alert('Ошибка загрузки изображения.');
                     }
                 });
-            }
-            else{
+            } else {
                 $('.parallelogram').css('background-color', 'lightgray');
                 character.src = '/images/image-removebg-preview.png';
             }
           
-
 
             $.ajax({
                 url: '@Url.Action("GetPosts", "Posts")',
@@ -211,7 +308,8 @@
                     currentPage: currentPage,
                     postsPerPage: postsPerPage,
                     filterGame: filterGame,
-                    filterTheme: filterTheme
+                    filterTheme: filterTheme,
+                    postName:filterName
                 },
                 success: function (posts) {
                     const container = document.getElementById('postsContainer');
@@ -283,6 +381,7 @@
         applyFilter();
     });
 </script>
+
 
 
 

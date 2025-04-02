@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using WebApplication1.Models;
 using WebApplication1.Services;
 
-[Authorize(Roles = "Admin")]
+
 public class GameController : Controller
 {
     private readonly AppDbContext _context;
@@ -15,19 +15,19 @@ public class GameController : Controller
     {
         _context = context;
     }
-
+    [Authorize(Roles = "Admin")]
     public IActionResult Index()
     {
         List<Game> games=_context.Games.ToList();
         return View(games);
     }
-  
+    [Authorize(Roles = "Admin")]
     public IActionResult Create(string? message)
     {
         ViewBag.Error = message;
         return View();
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(string GameName,string Description,IFormFile? GameCharacter,string Color)
@@ -48,7 +48,7 @@ public class GameController : Controller
         return RedirectToAction("Index");
     }
 
-
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int? id,string? message)
     {
         ViewBag.Error = message;
@@ -63,7 +63,7 @@ public class GameController : Controller
         }
         return View(game);
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id,string GameName, string Description, IFormFile? GameCharacter, string Color)
@@ -80,7 +80,6 @@ public class GameController : Controller
         existingGame.GameName = GameName;
         existingGame.Description = Description;
         existingGame.GameCharacter = GameCharacter != null ? MyConvert.ConvertFileToByteArray(GameCharacter):null ;
-        //if (GameCharacter!=null) existingGame.GameCharacter =  MyConvert.ConvertFileToByteArray(GameCharacter);
         existingGame.Color = Color;
         _context.Update(existingGame);
         await _context.SaveChangesAsync();
@@ -88,7 +87,7 @@ public class GameController : Controller
         return RedirectToAction("Index");
 
     }
-
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -122,19 +121,25 @@ public class GameController : Controller
         return RedirectToAction("Index");
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetGame(string gameName)
+
+    public async Task<IActionResult> GetGame(string? gameName)
     {
-        var game = _context.Games.First(game => game.GameName == gameName);
-        GameViewModel gameData=new GameViewModel()
+        var game = _context.Games.FirstOrDefault(game => game.GameName == gameName);
+        if (game == null)
         {
-            GameName=game.GameName,
-            GameCharacter=game.GameCharacter,
-            Description=game.Description,
-            Color=game.Color,
+            return NotFound();
+        }
+
+        var gameData = new GameViewModel()
+        {
+            GameName = game.GameName,
+            GameCharacter = game.GameCharacter,
+            Description = game.Description,
+            Color = game.Color,
         };
         return Json(gameData);
     }
+
 
     [HttpGet]
     public async Task<IActionResult> GetGames()

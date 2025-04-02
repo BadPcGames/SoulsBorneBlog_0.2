@@ -5,10 +5,6 @@ using WebApplication1.DbModels;
 using WebApplication1.Models;
 using System.Text;
 using WebApplication1.Services;
-using System.Security.Claims;
-using System.Reflection.Metadata;
-using WebApplication1.Controllers;
-using Microsoft.Extensions.Configuration;
 
 
 public class PostsController : Controller
@@ -59,7 +55,6 @@ public class PostsController : Controller
         _context.Update(post);
         _context.SaveChanges();
 
-
         User user = _context.Users.FirstOrDefault(user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId);
         _emailService.SendEmail(user.Email,"Публікація "+post.Title,"Була одобрена та опублікована");
 
@@ -94,8 +89,6 @@ public class PostsController : Controller
         var posts = await _context.Posts
                                   .Where(post => post.BlogId == id)
                                   .ToListAsync();
-        ViewBag.BlogId = id;
-
         if (_userService.GetUserId() != null)
         {
             ViewBag.CanChange= _userService.GetUserId() == _context.Blogs.First(blog => blog.Id == id).AuthorId;
@@ -117,6 +110,8 @@ public class PostsController : Controller
             BlogName=_context.Blogs.FirstOrDefault(blog=>blog.Id==post.BlogId)?.Name ?? "Unknown",
             Contents=_context.Post_Contents.Where(postsContents=>postsContents.PostId==post.Id).ToList()
         }).ToList();
+
+        ViewBag.BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == id).Name;
 
         return View(postsToShow);
     }
@@ -354,7 +349,6 @@ public class PostsController : Controller
         return Json(new { success = true, message = "" });
     }
 
- 
     [HttpPost]
     public async Task<IActionResult> MakeComent(string text,int postId)
     {
@@ -461,12 +455,17 @@ public class PostsController : Controller
         return Ok();
     }
 
-    public async Task<IActionResult> GetPosts(int currentPage, int postsPerPage,string? filterGame = null, string? filterTheme = null)
+    public async Task<IActionResult> GetPosts(int currentPage, int postsPerPage,string? filterGame = null, string? filterTheme = null,string? postName=null)
     {
         var query = _context.Posts.AsQueryable();
         int skip = (currentPage - 1) * postsPerPage;
 
         query = query.Where(post => post.Verify);
+
+        if (!string.IsNullOrEmpty(postName))
+        {
+            query = query.Where(post => post.Title.Contains(postName));
+        }
 
         if (!string.IsNullOrEmpty(filterGame))
         {

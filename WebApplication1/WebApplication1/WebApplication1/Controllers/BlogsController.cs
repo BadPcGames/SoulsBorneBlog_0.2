@@ -47,7 +47,7 @@ public class BlogsController : Controller
         }
 
         var blog = await _context.Blogs.FindAsync(id);
-        if(blog.AuthorId != int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value))
+        if (blog.AuthorId != int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value))
         {
             return RedirectToAction("Index", "Profile");
         }
@@ -134,7 +134,7 @@ public class BlogsController : Controller
 
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index","Profile");
+        return RedirectToAction("Index", "Profile");
     }
 
     [HttpGet]
@@ -165,5 +165,37 @@ public class BlogsController : Controller
     {
         var themes = await _context.Themes.ToListAsync();
         return Json(themes);
+    }
+
+
+
+    public async Task<IActionResult> GetBlogsForRecomendation(int currentPage, int blogsPerPage,string? blogName)
+    {
+        int skip = (currentPage - 1) * blogsPerPage;
+
+        var query = _context.Blogs.AsQueryable(); ;
+
+        if (blogName != null)
+        {
+            query = query.Where(blog => blog.Name.Contains(blogName));
+        }
+
+        var blogs = query
+            .OrderBy(blog => blog.Id) 
+            .Skip(skip)
+            .Take(blogsPerPage+1)
+            .Select(blog => new BlogViewModel
+            {
+                Id = blog.Id,
+                Name = blog.Name,
+                Description = blog.Description,
+                Theme = blog.Theme,
+                AuthorName = _context.Users
+                    .Where(user => user.Id == blog.AuthorId)
+                    .Select(user => user.Name)
+                    .FirstOrDefault() ?? "Unknown"
+            })
+            .AsNoTracking();
+        return Json(blogs);
     }
 }
