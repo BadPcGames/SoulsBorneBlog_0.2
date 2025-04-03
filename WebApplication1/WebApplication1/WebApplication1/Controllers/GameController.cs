@@ -115,9 +115,7 @@ public class GameController : Controller
         }
 
         _context.Games.Remove(game);
-
         await _context.SaveChangesAsync();
-
         return RedirectToAction("Index");
     }
 

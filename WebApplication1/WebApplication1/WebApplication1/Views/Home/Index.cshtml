@@ -143,6 +143,7 @@
 
 </body>
 
+@* get blogs *@
 <script>
     $(document).ready(function () {
         let currentPage = 1;
@@ -234,6 +235,7 @@
     });
 </script>
 
+@* get info for selector *@
 <script>
     $.ajax({
         url: '@Url.Action("GetThemes", "Blogs")',
@@ -264,6 +266,7 @@
     });
 </script>
 
+@* get posts *@
 <script>
     $(document).ready(function () {
         let currentPage = 1;

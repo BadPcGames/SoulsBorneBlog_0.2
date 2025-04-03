@@ -97,7 +97,12 @@
     </div>
 
     <h1>Blogs</h1>
-
+    @if (ViewBag.CanChange)
+    {
+        <p>
+            <a asp-controller="Profile" asp-action="Stats">Stats</a>
+        </p>
+    }
     <p>
         <a asp-controller="Blogs" asp-action="Create">Create New</a>
     </p>

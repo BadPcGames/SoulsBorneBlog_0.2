@@ -7,6 +7,7 @@ using System.Text;
 using WebApplication1.Services;
 
 
+
 public class PostsController : Controller
 {
     private readonly AppDbContext _context;
@@ -46,6 +47,11 @@ public class PostsController : Controller
         }
 
         return Json(postViewModels);
+    }
+
+    public IActionResult Stats(int postId)
+    {
+        return View(postId);
     }
 
     public async Task<IActionResult> PostApproval(int postId)
@@ -304,9 +310,9 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> MakeReactions(int value, int postId)
     {
-        if (HttpContext == null)
+        if (HttpContext == null|| _userService.GetUserId()==null)
         {
-            return Unauthorized(); 
+            return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
         bool access = await _userService.GetAccess();
         if (!access)
@@ -352,9 +358,9 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> MakeComent(string text,int postId)
     {
-        if (HttpContext.User == null)
+        if (HttpContext.User == null|| _userService.GetUserId()==null)
         {
-            return Unauthorized();
+            return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
         bool access = await _userService.GetAccess();
         if (!access)
@@ -378,7 +384,7 @@ public class PostsController : Controller
        _context.Coments.Add(newComent);
         await _context.SaveChangesAsync();
 
-        return Ok();
+        return Json(new { success = true, message = "" });
     }
 
     [HttpGet]
@@ -402,9 +408,9 @@ public class PostsController : Controller
     //EditComment
     public async Task<IActionResult> EditComment(int id,string text)
     {
-        if (HttpContext.User == null)
+        if (HttpContext.User == null || _userService.GetUserId() == null)
         {
-            return Unauthorized();
+            return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
         bool access = await _userService.GetAccess();
         if (!access)
@@ -433,9 +439,9 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteComment(int commentId)
     {
-        if (HttpContext.User == null)
+        if (HttpContext.User == null || _userService.GetUserId() == null)
         {
-            return Unauthorized();
+            return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
 
 

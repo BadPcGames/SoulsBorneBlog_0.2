@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApplication1.Models;
 using WebApplication1.Services;
@@ -11,16 +10,16 @@ namespace WebApplication1.Controllers
     public class ProfileController : Controller
     {
         private readonly AppDbContext _context;
-        public ProfileController(AppDbContext context, IConfiguration config)
+        private readonly UserService _userService;
+        public ProfileController(AppDbContext context, UserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
-
-    
         public async Task<IActionResult> Index(int? id)
         {
-            int currentUserId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.System).Value);
+            int currentUserId = (int)_userService.GetUserId();
 
             if (id == null || id == currentUserId)
             {
@@ -58,6 +57,10 @@ namespace WebApplication1.Controllers
             return View(otherBlogs);
         }
 
+        public IActionResult Stats()
+        {
+            return View(_userService.GetUserId());
+        }
 
         public async Task<IActionResult> Edit(string password)
         {

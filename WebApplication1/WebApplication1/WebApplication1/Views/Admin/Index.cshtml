@@ -25,9 +25,174 @@
     </style>
 </head>
 <body>
-        <a asp-action="Index" asp-controller="Game">Ігри платформи</a>
-        <br>
-        <a asp-action="Stats" asp-controller="Admin">Статистика</a>
+    <a asp-action="Index" asp-controller="Game">Ігри платформи</a>
+    <br>
+    <a asp-action="Stats" asp-controller="Admin">Статистика</a>
+    <br>
+
+    <input type="button" id="showUsers" value="Список користувачів" />
+    <input type="button" id="showModers" value="Список постів на верифікацію" />
+
+    <div id="users">
+        <p>
+            Name=<input type="text" id="nameOfUser"></input>  Email=<input type="text" id="emailOfUser"></input>  <button id="addModer">add</button>
+        </p>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя</th>
+                    <th>Email</th>
+                    <th>Попереджень</th>
+                    <th>Бан до</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+        </table>
+    </div>
+
+
+    <div id="moders">
+        <p>
+            Name=<input type="text" id="nameOfModer"></input>  Email=<input type="text" id="emailOfModer"></input>  <button id="deleteFromModer">Delete</button>
+        </p>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя</th>
+                    <th>Email</th>
+                    <th>Попереджень</th>
+                    <th>Бан до</th>
+                </tr>
+            </thead>
+            <tbody id="modersTableBody"></tbody>
+        </table>
+    </div>
+
 </body>
+
+
+<script>
+
+    document.getElementById('showUsers').onclick = function () {
+        document.getElementById('users').hidden = false;
+        document.getElementById('moders').hidden = true;
+        loadUsers();
+    }
+
+    document.getElementById('showModers').onclick = function () {
+        document.getElementById('users').hidden = true;
+        document.getElementById('moders').hidden = false;
+        loadModers();
+    }
+
+    document.getElementById('addModer').onclick = function () {
+        let name = $('#nameOfUser').val();
+        let email = $('#emailOfUser').val();
+        $.ajax({
+            url: '/Admin/AddModer', 
+            type: 'POST', 
+            data: ({ 
+                name: name,
+                email: email
+            }),
+            success: function (response) {
+                alert(response.message);
+                if (response.success) {
+                    loadUsers();
+                }
+            },
+            error: function () {
+                alert('Ошибка при изменении статуса публикации!');
+            }
+        });
+    }
+    document.getElementById('deleteFromModer').onclick = function () {
+        let name = $('#nameOfModer').val();
+        let email = $('#emailOfModer').val();
+        $.ajax({
+            url: '/Admin/DeleteModer',
+            type: 'POST',
+            data: ({
+                name: name,
+                email: email
+            }),
+            success: function (response) {
+                alert(response.message);
+                if (response.success) {
+                    loadModers();
+                }
+            },
+            error: function () {
+                alert('Ошибка при изменении статуса публикации!');
+            }
+        });
+    }
+
+    function loadUsers() {
+        $.ajax({
+            url: '@Url.Action("GetUsers", "Auth")',
+            method: 'GET',
+            success: function (response) {
+
+                let tableBody = $('#usersTableBody');
+                tableBody.empty();
+
+                if (response.success && response.message) {
+                    alert(response.message);
+                    return;
+                }
+
+               
+                response.forEach(user => {
+                    let row = `<tr>
+                                        <td>${user.id}</td>
+                                        <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
+                                        <td>${user.email}</td>
+                                        <td>${user.warnings}</td>
+                                        <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Не заблокирован'}</td>
+                                    </tr>`;
+                    tableBody.append(row);
+                });
+            }
+        });
+    }
+
+    function loadModers() {
+        $.ajax({
+            url: '@Url.Action("GetModers", "Auth")',
+            method: 'GET',
+            success: function (response) {
+                let tableBody = $('#modersTableBody');
+                tableBody.empty();
+
+                if (response.success && response.message) {
+                    alert(response.message);
+                    return;
+                }
+
+               
+                response.forEach(user => {
+                    let row = `<tr>
+                                            <td>${user.id}</td>
+                                            <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
+                                            <td>${user.email}</td>
+                                            <td>${user.warnings}</td>
+                                            <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Не заблокирован'}</td>
+                                        </tr>`;
+                    tableBody.append(row);
+                });
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        loadUsers();
+        document.getElementById('moders').hidden = true;
+    });
+</script>
 
 

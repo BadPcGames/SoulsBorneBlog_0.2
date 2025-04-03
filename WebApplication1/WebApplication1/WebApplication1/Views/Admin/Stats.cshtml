@@ -32,14 +32,14 @@
 
     <input type="button" id="showStats" value="stat">
 
-    <form id="pdfForm" method="post" asp-action="GetFileStats" asp-controller="Admin">
+    <form id="pdfForm" method="post" asp-action="GetFileStats" asp-controller="Stats">
         <input type="hidden" name="TimeStart" id="pdfFrom">
         <input type="hidden" name="TimeEnd" id="pdfTo">
         <input type="hidden" name="type" value="pdf">
         <input type="submit" id="statsPdf" value="pdf">
     </form>
 
-    <form id="excelForm" method="post" asp-action="GetFileStats" asp-controller="Admin">
+    <form id="excelForm" method="post" asp-action="GetFileStats" asp-controller="Stats">
         <input type="hidden" name="TimeStart" id="excelFrom">
         <input type="hidden" name="TimeEnd" id="excelTo">
         <input type="hidden" name="type" value="ex">
@@ -74,7 +74,7 @@
             let to = $('#to').val();
 
             $.ajax({
-                url: '/Admin/GetStats',
+                url: '/Stats/GetGlobalStats',
                 method: 'GET',
                 data: {
                     TimeStart: from,
@@ -113,9 +113,9 @@
                     }
 
                     if (data.postShortStats && data.postShortStats.length) {
-                        let postTable = `<table class='table table-bordered'><thead><tr><th>ID</th><th>Name</th><th>Likes</th><th>Dislikes</th><th>Comments</th></tr></thead><tbody>`;
+                        let postTable = `<table class='table table-bordered'><thead><tr><th>ID</th><th>Blog Name</th><th>Name</th><th>Likes</th><th>Dislikes</th><th>Comments</th></tr></thead><tbody>`;
                         data.postShortStats.forEach(post => {
-                            postTable += `<tr><td>${post.id}</td><td>${post.name}</td><td>${post.likeCount}</td><td>${post.notLikeCount}</td><td>${post.comentsCount}</td></tr>`;
+                            postTable += `<tr><td>${post.id}</td><td>${post.blogName}</td><td>${post.name}</td><td>${post.likeCount}</td><td>${post.notLikeCount}</td><td>${post.comentsCount}</td></tr>`;
                         });
                         postTable += `</tbody></table>`;
                         $('#stats-container').append(postTable);

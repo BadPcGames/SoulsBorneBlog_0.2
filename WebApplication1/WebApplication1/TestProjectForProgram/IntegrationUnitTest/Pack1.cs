@@ -10,6 +10,8 @@ using WebApplication1.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+
 
 namespace IntegrationUnitTest
 {
@@ -66,12 +68,24 @@ namespace IntegrationUnitTest
         [Test]
         public async Task TS10_01()
         {
-            _contextAccessor.HttpContext.User = null; 
+            // Имитация отсутствия аутентификации
+            _contextAccessor.HttpContext.User = null;
             var postId = 0;
 
-            var result = await _postsController.MakeReactions(1, postId) as UnauthorizedResult;
+            // Вызов метода
+            var result = await _postsController.MakeReactions(1, postId) as ObjectResult;
 
-            Assert.IsInstanceOf<UnauthorizedResult>(result);
+            // Проверяем, что возвращённый результат - ObjectResult со статусом 401
+            Assert.NotNull(result);
+            Assert.AreEqual(401, result.StatusCode);
+
+            // Извлекаем redirectUrl из JSON-ответа
+            var jsonString = JsonSerializer.Serialize(result.Value);
+            var responseData = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonString);
+
+            Assert.NotNull(responseData);
+            Assert.IsTrue(responseData.ContainsKey("redirectUrl"));
+            Assert.AreEqual("/Auth/Index", responseData["redirectUrl"]);
         }
         [Test]
         public async Task TS10_02()

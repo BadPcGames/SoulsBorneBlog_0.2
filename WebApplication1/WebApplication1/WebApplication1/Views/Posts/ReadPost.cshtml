@@ -96,7 +96,20 @@
                 },
                 error: function (xhr) {
                     console.error(xhr.responseText);
-                    alert('Error setting reaction.');
+
+                    if (xhr.status === 401) {// Если сервер вернул 401 Unauthorized
+                        try {
+                            let responseJson = JSON.parse(xhr.responseText);
+                            if (responseJson.redirectUrl) {
+                                window.location.href = responseJson.redirectUrl; // Перенаправляем на страницу входа
+                                return;
+                            }
+                        } catch (e) {
+                            console.error("Ошибка обработки JSON-ответа", e);
+                        }
+                    }
+
+                    alert('Ошибка при установке реакции.');
                 }
             });
         }   
@@ -262,7 +275,7 @@
             method: 'POST',
             data: { value: value, postId: postId },
             success: function (response) {
-                if (response.message!="")
+                if (response.message !== "")
                     alert(response.message);
                 if (response.success) {
                     updateReactions();
@@ -270,7 +283,20 @@
             },
             error: function (xhr) {
                 console.error(xhr.responseText);
-                alert('Error setting reaction.');
+
+                if (xhr.status === 401) { 
+                    try {
+                        let responseJson = JSON.parse(xhr.responseText);
+                        if (responseJson.redirectUrl) {
+                            window.location.href = responseJson.redirectUrl;
+                            return;
+                        }
+                    } catch (e) {
+                        console.error("Ошибка обработки JSON-ответа", e);
+                    }
+                }
+
+                alert('Ошибка при установке реакции.');
             }
         });
     }

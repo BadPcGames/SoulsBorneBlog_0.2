@@ -208,6 +208,30 @@ namespace WebApplication1.Controllers
             return Json(usersViewModel);
         }
 
+
+        public async Task<IActionResult> GetModers()
+        {
+            List<User> users = _context.Users.Where(user => user.Role == "Moder").ToList();
+
+            List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Avatar = user.Avatar,
+                BanTime = user.BanTime,
+                Warnings = user.Warnings
+            }).ToList();
+
+
+            if (usersViewModel.Count() == 0)
+            {
+                return Json(new { success = true, message = "Не знайдено доступних модераторів" });
+            }
+
+            return Json(usersViewModel);
+        }
+
         public async Task<IActionResult> GetUsersForBunDelete()
         {
             List<User> users = _context.Users.Where(user => user.BanTime!= null).ToList();

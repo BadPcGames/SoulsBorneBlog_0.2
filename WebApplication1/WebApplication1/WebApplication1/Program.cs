@@ -23,12 +23,13 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(options =>
 {
     options.LoginPath = "/auth/index";
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
 });
-//.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-//{
-//    options.ClientId = builder.Configuration["GoogleKeys:ClientId"];
-//    options.ClientSecret = builder.Configuration["GoogleKeys:SecretId"];
-//});
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();

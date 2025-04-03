@@ -1,13 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System.Xml.Linq;
 using WebApplication1;
 using WebApplication1.DbModels;
-using WebApplication1.Models;
 using WebApplication1.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 [Authorize(Roles = "Moder,Admin")]
 public class ModerController : Controller
