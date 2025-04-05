@@ -25,6 +25,11 @@ public class AdminController : Controller
 
     public async Task<IActionResult> AddModer(string name,string email)
     {
+        if ((name == "") || (email == ""))
+        {
+            return Json(new { success = true, message = "Всі поля мають бути заповнені" });
+        }
+
         var user = _context.Users.FirstOrDefault(u => (u.Name == name) && (u.Email == email));
         if (user == null)
         {
@@ -38,6 +43,11 @@ public class AdminController : Controller
 
     public async Task<IActionResult> DeleteModer(string Name, string Email)
     {
+        if ((Name == "") || (Email == ""))
+        {
+            return Json(new { success = true, message = "Всі поля мають бути заповнені" });
+        }
+
         var user = _context.Users.FirstOrDefault(user => user.Name == Name && user.Email == Email&&user.Role=="Moder");
         if (user == null)
         {

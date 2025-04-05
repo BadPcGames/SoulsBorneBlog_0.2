@@ -36,6 +36,11 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Register([Bind("Name,Email,Password")] RegisterModel model)
         {
 
+            if (_context.Users.Count()>=5000)
+            {
+                return RedirectToAction("Index", new { message = "Too much users" });
+            }
+
             if (model.Password == "" || model.Password == null ||
                  model.Email == "" || model.Password == null ||
                  model.Name == "" || model.Name == null)

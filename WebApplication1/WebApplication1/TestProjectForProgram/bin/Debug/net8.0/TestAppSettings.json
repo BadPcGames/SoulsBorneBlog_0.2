@@ -2,6 +2,7 @@
   "ConnectionStrings": {
     "DefaultConnection": "Server=localhost;Database=soulsborneblogstest;User=root;Password=;",
     "DefaultConnection2": "Server=localhost;Database=soulsborneblogstest2;User=root;Password=;",
+    "DefaultConnection5000": "Server=localhost;Database=soulsborneblogstest5000;User=root;Password=;",
     "MaximumPacketSize": "67108864;",
     "DefaultCommandTimeout": "600;"
   }

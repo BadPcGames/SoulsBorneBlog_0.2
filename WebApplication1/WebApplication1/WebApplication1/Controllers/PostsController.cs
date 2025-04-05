@@ -151,6 +151,10 @@ public class PostsController : Controller
     public IActionResult Create(int blogId,string? message)
     {
         ViewBag.Error = message;
+        if (_context.Posts.Where(post => post.BlogId == blogId).Count() >= 50)
+        {
+            return RedirectToAction("Index", new { id = blogId });
+        }
         var model = new Post
         {
             BlogId = blogId

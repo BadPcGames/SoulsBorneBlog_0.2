@@ -97,6 +97,50 @@ namespace ValidationTest
             }
         }
 
+        public async Task Register(int value)
+        {
+
+            var httpContextMock = new Mock<HttpContext>();
+            var serviceProviderMock = new Mock<IServiceProvider>();
+            var urlHelperMock = new Mock<IUrlHelper>();
+            var authServiceMock = new Mock<IAuthenticationService>();
+
+            serviceProviderMock.Setup(x => x.GetService(typeof(IAuthenticationService)))
+                               .Returns(authServiceMock.Object);
+
+            serviceProviderMock.Setup(x => x.GetService(typeof(IUrlHelperFactory)))
+                               .Returns(new Mock<IUrlHelperFactory>().Object);
+
+            httpContextMock.Setup(x => x.RequestServices)
+                           .Returns(serviceProviderMock.Object);
+
+
+            _authController.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContextMock.Object
+            };
+
+            _authController.Url = urlHelperMock.Object;
+
+            authServiceMock.Setup(x => x.SignInAsync(It.IsAny<HttpContext>(),
+                                                     It.IsAny<string>(),
+                                                     It.IsAny<ClaimsPrincipal>(),
+                                                     It.IsAny<AuthenticationProperties>()))
+                           .Returns(Task.CompletedTask);
+
+            for (int i = 0; i < value; i++)
+            {
+                var user = new RegisterModel
+                {
+                    Name = "nf" + i,
+                    Email = "nf" + i + "@gmail.com",
+                    Password = "123456"
+                };
+
+                var result = await _authController.Register(user);
+            }
+        }
+
 
 
         //TS02-1 -

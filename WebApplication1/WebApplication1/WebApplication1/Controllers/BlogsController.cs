@@ -31,7 +31,11 @@ public class BlogsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Name,Description,Theme,AuthorId")] Blog blog,int userId)
     {
-        if(blog.Name==""|| blog.Name == null||
+        if (_context.Blogs.Where(blog => blog.AuthorId == userId).Count() >= 5)
+        {
+            return RedirectToAction("Index", "Profile");
+        }
+        if (blog.Name==""|| blog.Name == null||
             blog.Description == "" || blog.Description == null||
             blog.Theme == "" || blog.Theme == null)
         {
