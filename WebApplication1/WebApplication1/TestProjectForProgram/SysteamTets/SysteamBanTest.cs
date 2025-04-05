@@ -70,7 +70,7 @@ namespace SysteamTest
 
             var jsonData = JObject.FromObject(result.Value);
             Assert.IsTrue(jsonData["success"].Value<bool>(), "success должен быть true");
-            Assert.AreEqual("Публікацій не знайдено", jsonData["message"].Value<string>(), "Неверное сообщение");
+            Assert.AreEqual("Публікацій не знайдено", jsonData["message"].Value<string>());
         }
 
 

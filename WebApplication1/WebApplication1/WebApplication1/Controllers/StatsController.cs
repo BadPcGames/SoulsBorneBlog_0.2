@@ -65,30 +65,7 @@ public class StatsController : Controller
         return stats;
     }
 
-    public async Task<List<PostShortStatsViewModel>> MakeUserStats(DateTime from, DateTime to, int userId)
-    {
-        List<PostShortStatsViewModel> stats = new List<PostShortStatsViewModel>();
-
-        var blogs = _context.Blogs
-                    .Where(blog => blog.AuthorId == userId)
-                    .Select(blog => blog.Id);
-
-        var posts = _context.Posts.Where(post => post.CreatedAt >= from && post.CreatedAt <= to&&blogs.Contains(post.BlogId));
-
-        stats= await posts
-            .Select(post => new PostShortStatsViewModel
-            {
-                Name = post.Title,
-                Id = post.Id,
-                LikeCount = _context.Reactions.Count(reaction => reaction.Value == 1 && reaction.PostId == post.Id),
-                NotLikeCount = _context.Reactions.Count(reaction => reaction.Value == -1 && reaction.PostId == post.Id),
-                ComentsCount = _context.Coments.Count(com => com.PostId == post.Id),
-                BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).Name,
-                Verify = post.Verify
-            }).ToListAsync();
-
-        return stats;
-    }
+  
 
     public async Task<PostShortStatsViewModel> MakePostStats(int postId)
     {
@@ -106,6 +83,31 @@ public class StatsController : Controller
             BlogName=_context.Blogs.FirstOrDefault(blog=>blog.Id==post.BlogId).Name,
             Verify = post.Verify
         };
+        return stats;
+    }
+
+    public async Task<List<PostShortStatsViewModel>> MakeUserStats(DateTime from, DateTime to, int userId)
+    {
+        List<PostShortStatsViewModel> stats = new List<PostShortStatsViewModel>();
+
+        var blogs = _context.Blogs
+                    .Where(blog => blog.AuthorId == userId)
+                    .Select(blog => blog.Id);
+
+        var posts = _context.Posts.Where(post => post.CreatedAt >= from && post.CreatedAt <= to && blogs.Contains(post.BlogId));
+
+        stats = await posts
+            .Select(post => new PostShortStatsViewModel
+            {
+                Name = post.Title,
+                Id = post.Id,
+                LikeCount = _context.Reactions.Count(reaction => reaction.Value == 1 && reaction.PostId == post.Id),
+                NotLikeCount = _context.Reactions.Count(reaction => reaction.Value == -1 && reaction.PostId == post.Id),
+                ComentsCount = _context.Coments.Count(com => com.PostId == post.Id),
+                BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).Name,
+                Verify = post.Verify
+            }).ToListAsync();
+
         return stats;
     }
 
@@ -134,6 +136,11 @@ public class StatsController : Controller
             return Json(new { success = true, message = "Невірний часовий проміжок" });
         }
         var stats = await MakeUserStats(from, to,userId);
+
+        if (stats.Count() == 0)
+        {
+            return Json(new { success = true, message = "Статистики немає" });
+        }
         return Json(stats);
     }
 

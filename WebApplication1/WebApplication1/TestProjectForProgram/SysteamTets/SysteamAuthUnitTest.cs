@@ -398,6 +398,47 @@ namespace SysteamTest
             Assert.Greater(first.AddSeconds(4), second);
         }
 
+
+        //TS29-1
+        [Test]
+        public async Task TS29_1()
+        {
+            var user = new RegisterModel
+            {
+                Name = "test",
+                Email = "test@gmail.com",
+                Password = "123456"
+            };
+
+            var result = await _authController.Register(user) as RedirectToActionResult;
+
+            Assert.AreNotEqual("123456", _dbContext.Users.FirstOrDefault(u => u.Name == "test").PasswordHash);
+
+            var userToDelete = _dbContext.Users.FirstOrDefault(x => x.Email == user.Email);
+            _dbContext.Users.Remove(userToDelete);
+            _dbContext.SaveChanges();
+        }
+
+        //TS29-2
+        [Test]
+        public async Task TS029_2()
+        {
+            var user = new LoginModel
+            {
+                Email = "user1@gmail.com",
+                Password = _dbContext.Users.FirstOrDefault(u=>u.Email== "user1@gmail.com").PasswordHash
+            };
+
+            var result = await _authController.Login(user) as RedirectToActionResult;
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.ActionName);
+
+            Assert.IsTrue(result.RouteValues.ContainsKey("message"));
+            Assert.AreEqual("password is incorrect", result.RouteValues["message"]);
+        }
+
+
         [TearDown]
         public void TearDown()
         {
