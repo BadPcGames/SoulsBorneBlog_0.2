@@ -41,8 +41,8 @@ namespace IntegrationUnitTest
 
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseMySql(
-                    _config.GetConnectionString("DefaultConnection"),
-                    ServerVersion.AutoDetect(_config.GetConnectionString("DefaultConnection"))
+                    _config.GetConnectionString("DefaultConnection2"),
+                    ServerVersion.AutoDetect(_config.GetConnectionString("DefaultConnection2"))
                 )
                 .Options;
 

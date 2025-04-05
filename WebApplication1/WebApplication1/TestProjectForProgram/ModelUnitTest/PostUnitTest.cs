@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using WebApplication1.Services;
 
 
-namespace ModelUnitTest
+namespace ModelTest
 {
 
     [TestFixture]

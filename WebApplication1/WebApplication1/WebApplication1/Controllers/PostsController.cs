@@ -92,6 +92,8 @@ public class PostsController : Controller
         {
             return BadRequest("Invalid blog ID.");
         }
+
+        ViewBag.BlogId = id;
         var posts = await _context.Posts
                                   .Where(post => post.BlogId == id)
                                   .ToListAsync();
@@ -118,7 +120,6 @@ public class PostsController : Controller
         }).ToList();
 
         ViewBag.BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == id).Name;
-
         return View(postsToShow);
     }
 

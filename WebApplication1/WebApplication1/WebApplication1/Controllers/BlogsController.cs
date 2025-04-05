@@ -5,14 +5,18 @@ using WebApplication1.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using WebApplication1.Models;
+using WebApplication1.Services;
 
 public class BlogsController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly UserService _userService;
 
-    public BlogsController(AppDbContext context)
+
+    public BlogsController(AppDbContext context,UserService userService)
     {
         _context = context;
+        _userService = userService;
     }
 
     // GET: Blogs/Create
@@ -25,11 +29,18 @@ public class BlogsController : Controller
     [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Description,Theme,AuthorId")] Blog blog)
+    public async Task<IActionResult> Create([Bind("Id,Name,Description,Theme,AuthorId")] Blog blog,int userId)
     {
+        if(blog.Name==""|| blog.Name == null||
+            blog.Description == "" || blog.Description == null||
+            blog.Theme == "" || blog.Theme == null)
+        {
+            return View(blog);
+        }
+
         if (ModelState.IsValid)
         {
-            blog.AuthorId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value);
+            blog.AuthorId = userId;
             _context.Add(blog);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Profile");
@@ -47,7 +58,7 @@ public class BlogsController : Controller
         }
 
         var blog = await _context.Blogs.FindAsync(id);
-        if (blog.AuthorId != int.Parse(HttpContext.User.FindFirst(ClaimTypes.System)?.Value))
+        if (blog.AuthorId != (int)_userService.GetUserId())
         {
             return RedirectToAction("Index", "Profile");
         }
@@ -67,6 +78,13 @@ public class BlogsController : Controller
         if (id != blog.Id)
         {
             return NotFound();
+        }
+
+        if (blog.Name == "" || blog.Name == null ||
+          blog.Description == "" || blog.Description == null ||
+          blog.Theme == "" || blog.Theme == null)
+        {
+            return View(blog);
         }
 
         if (ModelState.IsValid)

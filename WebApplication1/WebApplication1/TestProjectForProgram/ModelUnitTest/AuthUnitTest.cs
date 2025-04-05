@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
 using WebApplication1.Services;
 
-namespace ModelUnitTest
+namespace ModelTest
 {
     [TestFixture]
     public class AuthUnitTest
