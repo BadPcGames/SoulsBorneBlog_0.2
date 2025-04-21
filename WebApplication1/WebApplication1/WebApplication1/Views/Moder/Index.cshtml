@@ -60,7 +60,7 @@
                         <th>Видалення</th>
                     </tr>
                 </thead>
-                <tbody id="moderTableBody"></tbody>
+                <tbody id="postsTableBody"></tbody>
             </table>
         </div>
 
@@ -68,15 +68,49 @@
     <script>
 
        document.getElementById('showUsers').onclick = function() {
+           loadUsers();
             document.getElementById('users').hidden = false;
             document.getElementById('posts').hidden = true;
        }
 
        document.getElementById('showPosts').onclick = function() {
+           loadPosts();
             document.getElementById('users').hidden = true;
             document.getElementById('posts').hidden = false;
        }
 
+
+        function loadPosts() {
+            $.ajax({
+                url: '@Url.Action("GetPostsToVerify", "Posts")',
+                method: 'GET',
+                success: function (response) {
+                    let tableBody = $('#postsTableBody');
+                    tableBody.empty();
+
+                    if (response.success && response.message) {
+                        alert(response.message);
+                        return;
+                    }
+
+                    response.forEach(post => {
+                        let row = `<tr>
+                                                <td>${post.id}</td>
+                                                <td><a class="nav-link text-dark" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
+                                                <td>${post.authorName}</td>
+                                                <td>${post.game}</td>
+                                                <td><a class="nav-link text-dark" href="/Posts/Index?id=${post.blogId}">${post.blogName}</a></td>
+                                                <td><button onclick="postApproval(${post.id})">Одобрено</button></td>
+                                                <td><input type="text" id="postProblem-${post.id}" /></td>
+                                                <td><button onclick="postNotApproval(${post.id})">Не одобрено</button></td>
+                                            </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    console.log(response);
+                }
+            });
+        }
 
 
         function loadUsers() {
@@ -117,35 +151,7 @@
             });
         }
 
-        function loadPosts() {
-            $.ajax({
-                url: '@Url.Action("GetPostsToVerify", "Posts")',
-                method: 'GET',
-                success: function (response) {
-                    let tableBody = $('#postsTableBody');
-                    tableBody.empty();
-
-                    if (response.success && response.message) {
-                        alert(response.message); 
-                        return;
-                    }
-
-                    response.forEach(post => {
-                        let row = `<tr>
-                                        <td>${post.id}</td>
-                                        <td><a class="nav-link text-dark" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
-                                        <td>${post.authorName}</td>
-                                        <td>${post.game}</td>
-                                        <td><a class="nav-link text-dark" href="/Posts/Index?id=${post.blogId}">${post.blogName}</a></td>
-                                        <td><button onclick="postApproval(${post.id})">Одобрено</button></td>
-                                        <td><input type="text" id="postProblem-${post.id}" /></td>
-                                        <td><button onclick="postNotApproval(${post.id})">Не одобрено</button></td>
-                                    </tr>`;
-                        tableBody.append(row);
-                    });
-                }
-            });
-        }
+ 
 
         function banUser(userId) {
             let days = $(`#banDays-${userId}`).val();

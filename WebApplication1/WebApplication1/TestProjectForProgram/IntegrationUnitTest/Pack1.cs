@@ -11,6 +11,7 @@ using Moq;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
 using WebApplication1.Services;
+using Microsoft.Extensions.Options;
 
 namespace IntegrationUnitTest
 {
@@ -22,6 +23,8 @@ namespace IntegrationUnitTest
         private IConfiguration _config;
         private UserService _userService;
         private IHttpContextAccessor _contextAccessor;
+        private  EmailService _emailService;
+        private IOptions<AdminEmailOptions> _adminEmail;
 
         [SetUp]
         public void Setup()
@@ -47,7 +50,12 @@ namespace IntegrationUnitTest
 
             _dbContext = new AppDbContext(options);
             _userService = new UserService(_dbContext, _contextAccessor);
-            _authController = new AuthController(_dbContext, _config, _userService);
+            _emailService = new EmailService();
+
+            var adminEmailOptions = _config.GetSection("AdminEmail").Get<AdminEmailOptions>();
+            _adminEmail = Options.Create(adminEmailOptions);
+
+            _authController = new AuthController(_dbContext, _config, _userService, _emailService, _adminEmail);
         }
 
         //TS02-1 -

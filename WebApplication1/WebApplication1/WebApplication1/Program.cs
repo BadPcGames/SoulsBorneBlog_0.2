@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1;
 using WebApplication1.Services;
 using QuestPDF.Infrastructure;
+using WebApplication1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
 .AddCookie(options =>
 {
@@ -38,6 +39,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<EmailService>();
+builder.Services.Configure<AdminEmailOptions>(builder.Configuration.GetSection("AdminEmail"));
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 64 * 1024 * 1024; // 30 MB

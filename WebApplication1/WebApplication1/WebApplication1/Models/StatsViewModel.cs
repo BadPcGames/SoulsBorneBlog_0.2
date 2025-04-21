@@ -34,6 +34,8 @@ namespace WebApplication1.Models
         public  int ComentsCount { get; set; }
         public bool Verify {  get; set; }
         public string BlogName { get; set; }
+
+        public DateTime CreateAt { get; set; }
     }
 
 

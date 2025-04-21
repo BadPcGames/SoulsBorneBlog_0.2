@@ -22,6 +22,7 @@ public class BlogsController : Controller
     // GET: Blogs/Create
     public IActionResult Create()
     {
+        ViewBag.userId = _userService.GetUserId();
         return View();
     }
 
@@ -41,7 +42,9 @@ public class BlogsController : Controller
         {
             return View(blog);
         }
-
+        Console.WriteLine("adasdasdasd");
+        Console.WriteLine(userId);
+        Console.WriteLine("adasdasdasd");
         if (ModelState.IsValid)
         {
             blog.AuthorId = userId;

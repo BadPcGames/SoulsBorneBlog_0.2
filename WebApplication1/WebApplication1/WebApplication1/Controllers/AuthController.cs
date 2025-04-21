@@ -10,6 +10,8 @@ using WebApplication1.Services;
 using MyConvert = WebApplication1.Services.MyConvert;
 using UserService= WebApplication1.Services.UserService;
 using System.ComponentModel.DataAnnotations;
+using MimeKit.Text;
+using Microsoft.Extensions.Options;
 
 
 namespace WebApplication1.Controllers
@@ -19,11 +21,41 @@ namespace WebApplication1.Controllers
         private readonly AppDbContext _context;
         private IConfiguration _config;
         private readonly UserService _userService;
-        public AuthController(AppDbContext context, IConfiguration config, UserService userService)
+        private readonly EmailService _emailService;
+        private readonly AdminEmailOptions _adminEmail;
+        public AuthController(AppDbContext context, IConfiguration config, UserService userService, EmailService emailService, IOptions<AdminEmailOptions> adminEmailOptions)
         {
             _context = context;
             _config = config;
             _userService = userService;
+            _emailService = emailService;
+            _adminEmail = adminEmailOptions.Value;
+        }
+
+        [Authorize]
+        public IActionResult Report()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> MakeReport(string topic, string text)
+        {
+            var user= _context.Users.FirstOrDefault(user=>user.Id==_userService.GetUserId());
+
+            if (user==null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (text == "" || text == null || topic == "" || topic == null)
+            {
+                return Json(new { success = true, message = "Всі поля мають бути заповнені" });
+            }
+
+            _emailService.SendEmail(_adminEmail.Email,$"Скаркга на тему {topic}",$"Користувач \"{user.Name} \" \n Адреса \"{user.Email} \" \n {text}");
+
+            return Json(new { success = true, message = "Скарга відправлена" });
         }
 
         public IActionResult Index(string? message)
@@ -138,7 +170,6 @@ namespace WebApplication1.Controllers
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
 
         [Authorize]
         public async Task<IActionResult> EditProfileData(string? Name, string? Email, string? Password)

@@ -20,6 +20,15 @@ public class StatsController : Controller
 
     public async Task<StatsViewModel> MakeGlobalStats(DateTime from, DateTime to)
     {
+
+        if (to.Day == DateTime.Now.Day)
+        {
+            to = DateTime.Now;
+        }
+        if (to.Day < DateTime.Now.Day)
+        {
+            to = new DateTime(to.Year, to.Month, to.Day, 23, 59, 0);
+        }
         StatsViewModel stats = new StatsViewModel();
         stats.Name = $"Stats from: {from} to: {to}";
 
@@ -59,7 +68,8 @@ public class StatsController : Controller
                 NotLikeCount = _context.Reactions.Count(reaction => reaction.Value == -1 && reaction.PostId == post.Id),
                 ComentsCount = _context.Coments.Count(com => com.PostId == post.Id),
                 BlogName=_context.Blogs.FirstOrDefault(blog=>blog.Id==post.BlogId).Name,
-                Verify=post.Verify
+                Verify=post.Verify,
+                CreateAt = post.CreatedAt
             }).ToListAsync();
 
         return stats;
@@ -81,7 +91,9 @@ public class StatsController : Controller
             NotLikeCount = _context.Reactions.Count(reaction => reaction.Value == -1 && reaction.PostId == post.Id),
             ComentsCount = _context.Coments.Count(com => com.PostId == post.Id),
             BlogName=_context.Blogs.FirstOrDefault(blog=>blog.Id==post.BlogId).Name,
-            Verify = post.Verify
+            Verify = post.Verify,
+            CreateAt=post.CreatedAt
+            
         };
         return stats;
     }
@@ -89,6 +101,15 @@ public class StatsController : Controller
     public async Task<List<PostShortStatsViewModel>> MakeUserStats(DateTime from, DateTime to, int userId)
     {
         List<PostShortStatsViewModel> stats = new List<PostShortStatsViewModel>();
+
+        if(to.Day== DateTime.Now.Day)
+        {
+            to = DateTime.Now;
+        }
+        if (to.Day < DateTime.Now.Day)
+        {
+            to=new DateTime(to.Year,to.Month,to.Day,23,59,0);
+        }
 
         var blogs = _context.Blogs
                     .Where(blog => blog.AuthorId == userId)
@@ -105,7 +126,8 @@ public class StatsController : Controller
                 NotLikeCount = _context.Reactions.Count(reaction => reaction.Value == -1 && reaction.PostId == post.Id),
                 ComentsCount = _context.Coments.Count(com => com.PostId == post.Id),
                 BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).Name,
-                Verify = post.Verify
+                Verify = post.Verify,
+                CreateAt = post.CreatedAt
             }).ToListAsync();
 
         return stats;

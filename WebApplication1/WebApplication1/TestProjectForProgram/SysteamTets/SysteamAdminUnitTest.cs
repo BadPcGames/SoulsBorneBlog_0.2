@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using System.Security.Claims;
 using WebApplication1.Services;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Options;
 
 namespace SysteamTest
 {
@@ -24,6 +25,8 @@ namespace SysteamTest
         private IConfiguration _config;
         private UserService _userService;
         private IHttpContextAccessor _contextAccessor;
+        private EmailService _emailService;
+        private IOptions<AdminEmailOptions> _adminEmail;
 
         [SetUp]
         public void Setup()
@@ -50,7 +53,10 @@ namespace SysteamTest
             _dbContext = new AppDbContext(options);
             _userService = new UserService(_dbContext, _contextAccessor);
             _adminController = new AdminController(_dbContext);
-            _authController = new AuthController(_dbContext,_config, _userService);
+            _emailService = new EmailService();
+            var adminEmailOptions = _config.GetSection("AdminEmail").Get<AdminEmailOptions>();
+            _adminEmail = Options.Create(adminEmailOptions);
+            _authController = new AuthController(_dbContext, _config, _userService, _emailService, _adminEmail);
 
             _adminController.DeleteModer("user1", "user1@gmail.com");
             _adminController.DeleteModer("bad1", "bad1@gmail.com");

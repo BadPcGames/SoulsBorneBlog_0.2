@@ -79,6 +79,24 @@
     </div>
 }
 
+@{
+    var postUrl = $"https://localhost:7109/Posts/Index/{@ViewBag.BlogId}";
+    var encodedPostUrl = Uri.EscapeDataString(postUrl);
+    var message = Uri.EscapeDataString("Переглянь цей пост!");
+}
+
+<a href="https://t.me/share/url?url=@encodedPostUrl&text=@message" target="_blank">
+    Поделиться в Telegram
+</a>
+
+<a href="https://www.facebook.com/sharer/sharer.php?u=@encodedPostUrl" target="_blank">
+    Поделиться в Facebook
+</a>
+
+<a href="https://twitter.com/intent/tweet?url=@encodedPostUrl&text=@message" target="_blank">
+    Поделиться в Twitter
+</a>
+
 
 
    

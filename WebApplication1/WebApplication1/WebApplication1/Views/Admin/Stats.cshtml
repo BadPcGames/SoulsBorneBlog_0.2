@@ -1,5 +1,5 @@
 ﻿@using WebApplication1.DbModels
-@model IEnumerable<Blog>
+
 
 <head>
     <meta charset="UTF-8">
@@ -27,8 +27,8 @@
 <body>
     <a asp-action="Index" asp-controller="Admin">Назад</a>
     <br>
-    <input type="text" id="from" value="01.01.2024">
-    <input type="text" id="to" value="31.03.2025">
+    <input type="date" id="from" value="2024-01-01">
+    <input type="date" id="to" value="2025-04-16">
 
     <input type="button" id="showStats" value="stat">
 

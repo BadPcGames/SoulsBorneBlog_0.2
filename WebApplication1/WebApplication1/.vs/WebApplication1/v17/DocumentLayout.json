@@ -3,84 +3,72 @@
   "WorkspaceRootPath": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\webapplication1\\controllers\\modercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\modercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\validationtest\\validationblogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\validationtest\\validationblogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\modelunittest\\moderunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\moderunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\validationtest\\validationauthunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\validationtest\\validationauthunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\controllers\\statscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\statscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\systeamtets\\systeamfr103exeptionstests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeamfr103exeptionstests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\webapplication1\\controllers\\blogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\blogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\modelunittest\\adminunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\adminunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\modelunittest\\blogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\blogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\systeamtets\\systeambantest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeambantest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\modelunittest\\authunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\authunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\modelunittest\\postunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\postunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\modelunittest\\statsunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\statsunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\systeamtets\\systeamstatstest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeamstatstest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\integrationunittest\\pack5.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack5.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\integrationunittest\\pack3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\integrationunittest\\pack2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\integrationunittest\\pack6.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack6.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\systeamtets\\systeamadminunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeamadminunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\systeamtets\\systeamblogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\systeamtets\\systeamblogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeamblogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\integrationunittest\\pack1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\systeamtets\\systeambantest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeambantest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\systeamtets\\systeamauthunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeamauthunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\systeamtets\\systeamadminunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\systeamtets\\systeamadminunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\modelunittest\\moderunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\moderunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\modelunittest\\blogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\blogunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\modelunittest\\authunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\modelunittest\\authunittest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\integrationunittest\\pack5.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack5.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\integrationunittest\\pack4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\integrationunittest\\pack2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\integrationunittest\\pack1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\integrationunittest\\pack3_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack3_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\testprojectforprogram\\integrationunittest\\pack4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\integrationunittest\\pack4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\testprojectforprogram\\testappsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2C6C4802-F698-4586-B3C5-D22CEE5FE621}|TestProjectForProgram\\TestProjectForProgram.csproj|solutionrelative:testprojectforprogram\\testappsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -90,11 +78,232 @@
       "DocumentGroups": [
         {
           "DockedHeight": 267,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ValidationBlogUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ValidationTest\\ValidationBlogUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\ValidationTest\\ValidationBlogUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ValidationTest\\ValidationBlogUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\ValidationTest\\ValidationBlogUnitTest.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAAgwDoAAABLAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:21:59.535Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ValidationAuthUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ValidationTest\\ValidationAuthUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\ValidationTest\\ValidationAuthUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ValidationTest\\ValidationAuthUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\ValidationTest\\ValidationAuthUnitTest.cs",
+              "ViewState": "AQIAAB8AAAAAAAAAAAAgwDgAAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:21:54.267Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SysteamFr103ExeptionsTests.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamFr103ExeptionsTests.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamFr103ExeptionsTests.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamFr103ExeptionsTests.cs",
+              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamFr103ExeptionsTests.cs",
+              "ViewState": "AQIAACwAAAAAAAAAAAAQwD0AAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:21:43.819Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SysteamBlogUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
+              "ViewState": "AQIAACgAAAAAAAAAAAAgwD4AAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:21:38.768Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SysteamBanTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAAgwD8AAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:21:33.982Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SysteamAuthUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamAuthUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamAuthUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamAuthUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamAuthUnitTest.cs",
+              "ViewState": "AQIAABcAAAAAAAAAAAAQwDgAAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:20:55.226Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SysteamAdminUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
+              "ViewState": "AQIAACYAAAAAAAAAAAAQwDoAAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:20:49.384Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ModerUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAAgwD8AAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:20:44.311Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BlogUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
+              "ViewState": "AQIAACgAAAAAAAAAAAAgwD0AAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:20:39.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AuthUnitTest.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
+              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
+              "ViewState": "AQIAACIAAAAAAAAAAAAgwDcAAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:20:33.774Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Pack5.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
+              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAAgwDoAAABwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:20:14.232Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Pack4.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
+              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
+              "ViewState": "AQIAACAAAAAAAAAAAAAQwD0AAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:18:41.09Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Pack2.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
+              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
+              "ViewState": "AQIAACEAAAAAAAAAAAAuwDsAAABJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:17:54.765Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Pack1.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
+              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
+              "ViewState": "AQIAAB0AAAAAAAAAAIA0wDUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:13:50.779Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Program.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Program.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Program.cs",
+              "RelativeToolTip": "WebApplication1\\Program.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAACkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-21T09:15:06.172Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\appsettings.json",
+              "RelativeDocumentMoniker": "WebApplication1\\appsettings.json",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\appsettings.json",
+              "RelativeToolTip": "WebApplication1\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-21T09:14:32.533Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "TestAppSettings.json",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\TestAppSettings.json",
+              "RelativeDocumentMoniker": "TestProjectForProgram\\TestAppSettings.json",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\TestAppSettings.json",
+              "RelativeToolTip": "TestProjectForProgram\\TestAppSettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-21T09:14:28.153Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -111,249 +320,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "StatsController.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\StatsController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\StatsController.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\StatsController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\StatsController.cs",
-              "ViewState": "AQIAALgAAAAAAAAAAAAAALgAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T11:39:02.59Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ModerController.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\ModerController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\ModerController.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\ModerController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\ModerController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB0AAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T11:30:32.68Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "BlogsController.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\BlogsController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\BlogsController.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\BlogsController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\BlogsController.cs",
-              "ViewState": "AQIAAIEAAAAAAAAAAAAmwJoAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T11:13:45.789Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ModerUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\ModerUnitTest.cs",
-              "ViewState": "AQIAAFcAAAAAAAAAAAAowHIAAAA3AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T09:26:00.277Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "SysteamBanTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamBanTest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T09:25:55.242Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "PostUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\PostUnitTest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T09:20:56.875Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "StatsUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\StatsUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\StatsUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\StatsUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\StatsUnitTest.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAAAAFAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T09:21:52.881Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AdminUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AdminUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\AdminUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AdminUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\AdminUnitTest.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T09:20:21.398Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BlogUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\BlogUnitTest.cs",
-              "ViewState": "AQIAAGUAAAAAAAAAAAAYwHIAAAADAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T09:20:11.078Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "SysteamStatsTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamStatsTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamStatsTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamStatsTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamStatsTest.cs",
-              "ViewState": "AQIAANQAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:21:42.183Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Pack6.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack6.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack6.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack6.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack6.cs",
-              "ViewState": "AQIAAIQAAAAAAAAAAAAqwKIAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:22:01.413Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Pack5.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack5.cs",
-              "ViewState": "AQIAAFAAAAAAAAAAAAAwwBIAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:21:21.019Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Pack2.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack2.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:20:06.8Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "SysteamAdminUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamAdminUnitTest.cs",
-              "ViewState": "AQIAADcAAAAAAAAAAAAgwAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:21:01.306Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Pack3.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack3.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack3.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack3.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack3.cs",
-              "ViewState": "AQIAAHQAAAAAAAAAAAAIwA8AAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:19:26.575Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AuthUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\ModelUnitTest\\AuthUnitTest.cs",
-              "ViewState": "AQIAAK0AAAAAAAAAAAAuwAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:18:39.129Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "SysteamBlogUnitTest.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
-              "RelativeToolTip": "TestProjectForProgram\\SysteamTets\\SysteamBlogUnitTest.cs",
-              "ViewState": "AQIAAIYAAAAAAAAAAAAIwAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:19:47.22Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "Pack1.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack1.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:19:15.257Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "Pack3_1.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack3_1.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack3_1.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack3_1.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack3_1.cs",
-              "ViewState": "AQIAABEAAAAAAAAAAAAQwCIAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:17:36.281Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "Pack4.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
-              "RelativeDocumentMoniker": "TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
-              "RelativeToolTip": "TestProjectForProgram\\IntegrationUnitTest\\Pack4.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:17:22.764Z"
             }
           ]
         },

@@ -5,5 +5,8 @@
     "DefaultConnection5000": "Server=localhost;Database=soulsborneblogstest5000;User=root;Password=;",
     "MaximumPacketSize": "67108864;",
     "DefaultCommandTimeout": "600;"
+  },
+  "AdminEmail": {
+    "Email": "v.y.shumsjkyy@student.khai.edu"
   }
 }

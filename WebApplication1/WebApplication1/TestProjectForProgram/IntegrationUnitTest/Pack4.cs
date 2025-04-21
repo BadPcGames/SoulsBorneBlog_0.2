@@ -10,6 +10,7 @@ using WebApplication1.Services;
 using Newtonsoft.Json.Linq;
 using WebApplication1.Controllers;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Options;
 
 
 namespace IntegrationUnitTest
@@ -28,6 +29,7 @@ namespace IntegrationUnitTest
         private UserService _userService;
         private IHttpContextAccessor _contextAccessor;
         private AuthController _authController;
+        private IOptions<AdminEmailOptions> _adminEmail;
 
         [SetUp]
         public void Setup()
@@ -57,7 +59,10 @@ namespace IntegrationUnitTest
             _postsController = new PostsController(_dbContext, _userService, _config);
             _moderController = new ModerController(_dbContext, _emailService);
             _userService=new UserService(_dbContext, _contextAccessor);
-            _authController = new AuthController(_dbContext, _config, _userService);
+            _emailService = new EmailService();
+            var adminEmailOptions = _config.GetSection("AdminEmail").Get<AdminEmailOptions>();
+            _adminEmail = Options.Create(adminEmailOptions);
+            _authController = new AuthController(_dbContext, _config, _userService, _emailService, _adminEmail);
         }
 
 

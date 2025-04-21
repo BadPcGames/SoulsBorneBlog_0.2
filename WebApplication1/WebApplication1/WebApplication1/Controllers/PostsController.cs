@@ -64,7 +64,7 @@ public class PostsController : Controller
         User user = _context.Users.FirstOrDefault(user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId);
         _emailService.SendEmail(user.Email,"Публікація "+post.Title,"Була одобрена та опублікована");
 
-        return Ok();
+       return Json(new { success = true, message = "Публікація схвалена" });
     }
 
     public async Task<IActionResult> PostNotApproval(int postId, string? reason)

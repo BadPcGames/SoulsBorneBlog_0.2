@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Post_Content> Post_Contents { get; set; }
     public DbSet<Coments> Coments { get; set; }
     public DbSet<Reactions> Reactions { get; set; }
+    public DbSet<Baner> Baners { get; set; }
 
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -24,5 +25,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Blog>().ToTable("blogs");
         modelBuilder.Entity<Post>().ToTable("posts");
         modelBuilder.Entity<User>().ToTable("users");
+        modelBuilder.Entity<Baner>().ToTable("baners");
     }
 }

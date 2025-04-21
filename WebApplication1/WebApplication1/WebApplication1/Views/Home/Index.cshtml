@@ -56,11 +56,28 @@
             height:auto;
             margin:10px;
         }
+
+        #activeBannerContainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .active-banner-img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            aspect-ratio: 3 / 1; /* ширина в 3 раза больше высоты */
+            object-fit: cover;
+            border: 4px solid #4caf50;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
     </style>
 
 </head>
 <body >
-
+ @*    left filter *@
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center position-absolute start-0 end-0 p-3">
             <button class="btn btn-dark text-white" type="button" data-bs-toggle="offcanvas"
@@ -73,11 +90,13 @@
             </button>
         </div>
     </div>
-
+    @*    Center *@
     <div class="container" style="margin-top:10px">
         <div class="row">
             <div class="col-sm-2 col-md-3"></div>
             <div class="col-sm-4 col-md-6">
+                <div id="activeBannerContainer" class="mb-3 text-center"></div>
+
                 <div class="content" id="postsContainer">
 
                 </div>
@@ -87,7 +106,7 @@
         </div>
     </div>
 
-
+    @*    right filter *@
     <div class="offcanvas offcanvas-start bg-dark bg-opacity-50 text-white"
          data-bs-scroll="true"
          data-bs-backdrop="false" tabindex="-1"
@@ -271,6 +290,7 @@
     $(document).ready(function () {
         let currentPage = 1;
         const postsPerPage = 2;
+        loadActiveBanner();
 
         function loadPosts() {
             const filterGame = $('#gameSelect').val();
@@ -383,6 +403,27 @@
         }
         applyFilter();
     });
+
+    function loadActiveBanner() {
+        $.ajax({
+            url: '/Admin/GetHomeBanner',
+            type: 'GET',
+            success: function (response) {
+                if (response && response.image) {
+                    const img = $('<img>')
+                        .attr('src', 'data:image/png;base64,' + response.image)
+                        .addClass('active-banner-img');
+
+                    $('#activeBannerContainer').empty().append(img);
+                } else {
+                    $('#activeBannerContainer').empty(); 
+                }
+            },
+            error: function () {
+                console.error('Ошибка при загрузке активного банера');
+            }
+        });
+    }
 </script>
 
 
