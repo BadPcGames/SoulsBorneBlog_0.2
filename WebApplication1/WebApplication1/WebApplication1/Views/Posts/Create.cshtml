@@ -63,14 +63,14 @@
         const file = fileInput.files[0];
         if (file) {
             const originalName = file.name;
-             if (/^\d/.test(originalName)) {
+            if (/^\d/.test(originalName)) {
                 const newName = `file_${originalName}`;
                 const dataTransfer = new DataTransfer();
                 const renamedFile = new File([file], newName, { type: file.type });
                 dataTransfer.items.add(renamedFile);
                 fileInput.files = dataTransfer.files;
                 console.log(`Имя файла изменено: ${originalName} -> ${newName}`);
-             }
+            }
         }
     });
 
@@ -98,63 +98,134 @@
 
         if (contentType === "Text") {
             newModule.innerHTML = `
-            <div class="module-content">
-                <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
-                <label>Контент (${contentType}):</label>
-                <textarea name="contents[${newIndex}].Content" class="form-control" required></textarea>
-                <label>Позиция:</label>
-                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
-                <button type="button" onclick="removeModule(this)">Удалить</button>
-            </div>
-        `;
-        } else {
+                <div class="module-content">
+                    <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                    <label>Контент (${contentType}):</label>
+                    <textarea name="contents[${newIndex}].Content" class="form-control" required></textarea>
+                    <label>Позиция:</label>
+                    <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
+                    <button type="button" class="move-up">Вверх</button>
+                    <button type="button" class="move-down">Вниз</button>
+                    <button type="button" onclick="removeModule(this)">Удалить</button>
+                </div>
+            `;
+        } else if (contentType === "Image") {
             newModule.innerHTML = `
-            <div class="module-content">
-                <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
-                <label>Контент (${contentType}):</label>
-                <input type="file" name="contents[${newIndex}].FormFile" class="form-control" required />
-                <label>Позиция:</label>
-                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
-                <button type="button" onclick="removeModule(this)">Удалить</button>
-            </div>
-        `;
+                <div class="module-content">
+                    <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                    <label>Контент (${contentType}):</label>
+                    <input type="file" name="contents[${newIndex}].FormFile" class="form-control" accept="image/*" required />
+                    <div class="image-preview" style="display: none;">
+                        <img src="" alt="Preview" class="img-fluid" />
+                    </div>
+                    <label>Позиция:</label>
+                    <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
+                    <button type="button" class="move-up">Вверх</button>
+                    <button type="button" class="move-down">Вниз</button>
+                    <button type="button" onclick="removeModule(this)">Удалить</button>
+                </div>
+            `;
+        } else if (contentType === "Video") {
+            newModule.innerHTML = `
+                <div class="module-content">
+                    <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                    <label>Контент (${contentType}):</label>
+                    <input type="file" name="contents[${newIndex}].FormFile" class="form-control" accept="video/*" required />
+                   <div class="video-preview" style="display: none;">
+                        <video controls class="video-fluid">
+                            <source src="" type="video/mp4" />
+                        </video>
+                    </div>
+                    <label>Позиция:</label>
+                    <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
+                    <button type="button" class="move-up">Вверх</button>
+                    <button type="button" class="move-down">Вниз</button>
+                    <button type="button" onclick="removeModule(this)">Удалить</button>
+                </div>
+            `;
         }
 
         container.appendChild(newModule);
+
+        const fileInput = newModule.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.addEventListener('change', function () {
+                const file = this.files[0];
+                const previewContainer = newModule.querySelector('.image-preview, .video-preview');
+                if (file && previewContainer) {
+                    const previewElement = previewContainer.querySelector('img, video');
+                    const reader = new FileReader();
+                    
+                    reader.onload = function (e) {
+                    if (file.type.startsWith('image')) {
+                        previewElement.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    } else if (file.type.startsWith('video')) {
+                        const sourceElement = previewElement.querySelector('source');
+                        sourceElement.src = e.target.result;
+                        previewElement.load(); 
+                        previewContainer.style.display = 'block';
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
     }
 
     function removeModule(button) {
         const module = button.closest(".content-module");
         if (module) {
             module.remove();
-            updateModuleIndices(); 
+            updateModuleIndices();
         } else {
             console.error("Не удалось найти родительский элемент .content-module.");
         }
     }
 
-    function updateModuleIndices() {
-        const modules = document.querySelectorAll("#contentModules .content-module");
-        modules.forEach((module, index) => {
-            const positionInput = module.querySelector(".position-input");
-            if (positionInput) {
-                positionInput.value = index; 
-            }
-            const hiddenInput = module.querySelector('input[type="hidden"]');
-            if (hiddenInput) {
-                hiddenInput.name = `Contents[${index}].ContentType`; 
-            }
-        });
-    }
+
 
     document.getElementById("addTextModule").addEventListener("click", () => addModule("Text"));
     document.getElementById("addImageModule").addEventListener("click", () => addModule("Image"));
     document.getElementById("addVideoModule").addEventListener("click", () => addModule("Video"));
 
-    const sortable = new Sortable(document.getElementById("contentModules"), {
-        animation: 150, 
-        onEnd: function () {
-            updateModuleIndices(); 
-        },
+
+
+    document.querySelector("#contentModules").addEventListener("click", function (event) {
+        if (event.target.classList.contains("move-up")) {
+            const module = event.target.closest(".content-module");
+            moveModule(module, "up");
+        } else if (event.target.classList.contains("move-down")) {
+            const module = event.target.closest(".content-module");
+            moveModule(module, "down");
+        }
     });
+
+    function moveModule(module, direction) {
+        const allModules = Array.from(document.querySelectorAll(".content-module"));
+        const currentIndex = allModules.indexOf(module);
+
+        const newIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+        if (newIndex >= 0 && newIndex < allModules.length) {
+            const container = document.getElementById("contentModules");
+            if (direction === "down") {
+                container.insertBefore(module, allModules[newIndex + 1] || null);
+            }
+            else {
+                container.insertBefore(module, allModules[newIndex]);
+            }
+            updateModuleIndices();
+        }
+    }
+
+    function updateModuleIndices() {
+    const modules = document.querySelectorAll("#contentModules .content-module");
+    modules.forEach((module, index) => {
+        const positionInput = module.querySelector(".position-input");
+        if (positionInput) {
+            positionInput.value = index; 
+        }
+    });
+}
 </script>

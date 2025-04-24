@@ -162,11 +162,7 @@ public class PostsController : Controller
         return View(model);
     }
 
-    public IActionResult Edit(int id,string? message)
-    {
-        ViewBag.Error = message;
-        return View(getPost(id));
-    }
+
 
 
     // POST: Posts/Create/5
@@ -212,20 +208,38 @@ public class PostsController : Controller
         return RedirectToAction("Index", new { id = blogId });
     }
 
+    public IActionResult Edit(int id, string? message)
+    {
+        ViewBag.Error = message;
+        return View(getPost(id));
+    }
+
     [HttpPost]
-    public async Task<IActionResult> Edit([Bind("Title,Game")] Post post, List<PostContentViewModel> contents)
+    public async Task<IActionResult> Edit([Bind("Id,Title,Game")] Post post, List<PostContentViewModel> contents)
     {
         if (post.Title == "" || post.Game == "")
         {
             return RedirectToAction("Edit", new { id = post.Id, message = "all data must be fuiled" });
         }
-        post.Verify = false;
-        _context.Posts.Update(post);
+
+        var oldPost = _context.Posts.First(p=>p.Id==post.Id);
+
+        if (oldPost.Title != post.Title)
+        {
+            oldPost.Title = post.Title;
+        }
+        if (oldPost.Game != post.Game)
+        {
+            oldPost.Game = post.Game;
+        }
+
+        oldPost.Verify = false;
+        _context.Posts.Update(oldPost);
         await _context.SaveChangesAsync();
 
         var oldContent = _context.Post_Contents.Where(con => con.PostId == post.Id);
 
-        foreach(var content in oldContent)
+        foreach (var content in oldContent)
         {
             _context.Post_Contents.Remove(content);
         }
@@ -242,7 +256,8 @@ public class PostsController : Controller
                         contentData = Encoding.UTF8.GetBytes(content.Content);
                         break;
                     default:
-                        contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
+                        //contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
+                        contentData = content.Content != null ? Convert.FromBase64String(content.Content) : null;
                         break;
                 }
 
@@ -257,7 +272,7 @@ public class PostsController : Controller
             }
         }
 
-        return RedirectToAction("Index", new { id = post.BlogId });
+        return RedirectToAction("Index", new { id = oldPost.BlogId });
     }
     // POST: Posts/Dlete/5
     public async Task<IActionResult> Delete(int? id)

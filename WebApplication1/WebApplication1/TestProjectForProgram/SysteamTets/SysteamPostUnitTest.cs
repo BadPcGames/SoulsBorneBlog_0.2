@@ -7,6 +7,7 @@ using WebApplication1.DbModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using WebApplication1.Services;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 
@@ -271,7 +272,7 @@ namespace SysteamTest
             {
                 Position = 0,
                 ContentType = "Image",
-                FormFile = CreateIFormFileFromPath("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png")
+                Content = Convert.ToBase64String(MyConvert.ConvertFileToByteArray(CreateIFormFileFromPath("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png")))
             };
 
             contents.Add(content);
@@ -303,7 +304,7 @@ namespace SysteamTest
             {
                 Position = 0,
                 ContentType = "Video",
-                FormFile = CreateIFormFileFromPath("D:\\Смотреть\\записи\\Captures\\video.mp4")
+                Content = Convert.ToBase64String(MyConvert.ConvertFileToByteArray(CreateIFormFileFromPath("D:\\Смотреть\\записи\\Captures\\video.mp4")))
             };
 
             contents.Add(content);
