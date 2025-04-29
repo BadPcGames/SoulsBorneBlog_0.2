@@ -30,8 +30,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU3RhdHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/git/NewProjectWithSqlForDiplom/WebApplication1/WebApplication1/WebApplication1/Views/Auth/ConfirmEmailResult.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxDb25maXJtRW1haWxSZXN1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/git/NewProjectWithSqlForDiplom/WebApplication1/WebApplication1/WebApplication1/Views/Auth/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/git/NewProjectWithSqlForDiplom/WebApplication1/WebApplication1/WebApplication1/Views/Auth/InvalidLink.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxJbnZhbGlkTGluay5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/git/NewProjectWithSqlForDiplom/WebApplication1/WebApplication1/WebApplication1/Views/Auth/Report.cshtml]

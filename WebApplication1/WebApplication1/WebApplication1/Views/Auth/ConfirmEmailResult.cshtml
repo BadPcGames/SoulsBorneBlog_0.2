@@ -1,0 +1,23 @@
+﻿@{
+    Layout = null;
+    var email = ViewBag.Email as string;
+}
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Підтвердження email</title>
+    <script>
+        // Сразу после визита по ссылке из письма помечаем почту как подтверждённую
+        localStorage.setItem("emailConfirmed", "true");
+        localStorage.setItem("confirmedEmail", "@ViewBag.Email");
+        // Переходим обратно на страницу регистрации с параметром confirmed=true
+        setTimeout(() => {
+            window.location.href = "/Auth/Index?confirmed=true";
+        }, 1500);
+    </script>
+</head>
+<body>
+    <p>Email підтверджено. Зараз ви будете повернуті...</p>
+</body>
+</html>

@@ -12,6 +12,7 @@ using UserService= WebApplication1.Services.UserService;
 using System.ComponentModel.DataAnnotations;
 using MimeKit.Text;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 
 
 namespace WebApplication1.Controllers
@@ -23,13 +24,22 @@ namespace WebApplication1.Controllers
         private readonly UserService _userService;
         private readonly EmailService _emailService;
         private readonly AdminEmailOptions _adminEmail;
-        public AuthController(AppDbContext context, IConfiguration config, UserService userService, EmailService emailService, IOptions<AdminEmailOptions> adminEmailOptions)
+        private readonly IMemoryCache _memoryCache;
+
+        public AuthController(
+            AppDbContext context,
+            IConfiguration config,
+            UserService userService,
+            EmailService emailService,
+            IOptions<AdminEmailOptions> adminEmailOptions,
+            IMemoryCache memoryCache)
         {
             _context = context;
             _config = config;
             _userService = userService;
             _emailService = emailService;
             _adminEmail = adminEmailOptions.Value;
+            _memoryCache = memoryCache;
         }
 
         [Authorize]
@@ -37,6 +47,97 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SendConfirmationEmail([FromBody] EmailRequestModel model)
+        {
+            if (!IsValidEmail(model.Email))
+                return Json(new { success = false, message = "Некоректна пошта" });
+
+            var token = Guid.NewGuid().ToString();
+            var cacheKey = $"email_confirm_{model.Email}";
+            _memoryCache.Set(cacheKey, token, TimeSpan.FromMinutes(15));
+
+            // Абсолютний URL
+            var confirmUrl = Url.Action("ConfirmEmail", "Auth", new { email = model.Email, token = token }, protocol: Request.Scheme);
+
+            var body = $@"
+            <p>Щоб підтвердити email, натисніть на посилання нижче:</p>
+            <p><a href='{confirmUrl}' style='display:inline-block;padding:10px 15px;background-color:#28a745;color:white;text-decoration:none;border-radius:5px;'>Підтвердити Email</a></p>
+            <p>Або скопіюйте та вставте це посилання у браузер:</p>
+            <p>{confirmUrl}</p>";
+
+            try
+            {
+                await _emailService.SendHtmlEmailAsync(model.Email, "Підтвердження пошти", body);
+                return Json(new { success = true, message = "Підтвердження надіслано на вказану пошту.", token = token });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Помилка при відправці пошти: " + ex.Message });
+            }
+        }
+        [HttpGet]
+        public IActionResult ConfirmEmail(string email, string token)
+        {
+            var cacheKey = $"email_confirm_{email}";
+            var verifiedKey = $"email_verified_{email}";
+
+            if (_memoryCache.TryGetValue(verifiedKey, out bool isVerified) && isVerified)
+            {
+                ViewBag.Email = email;
+                return View("ConfirmEmailResult");
+            }
+
+            if (_memoryCache.TryGetValue(cacheKey, out string storedToken) && storedToken == token)
+            {
+                _memoryCache.Set(verifiedKey, true, TimeSpan.FromMinutes(30));
+                ViewBag.Email = email;
+                return View("ConfirmEmailResult");
+            }
+
+            return Content("Недійсне або прострочене посилання");
+        }
+
+        [HttpPost]
+        public IActionResult ClearEmailConfirmationCache([FromBody] EmailRequestModel request)
+        {
+            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(request.Email))
+                return BadRequest(new { success = false, message = "Invalid email." });
+
+            var confirmKey = $"email_confirm_{request.Email}";
+            var verifiedKey = $"email_verified_{request.Email}";
+
+            _memoryCache.Remove(confirmKey);
+            _memoryCache.Remove(verifiedKey);
+
+            return Ok(new { success = true });
+        }
+
+        public class EmailRequestModel
+        {
+            public string Email { get; set; }
+        }
+
+        //[HttpGet]
+        //public IActionResult ConfirmEmail(string email, string token)
+        //{
+        //    var cacheKey = $"email_confirm_{email}";
+
+        //    if (_memoryCache.TryGetValue(cacheKey, out string storedToken) && storedToken == token)
+        //    {
+        //        _memoryCache.Set($"email_verified_{email}", true, TimeSpan.FromMinutes(2));
+
+
+        //        //return View("EmailConfirmed");
+        //    }
+
+        //    return View("InvalidLink");
+        //}
+
+
+
+
 
         [Authorize]
         public async Task<IActionResult> MakeReport(string topic, string text)
@@ -84,6 +185,13 @@ namespace WebApplication1.Controllers
             {
                 return RedirectToAction("Index", new { message = "email is incorrect" });
             }
+
+            //var confirmed = _memoryCache.TryGetValue($"email_verified_{model.Email}", out bool verified) && verified;
+
+            //if (!confirmed)
+            //{
+            //    return RedirectToAction("Index", new { message = "Email не підтверджено" });
+            //}
 
             if (!_context.Users.Any(m => m.Email == model.Email))
             {

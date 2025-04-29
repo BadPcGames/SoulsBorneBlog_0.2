@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProjectForProgram", "TestProjectForProgram\TestProjectForProgram.csproj", "{2C6C4802-F698-4586-B3C5-D22CEE5FE621}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProjectForProgram", "TestProjectForProgram\TestProjectForProgram.csproj", "{2C6C4802-F698-4586-B3C5-D22CEE5FE621}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4} = {F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}
 	EndProjectSection

@@ -6,91 +6,212 @@
 }
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .faq{
-            max-width:500px;
-            margin:20px auto;
+        .faq {
+            max-width: 500px;
+            margin: 20px auto;
         }
-        .faq-item{
-            border:2px solid red;
-            border-radius:5px;
+
+        .faq-item {
+            border: 2px solid red;
+            border-radius: 5px;
+            margin-bottom: 10px;
         }
-        .faq-title{
-            display:block;
-            padding:10px <a href="#"></a>
 
-            color:#fff;
-            cursor:pointer;
-
+        .faq-title {
+            display: block;
+            padding: 10px;
+            background-color: crimson;
+            color: #fff;
+            cursor: pointer;
             transition: background .2s ease-out;
         }
-       .faq-title:hover{
-           background-color:lightcoral;
-       }
-       .faq-input{
-           width:0px;
-           height:0px;
 
-           -webkit-appearance:none;
-           appearance:none;
+        .faq-title:hover {
+            background-color: lightcoral;
+        }
 
-           position:absolute;
-       }
-       .faq-input:checked + .faq-text{
-           display:block;
-       }
+        .faq-input {
+            display: none;
+        }
 
-       .faq-text{
-           display:none;
-           padding:10px <a href="#"></a>
-           color:#fff;
-           font-size:14px;
-       }
+        .faq-text {
+            display: none;
+            padding: 10px;
+            color: #fff;
+            background-color: #333;
+            font-size: 14px;
+        }
+
+        .faq-input:checked + .faq-text {
+            display: block;
+        }
     </style>
 </head>
 
-<h1>Log in</h1>
+<body>
+    <h1 class="text-center">Авторизація</h1>
 
-<div class="fag">
+    <div class="faq">
+        @if (!string.IsNullOrEmpty(ViewBag.Error))
+        {
+            <p class="bg-danger text-white p-2">@ViewBag.Error</p>
+        }
 
-    @if (!string.IsNullOrEmpty(ViewBag.Error))
-    {
-        <p style="background-color:red">@ViewBag.Error</p>
+        <div class="faq-item">
+            <label class="faq-title" for="faq-login">Вхід</label>
+            <input class="faq-input" type="radio" name="faq" id="faq-login" checked>
+            <div class="faq-text">
+                <form asp-action="Login" method="post">
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="Email" id="loginEmail" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" name="Password" id="loginPassword" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Увійти</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <label class="faq-title" for="faq-register">Реєстрація</label>
+            <div id="statusMsg"></div>
+            <input class="faq-input" type="radio" name="faq" id="faq-register">
+            <div class="faq-text">
+                <form asp-action="Register" method="post">
+                
+
+                    <div class="mb-3">
+                        <label for="regEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="regEmail" name="Email" required />
+                        <button type="button" class="btn btn-secondary mt-2" id="sendConfirm">Підтвердити email</button>
+                        <p id="statusMsg" class="mt-1"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Ім’я</label>
+                        <input type="text" class="form-control" name="Name" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="regPassword" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" name="Password" required />
+                    </div>
+
+                    <button type="submit" id="registerBtn" class="btn btn-success" disabled>Зареєструватися</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+const emailInput   = document.getElementById('regEmail');
+const registerBtn  = document.getElementById('registerBtn');
+const statusText   = document.getElementById('statusMsg');
+const confirmBtn   = document.getElementById('sendConfirm');
+const nameInput    = document.querySelector('input[name="Name"]');
+const passwordInput= document.querySelector('input[name="Password"]');
+
+function checkConfirmed() {
+    const confirmed      = localStorage.getItem('emailConfirmed') === 'true';
+    const confirmedEmail = localStorage.getItem('confirmedEmail');
+
+    // Если совпадает почта и флаг установлен
+    if (confirmed && emailInput.value === confirmedEmail) {
+        registerBtn.disabled   = false;
+        nameInput.disabled     = false;
+        passwordInput.disabled = false;
+        confirmBtn.style.display = "none";
+        statusText.textContent   = "Email підтверджено!";
+        statusText.style.color   = "green";
+    } else {
+        registerBtn.disabled   = true;
+        nameInput.disabled     = true;
+        passwordInput.disabled = true;
+        confirmBtn.style.display = "inline-block";
+        statusText.textContent   = "Email не підтверджено";
+        statusText.style.color   = "red";
+    }
+}
+
+window.addEventListener('load', () => {
+    // 1) Сначала всегда дизейблим поля регистрации
+    nameInput.disabled     = true;
+    passwordInput.disabled = true;
+
+    // 2) Разбираем URL-параметры
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromConfirm = urlParams.get('confirmed') === 'true';
+
+    // 3) Чистим localStorage только при обычном заходе
+    if (!fromConfirm) {
+        localStorage.removeItem('emailConfirmed');
+        localStorage.removeItem('confirmedEmail');
+        localStorage.removeItem('lastToken');
     }
 
-    <div class="faq-item">
-        <label class="faq-title" for="faq-login">Вхід</label>
-        <input class="faq-input" type="radio" checked="checked"  name="faq" id="faq-login"></input>
-        <div class="faq-text">
-            <form asp-action="Login" method="post">
-                <h1>Email</h1>
-                <input type="text" name="Email" value="" />
-                <h1>Password</h1>
-                <input type="password" name="Password" value="" />
-                <input type="submit" />
-            </form>
-        </div>
-    </div>
+    // 4) Если в storage уже есть подтверждённая почта — подставляем её в поле
+    const savedEmail = localStorage.getItem('confirmedEmail');
+    if (savedEmail) {
+        emailInput.value = savedEmail;
+    }
 
-    <div class="faq-item">
-        <label class="faq-title" for="faq-registr">Реєстрація</label>
-        <input class="faq-input" type="radio" name="faq" id="faq-registr"></input>
-        <div class="faq-text">
-            <form asp-action="Register" method="post">
-                <h1>Name</h1>
-                <input type="text" name="Name" value="" />
-                <h1>Email</h1>
-                <input type="text" name="Email" value="" />
-                <h1>Password</h1>
-                <input type="password" name="Password" value="" />
-                <input type="submit" />
-            </form>
-        </div>
-    </div>
+    // 5) Обновляем состояние формы
+    checkConfirmed();
+});
 
-</div>
+emailInput.addEventListener('input', async () => {
+    // при любом изменении почты — сбрасываем флаги
+    localStorage.removeItem('emailConfirmed');
+    localStorage.removeItem('confirmedEmail');
+    localStorage.removeItem('lastToken');
+    checkConfirmed();
+
+    try {
+        await fetch('/Auth/ClearEmailConfirmationCache', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailInput.value })
+        });
+    } catch (e) {
+        console.warn('Не удалось очистить кеш на сервере:', e);
+    }
+});
+
+confirmBtn.addEventListener('click', async () => {
+    const email = emailInput.value;
+    if (!email || !email.includes('@@')) {
+        statusText.textContent = 'Введіть коректну пошту';
+        statusText.style.color = 'red';
+        return;
+    }
+
+    try {
+        const response = await fetch('/Auth/SendConfirmationEmail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+        statusText.textContent = result.message;
+        statusText.style.color   = result.success ? 'green' : 'red';
+        if (result.success && result.token) {
+            localStorage.setItem('lastToken', result.token);
+        }
+    } catch (err) {
+        statusText.textContent = 'Помилка при відправці запиту';
+        statusText.style.color = 'red';
+    }
+});
+</script>
+
+
+</body>
