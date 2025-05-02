@@ -5,10 +5,10 @@ using WebApplication1.DbModels;
 using WebApplication1.Models;
 using System.Text;
 using WebApplication1.Services;
+using Google.Apis.Gmail.v1.Data;
 
 
 
-// Controller to manage posts
 public class PostsController : Controller
 {
     private readonly AppDbContext _context;
@@ -158,6 +158,7 @@ public class PostsController : Controller
         {
             BlogId = blogId
         };
+        ViewBag.BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == blogId).Name;
         return View(model);
     }
 
@@ -200,6 +201,8 @@ public class PostsController : Controller
     public IActionResult Edit(int id, string? message)
     {
         ViewBag.Error = message;
+        ViewBag.PostName = _context.Posts.FirstOrDefault(post => post.Id == id).Title;
+
         return View(getPost(id));
     }
 
@@ -405,7 +408,7 @@ public class PostsController : Controller
         existingComment.Text = text;
         _context.Update(existingComment);
         await _context.SaveChangesAsync();
-        return Ok();
+        return Json(new { success = true, message="Comment was changed" });
     }
 
     [HttpPost]

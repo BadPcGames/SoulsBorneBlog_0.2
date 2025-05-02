@@ -9,4 +9,5 @@ namespace WebApplication1.Models
         public byte[] GameCharacter { get; set; }
         public string Color { get; set; }
     }
+
 }

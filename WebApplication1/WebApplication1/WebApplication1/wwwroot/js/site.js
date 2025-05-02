@@ -1,4 +1,4 @@
-﻿export async function getUserRole() {
+﻿async function getUserRole() {
     try {
         const response = await $.ajax({
             url: '/Auth/GetUserRole', 
@@ -11,7 +11,7 @@
     }
 }
 
-export async function getUserId() {
+async function getUserId() {
     try {
         const response = await $.ajax({
             url: '/Auth/GetUserId',
@@ -24,21 +24,21 @@ export async function getUserId() {
     }
 }
 
-export function checkAccess() {
+function checkAccess() {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: '/Auth/getAccess', 
+            url: '/Auth/getAccess',
             type: 'GET',
             success: function (response) {
                 if (!response) {
-                    alert("Ви в бані");
+                    alert("Comment caption is not available");
                     resolve(false);
                 } else {
                     resolve(true);
                 }
             },
             error: function () {
-                alert("Ви в бані");
+                alert("Comment caption is not available");
                 resolve(false);
             }
         });

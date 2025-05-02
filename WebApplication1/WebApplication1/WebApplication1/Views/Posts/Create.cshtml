@@ -9,36 +9,100 @@
     <title>Фиксированный макет с прокручиваемым центральным блоком</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .content-module {
+            border: 1px solid #dee2e6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #343a40;
+            color:white;
+        }
+
+        .module-content label {
+            font-weight: 500;
+        }
+
+        .module-content button {
+            margin-right: 0.5rem;
+        }
+
+        .image-preview img,
+        .video-preview video {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 0.25rem;
+        }
+
+        .choosenText {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .image-preview,
+        .video-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            border-radius: 0.25rem;
+            max-height: 300px;
+            overflow: hidden;
+            background-color: #212529;
+            padding: 10px;
+        }
+
+            .image-preview img,
+            .video-preview video {
+                display: block; 
+                margin: 0 auto; 
+                max-width: 100%;
+                max-height: 280px;
+                border-radius: 0.25rem;
+                object-fit: contain;
+            }
+    </style>
+
 </head>
 
-<h1>Редактор постов для блога: @Model.BlogId</h1>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Create post for Blog: @ViewBag.BlogName</h1>
 
-<form asp-action="Create" asp-route-blogId="@Model.BlogId" id="postForm" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="BlogId" asp-for="BlogId" />
+        <form asp-action="Create" asp-route-blogId="@Model.BlogId" id="postForm" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="BlogId" asp-for="BlogId" />
 
-    <h2>Назва</h2>
-    <input name="Title" asp-for="Title" class="form-control" required />
-    <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="mb-3">
+                <label for="Title" class="form-label h4">Title</label>
+                <input name="Title" asp-for="Title" class="form-control choosenText" required />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
 
-    <h2>Гра</h2>
-    <select id="gameSelect" name="Game" class="form-control" required>
-        <option value="">Оберіть гру...</option>
-    </select>
-    <span asp-validation-for="Game" class="text-danger"></span>
+            <div class="mb-3">
+                <label for="gameSelect" class="form-label h4">Game</label>
+                <select id="gameSelect" name="Game" class="form-select choosenText" required>
+                    <option value="">Select a game...</option>
+                </select>
+                <span asp-validation-for="Game" class="text-danger"></span>
+            </div>
 
-    <h2>Контент</h2>
-    <div id="contentModules">
-        
+            <div class="mb-4">
+                <h3>Post Content</h3>
+                <div id="contentModules" class="d-flex flex-column gap-3"></div>
+
+                <div style="margin-top:10px">
+                    <button type="button" id="addVideoModule" class="btn btn-danger">Add Video</button>
+                    <button type="button" id="addTextModule" class="btn btn-dark">Add Text</button>
+                    <button type="button" id="addImageModule"  class="btn btn-secondary">Add Image</button>
+                    <button type="submit" class="btn btn-success">Save Post</button>
+                </div>
+            </div>
+
+           
+        </form>
     </div>
+</body>
 
-    <div class="buttons">
-        <button type="button" id="addTextModule">Добавить текст</button>
-        <button type="button" id="addImageModule">Добавить изображение</button>
-        <button type="button" id="addVideoModule">Добавить видео</button>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Сохранить пост</button>
-</form>
 
 <script>
     $(document).ready(function () {
@@ -51,7 +115,7 @@
                 });
             },
             error: function () {
-                console.error("Не удалось загрузить список игр.");
+                console.error("Failed to load game list.");
             }
         });
     });
@@ -67,7 +131,7 @@
                 const renamedFile = new File([file], newName, { type: file.type });
                 dataTransfer.items.add(renamedFile);
                 fileInput.files = dataTransfer.files;
-                console.log(`Имя файла изменено: ${originalName} -> ${newName}`);
+                console.log(`File name: ${originalName} -> ${newName}`);
             }
         }
     });
@@ -98,47 +162,50 @@
             newModule.innerHTML = `
                 <div class="module-content">
                     <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
-                    <label>Контент (${contentType}):</label>
+                    <label>Text</label>
                     <textarea name="contents[${newIndex}].Content" class="form-control" required></textarea>
-                    <label>Позиция:</label>
-                    <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
-                    <button type="button" class="move-up">Вверх</button>
-                    <button type="button" class="move-down">Вниз</button>
-                    <button type="button" onclick="removeModule(this)">Удалить</button>
+                    <label>Position:</label>
+                        <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" disabled required />
+                           <br>
+                           <button type="button" class="move-up btn btn-light">Up</button>
+                                <button type="button" class="move-down btn btn-secondary">Down</button>
+                        <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>
                 </div>
             `;
         } else if (contentType === "Image") {
             newModule.innerHTML = `
                 <div class="module-content">
                     <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
-                    <label>Контент (${contentType}):</label>
+                    <label>Image:</label>
                     <input type="file" name="contents[${newIndex}].FormFile" class="form-control" accept="image/*" required />
                     <div class="image-preview" style="display: none;">
                         <img src="" alt="Preview" class="img-fluid" />
                     </div>
-                    <label>Позиция:</label>
-                    <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
-                    <button type="button" class="move-up">Вверх</button>
-                    <button type="button" class="move-down">Вниз</button>
-                    <button type="button" onclick="removeModule(this)">Удалить</button>
+                    <label>Position:</label>
+                            <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}"  disabled required />
+                    <br>
+                    <button type="button" class="move-up btn btn-light">Up</button>
+                    <button type="button" class="move-down btn btn-secondary">Down</button>
+                    <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>
                 </div>
             `;
         } else if (contentType === "Video") {
             newModule.innerHTML = `
                 <div class="module-content">
                     <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
-                    <label>Контент (${contentType}):</label>
+                    <label>Video:</label>
                     <input type="file" name="contents[${newIndex}].FormFile" class="form-control" accept="video/*" required />
                    <div class="video-preview" style="display: none;">
                         <video controls class="video-fluid">
                             <source src="" type="video/mp4" />
                         </video>
                     </div>
-                    <label>Позиция:</label>
-                    <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
-                    <button type="button" class="move-up">Вверх</button>
-                    <button type="button" class="move-down">Вниз</button>
-                    <button type="button" onclick="removeModule(this)">Удалить</button>
+                    <label>Position:</label>
+                            <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" disabled required />
+                         <br>
+                        <button type="button" class="move-up btn btn-light">Up</button>
+                            <button type="button" class="move-down btn btn-secondary">Down</button>
+                        <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>
                 </div>
             `;
         }
@@ -177,17 +244,13 @@
             module.remove();
             updateModuleIndices();
         } else {
-            console.error("Не удалось найти родительский элемент .content-module.");
+            console.error("Could not find parent element.content - module.");
         }
     }
-
-
 
     document.getElementById("addTextModule").addEventListener("click", () => addModule("Text"));
     document.getElementById("addImageModule").addEventListener("click", () => addModule("Image"));
     document.getElementById("addVideoModule").addEventListener("click", () => addModule("Video"));
-
-
 
     document.querySelector("#contentModules").addEventListener("click", function (event) {
         if (event.target.classList.contains("move-up")) {

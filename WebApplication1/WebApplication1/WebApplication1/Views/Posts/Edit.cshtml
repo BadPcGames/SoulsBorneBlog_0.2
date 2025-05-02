@@ -6,91 +6,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
+    <title>Edit Post</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</head>
 
-<h1>Редактирование поста: @Model.Id</h1>
-
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
-}
-
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="Id" value="@Model.Id" />
-    <input type="hidden" name="BlogId" value="@Model.BlogId" />
-
-    <h2>Название</h2>
-    <input name="Title" value="@Model.Title" class="form-control" required />
-
-    <h2>Гра</h2>
-    <select id="gameSelect" name="Game" class="form-control" required>
-        <option value="@Model.Game">@Model.Game</option>
-    </select>
-
-    <h2>Контент</h2>
-    <div id="contentModules">
-        @for (int i = 0; i < Model.Contents.Count; i++)
-        {
-            var content = Model.Contents[i];
-            var base64 = Convert.ToBase64String(content.Content);
-            var mimeType = content.ContentType == "Image" ? "image/png" :
-                           content.ContentType == "Video" ? "video/mp4" : "application/octet-stream";
-
-            <div class="content-module">
-                <input type="hidden" name="contents[@i].ContentType" value="@content.ContentType" />
-                <input type="hidden" name="contents[@i].Position" value="@i" class="position-input" />
-
-                @if (content.ContentType == "Text")
-                {
-                    <label>Контент (Text):</label>
-                    <textarea name="contents[@i].Content" class="form-control">@System.Text.Encoding.UTF8.GetString(content.Content)</textarea>
-                }
-                else
-                {
-                    <label>Предпросмотр:</label><br />
-
-                    @if (content.ContentType == "Image")
-                    {
-                        <div class="image-preview" style="margin-bottom: 10px;">
-                            <img src="data:@mimeType;base64,@base64" class="img-fluid" style="max-height: 200px;" />
-                        </div>
-                    }
-                    else if (content.ContentType == "Video")
-                    {
-                        <div class="video-preview" style="margin-bottom: 10px;">
-                            <video controls style="max-width: 100%; max-height: 240px;">
-                                <source src="data:@mimeType;base64,@base64" type="@mimeType" />
-                                Ваш браузер не поддерживает видео.
-                            </video>
-                        </div>
-                    }
-
-                    <input type="hidden" name="contents[@i].Content" value="@base64" />
-                    <label>Заменить файл:</label>
-                    <input type="file" name="contents[@i].FormFile" class="form-control file-converter" data-index="@i" />
-                }
-
-                <button type="button" class="move-up">Вверх</button>
-                <button type="button" class="move-down">Вниз</button>
-                <button type="button" onclick="removeModule(this)">Удалить</button>
-            </div>
+    <style>
+        .content-module {
+            border: 1px solid #dee2e6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #343a40;
+            color: white;
         }
 
-    </div>
+        .module-content label {
+            font-weight: 500;
+        }
 
-    <div class="buttons">
-        <button type="button" id="addTextModule">Добавить текст</button>
-        <button type="button" id="addImageModule">Добавить изображение</button>
-        <button type="button" id="addVideoModule">Добавить видео</button>
-    </div>
+        .module-content button {
+            margin-right: 0.5rem;
+        }
 
-    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-</form>
+        .choosenText {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .image-preview,
+        .video-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            border-radius: 0.25rem;
+            max-height: 300px;
+            overflow: hidden;
+            background-color: #212529;
+            padding: 10px;
+        }
+
+            .image-preview img,
+            .video-preview video {
+                display: block;
+                margin: 0 auto;
+                max-width: 100%;
+                max-height: 280px;
+                border-radius: 0.25rem;
+                object-fit: contain;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Edit Post: @ViewBag.PostName</h1>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <input type="hidden" name="BlogId" value="@Model.BlogId" />
+
+            <div class="mb-3">
+                <label for="Title" class="form-label h4">Title</label>
+                <input name="Title" asp-for="Title" value="@Model.Title" class="form-control choosenText" required />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="gameSelect" class="form-label h4">Game</label>
+                <select id="gameSelect" name="Game" class="form-select choosenText" required>
+                    <option value="@Model.Game">@Model.Game</option>
+                </select>
+                <span asp-validation-for="Game" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <h3>Post Content</h3>
+                <div id="contentModules" class="d-flex flex-column gap-3">
+                    @for (int i = 0; i < Model.Contents.Count; i++)
+                    {
+                        var content = Model.Contents[i];
+                        var base64 = Convert.ToBase64String(content.Content);
+                        var mimeType = content.ContentType == "Image" ? "image/png" :
+                        content.ContentType == "Video" ? "video/mp4" : "application/octet-stream";
+
+                        <div class="content-module">
+                            <input type="hidden" name="contents[@i].ContentType" value="@content.ContentType" />
+                            <input type="hidden" name="contents[@i].Position" value="@i" class="position-input" />
+
+                            @if (content.ContentType == "Text")
+                            {
+                                <label>Text:</label>
+                                <textarea name="contents[@i].Content" class="form-control">@System.Text.Encoding.UTF8.GetString(content.Content)</textarea>
+                            }
+                            else
+                            {
+                                
+                                @if (content.ContentType == "Image")
+                                {
+                                    <label>Image:</label>
+                                    <input type="file" name="contents[@i].FormFile" class="form-control file-converter" data-index="@i" />
+                                    <div class="image-preview mb-2">
+                                        <img src="data:@mimeType;base64,@base64" class="img-fluid" />
+                                    </div>
+                                }
+                                else if (content.ContentType == "Video")
+                                {
+                                    <label>Video:</label>
+                                    <input type="file" name="contents[@i].FormFile" class="form-control file-converter" data-index="@i" />
+                                    <div class="video-preview mb-2">
+                                        <video controls>
+                                            <source src="data:@mimeType;base64,@base64" type="@mimeType" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                }
+                                <input type="hidden" name="contents[@i].Content" value="@base64" />
+                            }
+
+                            <label>Position:</label>
+                            <input type="number" name="contents[@Model.Contents[i].Position]" class="form-control position-input" value="@(Model.Contents[i].Position)" disabled required />
+                            <br>
+
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-light move-up">Up</button>
+                                <button type="button" class="btn btn-secondary move-down">Down</button>
+                                <button type="button" class="btn btn-danger" onclick="removeModule(this)">Delete</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-3">
+                    <button type="button" id="addVideoModule" class="btn btn-danger">Add Video</button>
+                    <button type="button" id="addTextModule" class="btn btn-dark">Add Text</button>
+                    <button type="button" id="addImageModule" class="btn btn-secondary">Add Image</button>
+                    <button type="submit" class="btn btn-success">Save Post</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
 
 <script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("GetGames", "Posts")',
+            method: 'GET',
+            success: function (games) {
+                games.forEach(function (game) {
+                    $("#gameSelect").append(`<option value="${game.gameName}">${game.gameName}</option>`);
+                });
+            },
+            error: function () {
+                console.error("Failed to load game list.");
+            }
+        });
+    });
+
+    $(document).on('change', 'input[type="file"]', function () {
+        const fileInput = this;
+        const file = fileInput.files[0];
+        if (file) {
+            const originalName = file.name;
+            if (/^\d/.test(originalName)) {
+                const newName = `file_${originalName}`;
+                const dataTransfer = new DataTransfer();
+                const renamedFile = new File([file], newName, { type: file.type });
+                dataTransfer.items.add(renamedFile);
+                fileInput.files = dataTransfer.files;
+                console.log(`File name: ${originalName} -> ${newName}`);
+            }
+        }
+    });
+
+    let moduleIndex = 0;
+
     function addModule(contentType) {
         const container = document.getElementById("contentModules");
 
@@ -113,94 +209,92 @@
 
         if (contentType === "Text") {
             newModule.innerHTML = `
-            <div class="module-content">
-                <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
-                <label>Контент (${contentType}):</label>
-                <textarea name="contents[${newIndex}].Content" class="form-control" required></textarea>
-                <label>Позиция:</label>
-                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
-                <button type="button" class="move-up">Вверх</button>
-                <button type="button" class="move-down">Вниз</button>
-                <button type="button" onclick="removeModule(this)">Удалить</button>
-            </div>
-        `;
-        } else {
+                    <div class="module-content">
+                        <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                        <label>Text</label>
+                        <textarea name="contents[${newIndex}].Content" class="form-control" required></textarea>
+                        <label>Position:</label>
+                            <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" disabled required />
+                               <br>
+                               <button type="button" class="move-up btn btn-light">Up</button>
+                                    <button type="button" class="move-down btn btn-secondary">Down</button>
+                            <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>
+                    </div>
+                `;
+        } else if (contentType === "Image") {
             newModule.innerHTML = `
-            <div class="module-content">
-                <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
-                <label>Контент (${contentType}):</label>
-                <input type="file" name="contents[${newIndex}].FormFile" class="form-control file-converter" data-index="${newIndex}" required />
-                <label>Позиция:</label>
-                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" required />
-
-                <!-- Превью для изображений и видео -->
-                <div class="preview-container" style="margin-top: 10px;">
-                    <div class="image-preview" style="display: none;">
-                        <img src="" class="img-fluid" />
+                    <div class="module-content">
+                        <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                        <label>Image:</label>
+                        <input type="file" name="contents[${newIndex}].FormFile" class="form-control" accept="image/*" required />
+                        <div class="image-preview" style="display: none;">
+                            <img src="" alt="Preview" class="img-fluid" />
+                        </div>
+                        <label>Position:</label>
+                                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex }"  disabled required />
+                        <br>
+                        <button type="button" class="move-up btn btn-light">Up</button>
+                        <button type="button" class="move-down btn btn-secondary">Down</button>
+                        <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>
                     </div>
-                    <div class="video-preview" style="display: none;">
-                        <video controls class="video-fluid" style="max-width: 100%; max-height: 240px;">
-                            <source src="" type="video/mp4" />
-                        </video>
+                `;
+        } else if (contentType === "Video") {
+            newModule.innerHTML = `
+                    <div class="module-content">
+                        <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
+                        <label>Video:</label>
+                        <input type="file" name="contents[${newIndex}].FormFile" class="form-control" accept="video/*" required />
+                       <div class="video-preview" style="display: none;">
+                            <video controls class="video-fluid">
+                                <source src="" type="video/mp4" />
+                            </video>
+                        </div>
+                        <label>Position:</label>
+                                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" disabled required />
+                             <br>
+                            <button type="button" class="move-up btn btn-light">Up</button>
+                                <button type="button" class="move-down btn btn-secondary">Down</button>
+                            <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>
                     </div>
-                </div>
-
-                <button type="button" class="move-up">Вверх</button>
-                <button type="button" class="move-down">Вниз</button>
-                <button type="button" onclick="removeModule(this)">Удалить</button>
-            </div>
-        `;
+                `;
         }
-
-
 
         container.appendChild(newModule);
-    }
 
-    document.addEventListener("change", function (e) {
-        if (e.target.type === "file" && e.target.classList.contains("file-converter")) {
-            const fileInput = e.target;
-            const file = fileInput.files[0];
-            if (!file) return;
+        const fileInput = newModule.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.addEventListener('change', function () {
+                const file = this.files[0];
+                const previewContainer = newModule.querySelector('.image-preview, .video-preview');
+                if (file && previewContainer) {
+                    const previewElement = previewContainer.querySelector('img, video');
+                    const reader = new FileReader();
 
-            const parent = fileInput.closest('.module-content');
-            const index = fileInput.getAttribute('data-index');
+                    reader.onload = function (e) {
+                        if (file.type.startsWith('image')) {
+                            previewElement.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                        } else if (file.type.startsWith('video')) {
+                            const sourceElement = previewElement.querySelector('source');
+                            sourceElement.src = e.target.result;
+                            previewElement.load();
+                            previewContainer.style.display = 'block';
+                        }
 
-            const hiddenName = fileInput.name.replace("FormFile", "Content");
-            const existingHidden = parent.querySelector(`input[name='${hiddenName}']`);
-            if (existingHidden) existingHidden.remove();
-
-            const hiddenInput = document.createElement("input");
-            hiddenInput.type = "hidden";
-            hiddenInput.name = hiddenName;
-            parent.appendChild(hiddenInput);
-
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                const base64String = event.target.result.split(',')[1];
-                hiddenInput.value = base64String;
-
-                const previewContainer = parent.querySelector('.preview-container');
-                const imagePreview = previewContainer.querySelector('.image-preview');
-                const videoPreview = previewContainer.querySelector('.video-preview');
-
-                if (file.type.startsWith("image")) {
-                    imagePreview.style.display = "block";
-                    videoPreview.style.display = "none";
-                    const img = imagePreview.querySelector("img");
-                    img.src = event.target.result;
-                } else if (file.type.startsWith("video")) {
-                    videoPreview.style.display = "block";
-                    imagePreview.style.display = "none";
-                    const video = videoPreview.querySelector("video");
-                    const source = video.querySelector("source");
-                    source.src = event.target.result;
-                    video.load();
+                        let hiddenInput = newModule.querySelector(`input[name="contents[${newIndex}].Content"]`);
+                        if (!hiddenInput) {
+                            hiddenInput = document.createElement("input");
+                            hiddenInput.type = "hidden";
+                            hiddenInput.name = `contents[${newIndex}].Content`;
+                            newModule.appendChild(hiddenInput);
+                        }
+                        hiddenInput.value = e.target.result.split(',')[1]; 
+                    };
+                    reader.readAsDataURL(file);
                 }
-            };
-            reader.readAsDataURL(file);
+            });
         }
-    });
+    }
 
     function removeModule(button) {
         const module = button.closest(".content-module");
@@ -208,7 +302,7 @@
             module.remove();
             updateModuleIndices();
         } else {
-            console.error("Не удалось найти родительский элемент .content-module.");
+            console.error("Could not find parent element.content - module.");
         }
     }
 
@@ -216,16 +310,28 @@
     document.getElementById("addImageModule").addEventListener("click", () => addModule("Image"));
     document.getElementById("addVideoModule").addEventListener("click", () => addModule("Video"));
 
+    document.querySelector("#contentModules").addEventListener("click", function (event) {
+        if (event.target.classList.contains("move-up")) {
+            const module = event.target.closest(".content-module");
+            moveModule(module, "up");
+        } else if (event.target.classList.contains("move-down")) {
+            const module = event.target.closest(".content-module");
+            moveModule(module, "down");
+        }
+    });
+
     function moveModule(module, direction) {
         const allModules = Array.from(document.querySelectorAll(".content-module"));
         const currentIndex = allModules.indexOf(module);
+
         const newIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
 
         if (newIndex >= 0 && newIndex < allModules.length) {
             const container = document.getElementById("contentModules");
             if (direction === "down") {
                 container.insertBefore(module, allModules[newIndex + 1] || null);
-            } else {
+            }
+            else {
                 container.insertBefore(module, allModules[newIndex]);
             }
             updateModuleIndices();
@@ -239,23 +345,8 @@
             if (positionInput) {
                 positionInput.value = index;
             }
-            const fileInput = module.querySelector('.file-converter');
-            if (fileInput) {
-                fileInput.setAttribute('data-index', index);
-                fileInput.name = fileInput.name.replace(/\[\d+\]/, `[${index}]`);
-            }
         });
     }
-
-    document.querySelector("#contentModules").addEventListener("click", function (event) {
-        if (event.target.classList.contains("move-up")) {
-            const module = event.target.closest(".content-module");
-            moveModule(module, "up");
-        } else if (event.target.classList.contains("move-down")) {
-            const module = event.target.closest(".content-module");
-            moveModule(module, "down");
-        }
-    });
 </script>
 
 
