@@ -8,12 +8,14 @@ using WebApplication1.Services;
 
 
 
+// Controller to manage posts
 public class PostsController : Controller
 {
     private readonly AppDbContext _context;
     private readonly UserService _userService;
     private readonly IConfiguration _configuration;
     private readonly EmailService _emailService;
+
     public PostsController(AppDbContext context, UserService userService, IConfiguration configuration)
     {
         _context = context;
@@ -43,7 +45,7 @@ public class PostsController : Controller
 
         if (postViewModels.Count() == 0)
         {
-            return Json(new { success = true, message = "Публікацій не знайдено" });
+            return Json(new { success = true, message = "No publications found" });
         }
 
         return Json(postViewModels);
@@ -56,36 +58,35 @@ public class PostsController : Controller
 
     public async Task<IActionResult> PostApproval(int postId)
     {
-        var post=_context.Posts.FirstOrDefault(post => post.Id == postId);
+        var post = _context.Posts.FirstOrDefault(post => post.Id == postId);
         post.Verify = true;
         _context.Update(post);
         _context.SaveChanges();
 
         User user = _context.Users.FirstOrDefault(user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId);
-        _emailService.SendEmail(user.Email,"Публікація "+post.Title,"Була одобрена та опублікована");
+        _emailService.SendEmail(user.Email, "Post " + post.Title, "Has been approved and published");
 
-       return Json(new { success = true, message = "Публікація схвалена" });
+        return Json(new { success = true, message = "Post approved" });
     }
 
     public async Task<IActionResult> PostNotApproval(int postId, string? reason)
     {
-        if (reason==null||reason=="")
+        if (string.IsNullOrWhiteSpace(reason))
         {
-            return Json(new { success = true, message = "Причина не написана" });
+            return Json(new { success = true, message = "Reason not provided" });
         }
-        if (reason.Length<15)
+        if (reason.Length < 15)
         {
-            return Json(new { success = true, message = "Опиши причину детальніше" });
+            return Json(new { success = true, message = "Please provide a more detailed reason" });
         }
 
         var post = _context.Posts.FirstOrDefault(post => post.Id == postId);
         User user = _context.Users.FirstOrDefault(user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId);
-        _emailService.SendEmail(user.Email, "Публікація " + post.Title, "Була одобрена скрита з причини:" +reason);
+        _emailService.SendEmail(user.Email, "Post " + post.Title, "Was hidden for the following reason: " + reason);
 
-        return Json(new { success = true, message = "Повідомлення відправлено" });
+        return Json(new { success = true, message = "Notification sent" });
     }
 
-    // GET: Posts
     public async Task<IActionResult> Index(int id)
     {
         if (id <= 0)
@@ -94,16 +95,14 @@ public class PostsController : Controller
         }
 
         ViewBag.BlogId = id;
-        var posts = await _context.Posts
-                                  .Where(post => post.BlogId == id)
-                                  .ToListAsync();
+        var posts = await _context.Posts.Where(post => post.BlogId == id).ToListAsync();
         if (_userService.GetUserId() != null)
         {
-            ViewBag.CanChange= _userService.GetUserId() == _context.Blogs.First(blog => blog.Id == id).AuthorId;
+            ViewBag.CanChange = _userService.GetUserId() == _context.Blogs.First(blog => blog.Id == id).AuthorId;
         }
         else
         {
-            ViewBag.CanChange=false;
+            ViewBag.CanChange = false;
         }
 
         var postsToShow = posts.Select(post => new PostViewModel
@@ -112,18 +111,18 @@ public class PostsController : Controller
             Title = post.Title,
             BlogId = post.BlogId,
             Game = post.Game,
-            CreateAt=post.CreatedAt,
+            CreateAt = post.CreatedAt,
+            Color = _context.Games.First(game => game.GameName == post.Game).Color,
             AuthorName = _context.Users.FirstOrDefault(
                 user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId)?.Name ?? "Unknown",
-            BlogName=_context.Blogs.FirstOrDefault(blog=>blog.Id==post.BlogId)?.Name ?? "Unknown",
-            Contents=_context.Post_Contents.Where(postsContents=>postsContents.PostId==post.Id).ToList()
+            BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId)?.Name ?? "Unknown",
+            Contents = _context.Post_Contents.Where(postsContents => postsContents.PostId == post.Id).ToList()
         }).ToList();
 
         ViewBag.BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == id).Name;
         return View(postsToShow);
     }
 
-    // GET: One Post
     public async Task<IActionResult> ReadPost(int id)
     {
         return View(getPost(id));
@@ -139,6 +138,7 @@ public class PostsController : Controller
             BlogId = post.BlogId,
             Game = post.Game,
             CreateAt = post.CreatedAt,
+            Color = _context.Games.First(game => game.GameName == post.Game).Color,
             AuthorName = _context.Users.FirstOrDefault(
                     user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId)?.Name ?? "Unknown",
             BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId)?.Name ?? "Unknown",
@@ -147,8 +147,7 @@ public class PostsController : Controller
         return postToShow;
     }
 
-    // GET: Posts/Create/5
-    public IActionResult Create(int blogId,string? message)
+    public IActionResult Create(int blogId, string? message)
     {
         ViewBag.Error = message;
         if (_context.Posts.Where(post => post.BlogId == blogId).Count() >= 50)
@@ -162,17 +161,14 @@ public class PostsController : Controller
         return View(model);
     }
 
-
-
-
-    // POST: Posts/Create/5
     [HttpPost]
     public async Task<IActionResult> Create(int blogId, [Bind("Title,Game")] Post post, List<PostContentViewModel> contents)
     {
-        if (post.Title == "" || post.Game == "")
+        if (string.IsNullOrWhiteSpace(post.Title) || string.IsNullOrWhiteSpace(post.Game))
         {
-            return RedirectToAction("Create", new { id = blogId, message = "all data must be fuiled" });
+            return RedirectToAction("Create", new { id = blogId, message = "All fields must be filled in" });
         }
+
         post.BlogId = blogId;
         post.CreatedAt = DateTime.Now;
         post.Verify = false;
@@ -183,17 +179,10 @@ public class PostsController : Controller
         {
             foreach (var content in contents)
             {
-                var contentData= new byte[0];
-                switch (content.ContentType)
-                {
-                    case "Text":
-                        contentData = Encoding.UTF8.GetBytes(content.Content);
-                        break;
-                    default:
-                        contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
-                        break;
-                }
-               
+                var contentData = content.ContentType == "Text"
+                    ? Encoding.UTF8.GetBytes(content.Content)
+                    : (content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null);
+
                 _context.Post_Contents.Add(new Post_Content
                 {
                     PostId = post.Id,
@@ -202,7 +191,7 @@ public class PostsController : Controller
                     Position = content.Position
                 });
                 await _context.SaveChangesAsync();
-            } 
+            }
         }
 
         return RedirectToAction("Index", new { id = blogId });
@@ -217,64 +206,42 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit([Bind("Id,Title,Game")] Post post, List<PostContentViewModel> contents)
     {
-        if (post.Title == "" || post.Game == "")
+        if (string.IsNullOrWhiteSpace(post.Title) || string.IsNullOrWhiteSpace(post.Game))
         {
-            return RedirectToAction("Edit", new { id = post.Id, message = "all data must be fuiled" });
+            return RedirectToAction("Edit", new { id = post.Id, message = "All fields must be filled in" });
         }
 
-        var oldPost = _context.Posts.First(p=>p.Id==post.Id);
+        var oldPost = _context.Posts.First(p => p.Id == post.Id);
 
-        if (oldPost.Title != post.Title)
-        {
-            oldPost.Title = post.Title;
-        }
-        if (oldPost.Game != post.Game)
-        {
-            oldPost.Game = post.Game;
-        }
-
+        oldPost.Title = post.Title;
+        oldPost.Game = post.Game;
         oldPost.Verify = false;
         _context.Posts.Update(oldPost);
         await _context.SaveChangesAsync();
 
         var oldContent = _context.Post_Contents.Where(con => con.PostId == post.Id);
-
-        foreach (var content in oldContent)
-        {
-            _context.Post_Contents.Remove(content);
-        }
+        _context.Post_Contents.RemoveRange(oldContent);
         await _context.SaveChangesAsync();
 
-        if (contents != null)
+        foreach (var content in contents)
         {
-            foreach (var content in contents)
-            {
-                var contentData = new byte[0];
-                switch (content.ContentType)
-                {
-                    case "Text":
-                        contentData = Encoding.UTF8.GetBytes(content.Content);
-                        break;
-                    default:
-                        //contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
-                        contentData = content.Content != null ? Convert.FromBase64String(content.Content) : null;
-                        break;
-                }
+            var contentData = content.ContentType == "Text"
+                ? Encoding.UTF8.GetBytes(content.Content)
+                : (content.Content != null ? Convert.FromBase64String(content.Content) : null);
 
-                _context.Post_Contents.Add(new Post_Content
-                {
-                    PostId = post.Id,
-                    ContentType = content.ContentType,
-                    Content = contentData,
-                    Position = content.Position
-                });
-                await _context.SaveChangesAsync();
-            }
+            _context.Post_Contents.Add(new Post_Content
+            {
+                PostId = post.Id,
+                ContentType = content.ContentType,
+                Content = contentData,
+                Position = content.Position
+            });
+            await _context.SaveChangesAsync();
         }
 
         return RedirectToAction("Index", new { id = oldPost.BlogId });
     }
-    // POST: Posts/Dlete/5
+
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -290,12 +257,9 @@ public class PostsController : Controller
 
         int blogId = post.BlogId;
 
-        var contentsToDelete = _context.Post_Contents.Where(m => m.PostId == id);
-        _context.Post_Contents.RemoveRange(contentsToDelete);
-        var reactionsToDelete = _context.Reactions.Where(m => m.PostId == id);
-        _context.Reactions.RemoveRange(reactionsToDelete);
-        var comentsToDelete = _context.Coments.Where(m => m.PostId == id);
-        _context.Coments.RemoveRange(comentsToDelete);
+        _context.Post_Contents.RemoveRange(_context.Post_Contents.Where(m => m.PostId == id));
+        _context.Reactions.RemoveRange(_context.Reactions.Where(m => m.PostId == id));
+        _context.Coments.RemoveRange(_context.Coments.Where(m => m.PostId == id));
         _context.Posts.Remove(post);
         await _context.SaveChangesAsync();
 
@@ -312,51 +276,38 @@ public class PostsController : Controller
     [HttpGet]
     public async Task<IActionResult> GetLikes(int postId)
     {
-        int likeCount = await _context.Reactions
-                                      .Where(like => like.PostId == postId && like.Value > 0)
-                                      .CountAsync();
+        int likeCount = await _context.Reactions.Where(like => like.PostId == postId && like.Value > 0).CountAsync();
         return Ok(likeCount);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetDisLikes(int postId)
     {
-        int likeCount = await _context.Reactions
-                                      .Where(like => like.PostId == postId && like.Value < 0)
-                                      .CountAsync();
+        int likeCount = await _context.Reactions.Where(like => like.PostId == postId && like.Value < 0).CountAsync();
         return Ok(likeCount);
     }
 
     [HttpPost]
     public async Task<IActionResult> MakeReactions(int value, int postId)
     {
-        if (HttpContext == null|| _userService.GetUserId()==null)
+        if (HttpContext == null || _userService.GetUserId() == null)
         {
             return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
+
         bool access = await _userService.GetAccess();
         if (!access)
         {
             var user = _context.Users.FirstOrDefault(user => user.Id == _userService.GetUserId());
-            return Json(new { success = true, message = $"Ви знаходетесь в бані до {user.BanTime}" }) ;
+            return Json(new { success = true, message = $"You are banned until {user.BanTime}" });
         }
 
         int clientId = (int)_userService.GetUserId();
-
-        Reactions? existingReaction = _context.Reactions
-                                              .FirstOrDefault(reaction => reaction.AuthorId == clientId && reaction.PostId == postId);
+        var existingReaction = _context.Reactions.FirstOrDefault(reaction => reaction.AuthorId == clientId && reaction.PostId == postId);
 
         if (existingReaction == null)
         {
-            Reactions reactions = new Reactions()
-            {
-                Value = value,
-                AuthorId = clientId,
-                PostId = postId
-            };
-
-            _context.Add(reactions);
-            await _context.SaveChangesAsync();
+            _context.Add(new Reactions { Value = value, AuthorId = clientId, PostId = postId });
         }
         else
         {
@@ -364,46 +315,47 @@ public class PostsController : Controller
             {
                 existingReaction.Value = value;
                 _context.Update(existingReaction);
-                await _context.SaveChangesAsync();
             }
             else
             {
                 _context.Reactions.Remove(existingReaction);
-                await _context.SaveChangesAsync();
             }
         }
+
+        await _context.SaveChangesAsync();
         return Json(new { success = true, message = "" });
     }
 
     [HttpPost]
-    public async Task<IActionResult> MakeComent(string text,int postId)
+    public async Task<IActionResult> MakeComent(string text, int postId)
     {
-        if (HttpContext.User == null|| _userService.GetUserId()==null)
+        if (HttpContext.User == null || _userService.GetUserId() == null)
         {
             return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
+
         bool access = await _userService.GetAccess();
         if (!access)
         {
             var user = _context.Users.FirstOrDefault(user => user.Id == _userService.GetUserId());
-            return Json(new { success = true, message = $"Ви знаходетесь в бані до {user.BanTime}" });
+            return Json(new { success = true, message = $"You are banned until {user.BanTime}" });
         }
-        if (text == "")
+
+        if (string.IsNullOrWhiteSpace(text))
         {
-            return Json(new { success = true, message = "Коментар не може бути пустим" });
+            return Json(new { success = true, message = "Comment cannot be empty" });
         }
+
         int clientId = (int)_userService.GetUserId();
-        Coments newComent = new Coments()
+        _context.Coments.Add(new Coments
         {
             AuthorId = clientId,
-            Text= text,
-            PostId= postId,
+            Text = text,
+            PostId = postId,
             CreateAt = DateTime.Now
-        };
+        });
 
-       _context.Coments.Add(newComent);
         await _context.SaveChangesAsync();
-
         return Json(new { success = true, message = "" });
     }
 
@@ -412,7 +364,7 @@ public class PostsController : Controller
     {
         var coments = await _context.Coments.Where(coment => coment.PostId == postId).ToListAsync();
         var users = await _context.Users.ToListAsync();
-        List<ComentViewModel> comentsToShow = coments.Select(coment => new ComentViewModel
+        var comentsToShow = coments.Select(coment => new ComentViewModel
         {
             Id = coment.Id,
             Text = coment.Text,
@@ -425,34 +377,34 @@ public class PostsController : Controller
         return Json(comentsToShow);
     }
 
-    //EditComment
-    public async Task<IActionResult> EditComment(int id,string text)
+    public async Task<IActionResult> EditComment(int id, string text)
     {
         if (HttpContext.User == null || _userService.GetUserId() == null)
         {
             return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
+
         bool access = await _userService.GetAccess();
         if (!access)
         {
             var user = _context.Users.FirstOrDefault(user => user.Id == _userService.GetUserId());
-            return Json(new { success = true, message = $"Ви знаходетесь в бані до {user.BanTime}" });
+            return Json(new { success = true, message = $"You are banned until {user.BanTime}" });
         }
-        if (text == "")
+
+        if (string.IsNullOrWhiteSpace(text))
         {
-            return Json(new { success = true, message = "Коментар не може бути пустим" });
+            return Json(new { success = true, message = "Comment cannot be empty" });
         }
+
         var existingComment = await _context.Coments.FindAsync(id);
         if (existingComment == null)
         {
             return NotFound();
         }
 
-        existingComment.Text= text;
-
+        existingComment.Text = text;
         _context.Update(existingComment);
         await _context.SaveChangesAsync();
-
         return Ok();
     }
 
@@ -464,28 +416,20 @@ public class PostsController : Controller
             return Unauthorized(new { redirectUrl = "/Auth/Index" });
         }
 
-
-        if (commentId == null)
-        {
-            return NotFound();
-        }
-
         var comment = await _context.Coments.FirstOrDefaultAsync(m => m.Id == commentId);
         if (comment == null)
         {
             return NotFound();
         }
+
         _context.Coments.Remove(comment);
         await _context.SaveChangesAsync();
-
         return Ok();
     }
 
-    public async Task<IActionResult> GetPosts(int currentPage, int postsPerPage,string? filterGame = null, string? filterTheme = null,string? postName=null)
+    public async Task<IActionResult> GetPosts(int currentPage, int postsPerPage, string? filterGame = null, string? filterTheme = null, string? postName = null)
     {
         var query = _context.Posts.AsQueryable();
-        int skip = (currentPage - 1) * postsPerPage;
-
         query = query.Where(post => post.Verify);
 
         if (!string.IsNullOrEmpty(postName))
@@ -506,13 +450,12 @@ public class PostsController : Controller
                 .FirstOrDefault() == filterTheme);
         }
 
-        List<Post> posts= await query
-            .OrderByDescending(post => post.CreatedAt) 
-            .Skip(skip) 
-            .Take(postsPerPage) 
-            .ToListAsync();
+        var posts = await query.OrderByDescending(post => post.CreatedAt)
+                               .Skip((currentPage - 1) * postsPerPage)
+                               .Take(postsPerPage)
+                               .ToListAsync();
 
-        List<PostViewModel> postViewModels = posts.Select(post => new PostViewModel
+        var postViewModels = posts.Select(post => new PostViewModel
         {
             Id = post.Id,
             Title = post.Title,
@@ -529,3 +472,4 @@ public class PostsController : Controller
         return Json(postViewModels);
     }
 }
+

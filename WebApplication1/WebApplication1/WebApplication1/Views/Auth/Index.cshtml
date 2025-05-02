@@ -55,7 +55,7 @@
 </head>
 
 <body>
-    <h1 class="text-center">Авторизація</h1>
+    <h1 class="text-center">Authorization</h1>
 
     <div class="faq">
         @if (!string.IsNullOrEmpty(ViewBag.Error))
@@ -64,7 +64,7 @@
         }
 
         <div class="faq-item">
-            <label class="faq-title" for="faq-login">Вхід</label>
+            <label class="faq-title" for="faq-login">Log in</label>
             <input class="faq-input" type="radio" name="faq" id="faq-login" checked>
             <div class="faq-text">
                 <form asp-action="Login" method="post">
@@ -73,44 +73,43 @@
                         <input type="email" class="form-control" name="Email" id="loginEmail" required />
                     </div>
                     <div class="mb-3">
-                        <label for="loginPassword" class="form-label">Пароль</label>
+                        <label for="loginPassword" class="form-label">Password</label>
                         <input type="password" class="form-control" name="Password" id="loginPassword" required />
                     </div>
-                    <button type="submit" class="btn btn-primary">Увійти</button>
+                    <button type="submit" class="btn btn-primary">Log in</button>
                 </form>
             </div>
         </div>
 
         <div class="faq-item">
-            <label class="faq-title" for="faq-register">Реєстрація</label>
-            <div id="statusMsg"></div>
+            <label class="faq-title" for="faq-register">Sign up</label>
             <input class="faq-input" type="radio" name="faq" id="faq-register">
             <div class="faq-text">
                 <form asp-action="Register" method="post">
-                
-
+                    <div id="statusMsg"></div>
                     <div class="mb-3">
                         <label for="regEmail" class="form-label">Email</label>
                         <input type="email" class="form-control" id="regEmail" name="Email" required />
-                        <button type="button" class="btn btn-secondary mt-2" id="sendConfirm">Підтвердити email</button>
+                        <button type="button" class="btn btn-secondary mt-2" id="sendConfirm">Confirm email</button>
                         <p id="statusMsg" class="mt-1"></p>
                     </div>
 
                     <div class="mb-3">
-                        <label for="name" class="form-label">Ім’я</label>
+                        <label for="name" class="form-label">Username</label>
                         <input type="text" class="form-control" name="Name" required />
                     </div>
 
                     <div class="mb-3">
-                        <label for="regPassword" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" name="Password" required />
+                        <label for="regPassword" class="form-label">Password</label>
+                        <input type="password" id="regPassword" class="form-control" name="Password" required />
                     </div>
 
-                    <button type="submit" id="registerBtn" class="btn btn-success" disabled>Зареєструватися</button>
+                    <button type="submit" id="registerBtn" class="btn btn-success" disabled>Sign Up</button>
                 </form>
             </div>
         </div>
     </div>
+</body>
 
 <script>
 const emailInput   = document.getElementById('regEmail');
@@ -118,58 +117,50 @@ const registerBtn  = document.getElementById('registerBtn');
 const statusText   = document.getElementById('statusMsg');
 const confirmBtn   = document.getElementById('sendConfirm');
 const nameInput    = document.querySelector('input[name="Name"]');
-const passwordInput= document.querySelector('input[name="Password"]');
+const passwordInput = document.getElementById('regPassword');
 
 function checkConfirmed() {
     const confirmed      = localStorage.getItem('emailConfirmed') === 'true';
     const confirmedEmail = localStorage.getItem('confirmedEmail');
 
-    // Если совпадает почта и флаг установлен
     if (confirmed && emailInput.value === confirmedEmail) {
         registerBtn.disabled   = false;
         nameInput.disabled     = false;
         passwordInput.disabled = false;
         confirmBtn.style.display = "none";
-        statusText.textContent   = "Email підтверджено!";
+        statusText.textContent = "Email verified";
         statusText.style.color   = "green";
     } else {
         registerBtn.disabled   = true;
         nameInput.disabled     = true;
         passwordInput.disabled = true;
         confirmBtn.style.display = "inline-block";
-        statusText.textContent   = "Email не підтверджено";
+        statusText.textContent = "Email not verified";
         statusText.style.color   = "red";
     }
 }
 
 window.addEventListener('load', () => {
-    // 1) Сначала всегда дизейблим поля регистрации
     nameInput.disabled     = true;
     passwordInput.disabled = true;
 
-    // 2) Разбираем URL-параметры
     const urlParams = new URLSearchParams(window.location.search);
     const fromConfirm = urlParams.get('confirmed') === 'true';
 
-    // 3) Чистим localStorage только при обычном заходе
     if (!fromConfirm) {
         localStorage.removeItem('emailConfirmed');
         localStorage.removeItem('confirmedEmail');
         localStorage.removeItem('lastToken');
     }
 
-    // 4) Если в storage уже есть подтверждённая почта — подставляем её в поле
     const savedEmail = localStorage.getItem('confirmedEmail');
     if (savedEmail) {
         emailInput.value = savedEmail;
     }
-
-    // 5) Обновляем состояние формы
     checkConfirmed();
 });
 
 emailInput.addEventListener('input', async () => {
-    // при любом изменении почты — сбрасываем флаги
     localStorage.removeItem('emailConfirmed');
     localStorage.removeItem('confirmedEmail');
     localStorage.removeItem('lastToken');
@@ -182,14 +173,14 @@ emailInput.addEventListener('input', async () => {
             body: JSON.stringify({ email: emailInput.value })
         });
     } catch (e) {
-        console.warn('Не удалось очистить кеш на сервере:', e);
+        console.warn('Failed to clear cache on server:', e);
     }
 });
 
 confirmBtn.addEventListener('click', async () => {
     const email = emailInput.value;
     if (!email || !email.includes('@@')) {
-        statusText.textContent = 'Введіть коректну пошту';
+        statusText.textContent = 'Enter a valid email';
         statusText.style.color = 'red';
         return;
     }
@@ -207,11 +198,9 @@ confirmBtn.addEventListener('click', async () => {
             localStorage.setItem('lastToken', result.token);
         }
     } catch (err) {
-        statusText.textContent = 'Помилка при відправці запиту';
+        statusText.textContent = 'Error sending request';
         statusText.style.color = 'red';
     }
 });
 </script>
 
-
-</body>

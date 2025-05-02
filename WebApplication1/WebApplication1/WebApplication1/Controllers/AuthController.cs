@@ -8,7 +8,7 @@ using WebApplication1.DbModels;
 using WebApplication1.Models;
 using WebApplication1.Services;
 using MyConvert = WebApplication1.Services.MyConvert;
-using UserService= WebApplication1.Services.UserService;
+using UserService = WebApplication1.Services.UserService;
 using System.ComponentModel.DataAnnotations;
 using MimeKit.Text;
 using Microsoft.Extensions.Options;
@@ -52,31 +52,31 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> SendConfirmationEmail([FromBody] EmailRequestModel model)
         {
             if (!IsValidEmail(model.Email))
-                return Json(new { success = false, message = "Некоректна пошта" });
+                return Json(new { success = false, message = "Invalid email address" });
 
             var token = Guid.NewGuid().ToString();
             var cacheKey = $"email_confirm_{model.Email}";
             _memoryCache.Set(cacheKey, token, TimeSpan.FromMinutes(15));
 
-            // Абсолютний URL
             var confirmUrl = Url.Action("ConfirmEmail", "Auth", new { email = model.Email, token = token }, protocol: Request.Scheme);
 
             var body = $@"
-            <p>Щоб підтвердити email, натисніть на посилання нижче:</p>
-            <p><a href='{confirmUrl}' style='display:inline-block;padding:10px 15px;background-color:#28a745;color:white;text-decoration:none;border-radius:5px;'>Підтвердити Email</a></p>
-            <p>Або скопіюйте та вставте це посилання у браузер:</p>
+            <p>To confirm your email, click the button below:</p>
+            <p><a href='{confirmUrl}' style='display:inline-block;padding:10px 15px;background-color:#28a745;color:white;text-decoration:none;border-radius:5px;'>Confirm Email</a></p>
+            <p>Or copy and paste this link into your browser:</p>
             <p>{confirmUrl}</p>";
 
             try
             {
-                await _emailService.SendHtmlEmailAsync(model.Email, "Підтвердження пошти", body);
-                return Json(new { success = true, message = "Підтвердження надіслано на вказану пошту.", token = token });
+                await _emailService.SendHtmlEmailAsync(model.Email, "Email Confirmation", body);
+                return Json(new { success = true, message = "Confirmation has been sent to the specified email.", token = token });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Помилка при відправці пошти: " + ex.Message });
+                return Json(new { success = false, message = "Error sending email: " + ex.Message });
             }
         }
+
         [HttpGet]
         public IActionResult ConfirmEmail(string email, string token)
         {
@@ -96,7 +96,7 @@ namespace WebApplication1.Controllers
                 return View("ConfirmEmailResult");
             }
 
-            return Content("Недійсне або прострочене посилання");
+            return Content("Invalid or expired link");
         }
 
         [HttpPost]
@@ -119,44 +119,24 @@ namespace WebApplication1.Controllers
             public string Email { get; set; }
         }
 
-        //[HttpGet]
-        //public IActionResult ConfirmEmail(string email, string token)
-        //{
-        //    var cacheKey = $"email_confirm_{email}";
-
-        //    if (_memoryCache.TryGetValue(cacheKey, out string storedToken) && storedToken == token)
-        //    {
-        //        _memoryCache.Set($"email_verified_{email}", true, TimeSpan.FromMinutes(2));
-
-
-        //        //return View("EmailConfirmed");
-        //    }
-
-        //    return View("InvalidLink");
-        //}
-
-
-
-
-
         [Authorize]
         public async Task<IActionResult> MakeReport(string topic, string text)
         {
-            var user= _context.Users.FirstOrDefault(user=>user.Id==_userService.GetUserId());
+            var user = _context.Users.FirstOrDefault(user => user.Id == _userService.GetUserId());
 
-            if (user==null)
+            if (user == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            if (text == "" || text == null || topic == "" || topic == null)
+            if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(topic))
             {
-                return Json(new { success = true, message = "Всі поля мають бути заповнені" });
+                return Json(new { success = true, message = "All fields must be filled in" });
             }
 
-            _emailService.SendEmail(_adminEmail.Email,$"Скаркга на тему {topic}",$"Користувач \"{user.Name} \" \n Адреса \"{user.Email} \" \n {text}");
+            _emailService.SendEmail(_adminEmail.Email, $"Complaint on topic {topic}", $"User \"{user.Name}\" \nEmail \"{user.Email}\" \n{text}");
 
-            return Json(new { success = true, message = "Скарга відправлена" });
+            return Json(new { success = true, message = "Complaint has been sent" });
         }
 
         public IActionResult Index(string? message)
@@ -168,36 +148,28 @@ namespace WebApplication1.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([Bind("Name,Email,Password")] RegisterModel model)
         {
-
-            if (_context.Users.Count()>=5000)
+            if (_context.Users.Count() >= 5000)
             {
-                return RedirectToAction("Index", new { message = "Too much users" });
+                return RedirectToAction("Index", new { message = "Too many users" });
             }
 
-            if (model.Password == "" || model.Password == null ||
-                 model.Email == "" || model.Password == null ||
-                 model.Name == "" || model.Name == null)
+            if (string.IsNullOrWhiteSpace(model.Password) ||
+                string.IsNullOrWhiteSpace(model.Email) ||
+                string.IsNullOrWhiteSpace(model.Name))
             {
-                return RedirectToAction("Index", new { message = "all data must be fielded" });
+                return RedirectToAction("Index", new { message = "All fields must be filled in" });
             }
 
             if (!IsValidEmail(model.Email))
             {
-                return RedirectToAction("Index", new { message = "email is incorrect" });
+                return RedirectToAction("Index", new { message = "Invalid email" });
             }
-
-            //var confirmed = _memoryCache.TryGetValue($"email_verified_{model.Email}", out bool verified) && verified;
-
-            //if (!confirmed)
-            //{
-            //    return RedirectToAction("Index", new { message = "Email не підтверджено" });
-            //}
 
             if (!_context.Users.Any(m => m.Email == model.Email))
             {
                 if (model.Password.Length < 6)
                 {
-                    return RedirectToAction("Index", new { message = "password is too short" });
+                    return RedirectToAction("Index", new { message = "Password is too short" });
                 }
 
                 using (var stream = System.IO.File.OpenRead("D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\wwwroot\\images\\images.png"))
@@ -224,22 +196,20 @@ namespace WebApplication1.Controllers
             }
             else
             {
-                return RedirectToAction("Index",new { message = "email is alredy used" });
+                return RedirectToAction("Index", new { message = "Email is already in use" });
             }
         }
+
         public async Task<IActionResult> Login([Bind("Email,Password")] LoginModel model)
         {
-
-
-            if (model.Password == "" || model.Password == null ||
-                 model.Email == "" || model.Password == null )
+            if (string.IsNullOrWhiteSpace(model.Password) || string.IsNullOrWhiteSpace(model.Email))
             {
-                return RedirectToAction("Index", new { message = "all data must be fielded" });
+                return RedirectToAction("Index", new { message = "All fields must be filled in" });
             }
 
             if (!IsValidEmail(model.Email))
             {
-                return RedirectToAction("Index", new { message = "email is incorrect" });
+                return RedirectToAction("Index", new { message = "Invalid email" });
             }
 
             if (!_context.Users.Any(m => m.Email == model.Email))
@@ -250,7 +220,7 @@ namespace WebApplication1.Controllers
             User user = _context.Users.FirstAsync(m => m.Email == model.Email).Result;
             if (!ShifrService.DeHashPassword(user.PasswordHash, model.Password))
             {
-                 return RedirectToAction("Index", new { message = "password is incorrect" });
+                return RedirectToAction("Index", new { message = "Incorrect password" });
             }
 
             await SingIn(user);
@@ -331,7 +301,7 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> GetUsers()
         {
-            List<User> users = _context.Users.Where(user=>user.Role=="User").ToList();
+            List<User> users = _context.Users.Where(user => user.Role == "User").ToList();
 
             List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
             {
@@ -340,18 +310,16 @@ namespace WebApplication1.Controllers
                 Email = user.Email,
                 Avatar = user.Avatar,
                 BanTime = user.BanTime,
-                Warnings= user.Warnings
+                Warnings = user.Warnings
             }).ToList();
 
-
-            if (usersViewModel.Count()==0)
+            if (usersViewModel.Count() == 0)
             {
-                return Json(new { success = true, message = "Не знайдено доступних користувачів" });
+                return Json(new { success = true, message = "No available users found" });
             }
 
             return Json(usersViewModel);
         }
-
 
         public async Task<IActionResult> GetModers()
         {
@@ -367,10 +335,9 @@ namespace WebApplication1.Controllers
                 Warnings = user.Warnings
             }).ToList();
 
-
             if (usersViewModel.Count() == 0)
             {
-                return Json(new { success = true, message = "Не знайдено доступних модераторів" });
+                return Json(new { success = true, message = "No available moderators found" });
             }
 
             return Json(usersViewModel);
@@ -378,11 +345,11 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> GetUsersForBunDelete()
         {
-            List<User> users = _context.Users.Where(user => user.BanTime!= null).ToList();
+            List<User> users = _context.Users.Where(user => user.BanTime != null).ToList();
 
             if (users.Count() == 0)
             {
-                return Json(new { success = true, message = "Користувачів з обмеженями немає" });
+                return Json(new { success = true, message = "There are no users with restrictions" });
             }
 
             List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
@@ -399,4 +366,3 @@ namespace WebApplication1.Controllers
         }
     }
 }
-

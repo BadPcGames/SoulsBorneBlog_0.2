@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\views\\auth\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\views\\auth\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\views\\posts\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\views\\posts\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\webapplication1\\models\\postviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\postviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\views\\auth\\confirmemailresult.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\views\\auth\\confirmemailresult.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|d:\\git\\newprojectwithsqlfordiplom\\webapplication1\\webapplication1\\webapplication1\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\webapplication1\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\webapplication1\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5347B78-3E66-44BF-BB34-39E2E6CDCEF4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -21,23 +29,9 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 257,
-          "SelectedChildIndex": 6,
+          "DockedHeight": 306,
+          "SelectedChildIndex": 7,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\AuthController.cs",
-              "ViewState": "AQIAABoBAAAAAAAAAAAqwEoBAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T10:57:02.573Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
@@ -56,34 +50,71 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ConfirmEmailResult.cshtml",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Auth\\ConfirmEmailResult.cshtml",
-              "RelativeDocumentMoniker": "WebApplication1\\Views\\Auth\\ConfirmEmailResult.cshtml",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Auth\\ConfirmEmailResult.cshtml",
-              "RelativeToolTip": "WebApplication1\\Views\\Auth\\ConfirmEmailResult.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAABAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-29T12:34:31.671Z",
+              "DocumentIndex": 4,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\AdminController.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\AdminController.cs",
+              "ViewState": "AQIAAFIAAAAAAAAAAAAwwH8AAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T12:23:35.018Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PostsController.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\PostsController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\PostsController.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Controllers\\PostsController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\PostsController.cs",
+              "ViewState": "AQIAAJ4BAAAAAAAAAAAAAKsBAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T12:13:58.369Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PostViewModel.cs",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Models\\PostViewModel.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Models\\PostViewModel.cs",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Models\\PostViewModel.cs",
+              "RelativeToolTip": "WebApplication1\\Models\\PostViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T12:13:28.221Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Auth\\Index.cshtml",
-              "RelativeDocumentMoniker": "WebApplication1\\Views\\Auth\\Index.cshtml",
-              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Auth\\Index.cshtml",
-              "RelativeToolTip": "WebApplication1\\Views\\Auth\\Index.cshtml",
-              "ViewState": "AQIAAL0AAAAAAAAAAAAqwMgAAAArAAAA",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Posts\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebApplication1\\Views\\Posts\\Index.cshtml",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Posts\\Index.cshtml",
+              "RelativeToolTip": "WebApplication1\\Views\\Posts\\Index.cshtml",
+              "ViewState": "AQIAAIEAAAAAAAAAAAAAAIgAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-29T10:54:14.252Z",
+              "WhenOpened": "2025-05-01T12:08:07.955Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "WebApplication1\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\git\\NewProjectWithSqlForDiplom\\WebApplication1\\WebApplication1\\WebApplication1\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "WebApplication1\\Views\\Home\\Index.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-01T12:08:01.962Z",
               "EditorCaption": ""
             }
           ]
         },
         {
-          "DockedHeight": 63,
+          "DockedHeight": 14,
           "SelectedChildIndex": -1,
           "Children": [
             {
