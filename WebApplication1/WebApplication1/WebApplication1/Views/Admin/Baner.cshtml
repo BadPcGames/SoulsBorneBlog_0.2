@@ -1,90 +1,104 @@
 ﻿@using WebApplication1.DbModels
-
+@{
+    ViewData["Title"] = "Banners";
+}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
+    <title>Banner Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        #image-preview {
-            cursor: pointer;
-            width: 200px;
-            height: 200px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-        .banner-container {
-            display: inline-block;
+        #activeBannerContainer {
             text-align: center;
-            margin: 10px;
+            margin-bottom: 30px;
         }
 
-        .banner-image {
-            width: 200px;
-            height: 200px;
-            border: 5px solid gray;
-            display: block;
-            margin-bottom: 10px;
-            box-sizing: border-box;
+        .active-banner-img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 3 / 1;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
-        .banner-image.selected {
-            border: 15px solid green;
+        .banner-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 15px auto;
+            text-align: center;
         }
+
+        .banner-preview {
+            width: 100%;
+            aspect-ratio: 3 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 4px solid gray;
+            transition: border-color 0.3s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+            .banner-preview.selected {
+                border: 6px solid green;
+            }
 
         .banner-button {
-            margin: 5px;
-            padding: 5px 10px;
+            margin: 8px 5px 0;
+            padding: 6px 14px;
             font-size: 14px;
-            cursor: pointer;
+            border-radius: 5px;
         }
 
-        .delete-button {
-            background-color: #e74c3c;
+        .btn-delete {
+            background-color: #dc3545;
             color: white;
-            border: none;
         }
 
-        .select-button {
-            background-color: #2ecc71;
+        .btn-select {
+            background-color: #198754;
             color: white;
-            border: none;
-        }
-
-        .banner-button:hover {
-            opacity: 0.9;
         }
     </style>
 </head>
-<body>
-    <a asp-action="Index" asp-controller="Admin">Назад</a>
-    <br>
 
-    <form id="upload-form" enctype="multipart/form-data" class="mb-4">
-        <div class="mb-2">
-            <input type="file" name="image" id="image" accept="image/*" required>
+<body >
+    <div class="bg-light py-4">
+        <div class="container">
+            <div class="mb-4">
+                <a asp-action="Index" asp-controller="Admin" class="btn btn-outline-secondary">&larr; Back</a>
+            </div>
+
+            <div class="card p-4 shadow-sm mb-4">
+                <h3 class="text-center mb-3">Add New Banner</h3>
+                <form id="upload-form" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <input type="file" name="image" id="image" accept="image/*" class="form-control" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="isSelected" name="isSelected">
+                        <label class="form-check-label" for="isSelected">Set as active</label>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Upload Banner</button>
+                </form>
+            </div>
+
+            <div id="activeBannerContainer"></div>
+
+            <div id="banner-list"></div>
         </div>
-        <div class="form-check mb-2">
-            <input type="checkbox" class="form-check-input" id="isSelected" name="isSelected">
-            <label class="form-check-label" for="isSelected">Выбран</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Додати банер</button>
-    </form>
+    </div>
+    
 
+    <script>
+        $(document).ready(function () {
+            loadBanners();
+        });
 
-    <div id="banner-list" class="d-flex flex-wrap"></div>
-
-</body>
-
-<script>
-    $(document).ready(function () {
-        getBaners(); 
-    });
-    $('#upload-form').on('submit', function (e) {
+        $('#upload-form').on('submit', function (e) {
             e.preventDefault();
             const formData = new FormData();
             formData.append('image', $('#image')[0].files[0]);
@@ -99,89 +113,86 @@
                 success: function (response) {
                     alert(response.message);
                     $('#upload-form')[0].reset();
-                    getBaners();
+                    loadBanners();
                 },
                 error: function () {
-                    alert('Ошибка при добавлении банера');
+                    alert('Failed to upload banner.');
                 }
             });
-    });  
+        });
 
-    function setActiveBanner(id){
-        $.ajax({
+        function loadBanners() {
+            $.ajax({
+                url: '/Admin/GetBanners',
+                method: 'GET',
+                success: function (data) {
+                    if (data.success && data.message) {
+                        alert(data.message);
+                        return;
+                    }
+
+                    $('#banner-list').empty();
+                    $('#activeBannerContainer').empty();
+
+                    data.forEach(banner => {
+                        const imgSrc = 'data:image/png;base64,' + banner.image;
+
+                        if (banner.selected) {
+                            $('#activeBannerContainer').append(
+                                `<h4 class="text-center mb-3">Current Active Banner</h4>
+                                         <img src="${imgSrc}" class="active-banner-img mb-4" alt="Active Banner">`
+                            );
+                        }
+
+                        const bannerCard = $(`
+                                    <div class="banner-container card p-3 shadow-sm">
+                                        <img src="${imgSrc}" class="banner-preview ${banner.selected ? 'selected' : ''}" alt="Banner">
+                                        <div>
+                                            <button class="banner-button btn-select btn" onclick="setActiveBanner(${banner.id})">Select</button>
+                                            <button class="banner-button btn-delete btn" onclick="deleteBanner(${banner.id})">Delete</button>
+                                        </div>
+                                    </div>
+                                `);
+
+                        $('#banner-list').append(bannerCard);
+                    });
+                },
+                error: function () {
+                    console.error('Error loading banners.');
+                }
+            });
+        }
+
+        function setActiveBanner(id) {
+            $.ajax({
                 url: '/Admin/SelectBaner',
                 type: 'POST',
-                data: {
-                    id:id
-                },
+                data: { id: id },
                 success: function (response) {
                     alert(response.message);
-                    getBaners();
+                    loadBanners();
                 },
                 error: function () {
-                    alert('Помилка при обирані банера');
+                    alert('Error selecting banner.');
                 }
             });
-    }
+        }
 
-    function deleteBanner(id){
-             $.ajax({
+        function deleteBanner(id) {
+            if (!confirm("Are you sure you want to delete this banner?")) return;
+
+            $.ajax({
                 url: '/Admin/DeleteBaner',
                 type: 'POST',
-                data: {
-                    id:id
-                },
+                data: { id: id },
                 success: function (response) {
                     alert(response.message);
-                    getBaners();
+                    loadBanners();
                 },
                 error: function () {
-                    alert('Помилка при видалені');
+                    alert('Error deleting banner.');
                 }
             });
-    }
-
-
-    function getBaners() {
-        $.ajax({
-            url: '/Admin/GetBanners',
-            method: 'GET',
-            success: function (data) {
-                if (data.success && data.message) {
-                    alert(data.message);
-                    return;
-                }
-
-                $('#banner-list').empty();
-
-                data.forEach(banner => {
-                const container = $('<div>').addClass('banner-container');
-
-                const img = $('<img>')
-                    .attr('src', 'data:image/png;base64,' + banner.image)
-                    .addClass(banner.selected ? 'banner-image selected' : 'banner-image');
-
-                const deleteBtn = $('<button>')
-                    .text('Видалити')
-                    .addClass('banner-button delete-button')
-                    .on('click', function () {
-                        deleteBanner(banner.id);
-                    });
-
-                const selectBtn = $('<button>')
-                    .text('Обрати')
-                    .addClass('banner-button select-button')
-                    .on('click', function () {
-                        setActiveBanner(banner.id);
-                    });
-
-                container.append(img, deleteBtn, selectBtn);
-                $('#banner-list').append(container);
-            });
-            },
-            error: function (err) {
-                console.error('Ошибка при получении баннеров', err);
-            }
-        });
-    }
-</script>
+        }
+    </script>
+</body>

@@ -1,129 +1,177 @@
 ﻿@using WebApplication1.DbModels
 
+@{
+    ViewData["Title"] = "Global Stats";
+}
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        #fileInput {
-            display: none;
-        }
-
-        #image {
-            cursor: pointer;
-            width: 200px; 
-            height: 200px; 
-            border: 2px solid #ccc; 
-            border-radius: 8px; 
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
-    <a asp-action="Index" asp-controller="Admin">Назад</a>
-    <br>
-    <input type="date" id="from" value="2024-01-01">
-    <input type="date" id="to" value="2025-04-16">
+    <div class="container mt-5">
+        <a asp-action="Index" asp-controller="Admin" class="btn btn-secondary mb-3">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
 
-    <input type="button" id="showStats" value="stat">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white text-center">
+                <h4>Global Statistics</h4>
+            </div>
+            <div class="card-body">
 
-    <form id="pdfForm" method="post" asp-action="GetFileStats" asp-controller="Stats">
-        <input type="hidden" name="TimeStart" id="pdfFrom">
-        <input type="hidden" name="TimeEnd" id="pdfTo">
-        <input type="hidden" name="type" value="pdf">
-        <input type="submit" id="statsPdf" value="pdf">
-    </form>
+                <form class="row g-3 mb-4">
+                    <div class="col-md-5">
+                        <label for="from" class="form-label">From</label>
+                        <input type="date" id="from" class="form-control" value="2024-01-01">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="to" class="form-label">To</label>
+                        <input type="date" id="to" class="form-control" value="2025-04-16">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" id="showStats" class="btn btn-dark w-100">
+                            Show <i class="bi bi-bar-chart-line"></i>
+                        </button>
+                    </div>
+                </form>
 
-    <form id="excelForm" method="post" asp-action="GetFileStats" asp-controller="Stats">
-        <input type="hidden" name="TimeStart" id="excelFrom">
-        <input type="hidden" name="TimeEnd" id="excelTo">
-        <input type="hidden" name="type" value="ex">
-        <input type="submit" id="statsExcel" value="excel">
-    </form>
+                <div class="d-flex gap-2 mb-3">
+                    <form id="pdfForm" method="post" asp-action="GetFileStats" asp-controller="Stats">
+                        <input type="hidden" name="TimeStart" id="pdfFrom">
+                        <input type="hidden" name="TimeEnd" id="pdfTo">
+                        <input type="hidden" name="type" value="pdf">
+                        <button type="submit" id="statsPdf" class="btn btn-danger">
+                            PDF <i class="bi bi-filetype-pdf"></i>
+                        </button>
+                    </form>
 
-    <div id="stats-container"></div>
-</body>
+                    <form id="excelForm" method="post" asp-action="GetFileStats" asp-controller="Stats">
+                        <input type="hidden" name="TimeStart" id="excelFrom">
+                        <input type="hidden" name="TimeEnd" id="excelTo">
+                        <input type="hidden" name="type" value="ex">
+                        <button type="submit" id="statsExcel" class="btn btn-success">
+                            Excel <i class="bi bi-file-earmark-excel"></i>
+                        </button>
+                    </form>
+                </div>
 
-<script>
-    $(document).ready(function () {
-        $('#showStats').click(function () {
-            loadStats();
-        });
+                <div id="stats-container" class="table-responsive"></div>
+            </div>
+        </div>
+    </div>
 
-        $('#statsPdf').click(function (event) {
-            event.preventDefault();
-            $('#pdfFrom').val($('#from').val());
-            $('#pdfTo').val($('#to').val());
-            $('#pdfForm').submit();
-        });
+    <script>
+        window.onload = function () {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('to').value = today;
+        };
 
-        $('#statsExcel').click(function (event) {
-            event.preventDefault();
-            $('#excelFrom').val($('#from').val());
-            $('#excelTo').val($('#to').val());
-            $('#excelForm').submit();
-        });
-
-        function loadStats() {
-            let from = $('#from').val();
-            let to = $('#to').val();
-
-            $.ajax({
-                url: '/Stats/GetGlobalStats',
-                method: 'GET',
-                data: {
-                    TimeStart: from,
-                    TimeEnd: to
-                },
-                dataType: 'json',
-                success: function (data) {
-                    if (data.success && data.message) {
-                        alert(data.message);
-                        return;
-                    }
-
-                    $('#stats-container').empty();
-
-                    $('#stats-container').append(`<p>Name: ${data.name}</p>`);
-                    $('#stats-container').append(`<p>Post Count: ${data.postCount}</p>`);
-                    $('#stats-container').append(`<p>Verified Posts: ${data.verifyPostCount}</p>`);
-                    $('#stats-container').append(`<p>Not Verified Posts: ${data.notVerifyPostCount}</p>`);
-
-                    if (data.gameStats && data.gameStats.length) {
-                        let gameTable = `<table class='table table-bordered'><thead><tr><th>Game Name</th><th>Post Count</th></tr></thead><tbody>`;
-                        data.gameStats.forEach(game => {
-                            gameTable += `<tr><td>${game.name}</td><td>${game.postsCount}</td></tr>`;
-                        });
-                        gameTable += `</tbody></table>`;
-                        $('#stats-container').append(gameTable);
-                    }
-
-                    if (data.themesStats && data.themesStats.length) {
-                        let themeTable = `<table class='table table-bordered'><thead><tr><th>Theme Name</th><th>Post Count</th></tr></thead><tbody>`;
-                        data.themesStats.forEach(theme => {
-                            themeTable += `<tr><td>${theme.name}</td><td>${theme.postsCount}</td></tr>`;
-                        });
-                        themeTable += `</tbody></table>`;
-                        $('#stats-container').append(themeTable);
-                    }
-
-                    if (data.postShortStats && data.postShortStats.length) {
-                        let postTable = `<table class='table table-bordered'><thead><tr><th>ID</th><th>Blog Name</th><th>Name</th><th>Likes</th><th>Dislikes</th><th>Comments</th></tr></thead><tbody>`;
-                        data.postShortStats.forEach(post => {
-                            postTable += `<tr><td>${post.id}</td><td>${post.blogName}</td><td>${post.name}</td><td>${post.likeCount}</td><td>${post.notLikeCount}</td><td>${post.comentsCount}</td></tr>`;
-                        });
-                        postTable += `</tbody></table>`;
-                        $('#stats-container').append(postTable);
-                    }
-                },
-                error: function (error) {
-                    console.error('Error fetching data', error);
-                }
+        $(document).ready(function () {
+            $('#showStats').click(function () {
+                loadStats();
             });
-        }
-    });
-</script>
 
+            $('#statsPdf').click(function (event) {
+                event.preventDefault();
+                $('#pdfFrom').val($('#from').val());
+                $('#pdfTo').val($('#to').val());
+                $('#pdfForm').submit();
+            });
 
+            $('#statsExcel').click(function (event) {
+                event.preventDefault();
+                $('#excelFrom').val($('#from').val());
+                $('#excelTo').val($('#to').val());
+                $('#excelForm').submit();
+            });
+
+            function loadStats() {
+                let from = $('#from').val();
+                let to = $('#to').val();
+
+                $.ajax({
+                    url: '/Stats/GetGlobalStats',
+                    method: 'GET',
+                    data: {
+                        TimeStart: from,
+                        TimeEnd: to
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#stats-container').empty();
+
+                        if (data.success && data.message) {
+                            alert(data.message);
+                            return;
+                        }
+
+                        $('#stats-container').append(`<p><strong>Name:</strong> ${data.name}</p>`);
+                        $('#stats-container').append(`<p><strong>Post Count:</strong> ${data.postCount}</p>`);
+                        $('#stats-container').append(`<p><strong>Verified Posts:</strong> ${data.verifyPostCount}</p>`);
+                        $('#stats-container').append(`<p><strong>Not Verified Posts:</strong> ${data.notVerifyPostCount}</p>`);
+
+                        if (data.gameStats?.length) {
+                            let gameTable = `<h5 class="mt-4">Game Stats</h5>
+                                    <table class="table table-striped table-hover align-middle">
+                                        <thead class="table-dark">
+                                            <tr><th>Game Name</th><th>Post Count</th></tr>
+                                        </thead><tbody>`;
+                            data.gameStats.forEach(game => {
+                                gameTable += `<tr><td>${game.name}</td><td>${game.postsCount}</td></tr>`;
+                            });
+                            gameTable += `</tbody></table>`;
+                            $('#stats-container').append(gameTable);
+                        }
+
+                        if (data.themesStats?.length) {
+                            let themeTable = `<h5 class="mt-4">Theme Stats</h5>
+                                    <table class="table table-striped table-hover align-middle">
+                                        <thead class="table-dark">
+                                            <tr><th>Theme Name</th><th>Post Count</th></tr>
+                                        </thead><tbody>`;
+                            data.themesStats.forEach(theme => {
+                                themeTable += `<tr><td>${theme.name}</td><td>${theme.postsCount}</td></tr>`;
+                            });
+                            themeTable += `</tbody></table>`;
+                            $('#stats-container').append(themeTable);
+                        }
+
+                        if (data.postShortStats?.length) {
+                            let postTable = `<h5 class="mt-4">Post Stats</h5>
+                                    <table class="table table-striped table-hover align-middle">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>ID</th><th>Blog</th><th>Title</th>
+                                                <th>Likes <i class="bi bi-hand-thumbs-up"></i></th>
+                                                <th>Dislikes <i class="bi bi-hand-thumbs-down"></i></th>
+                                                <th>Comments <i class="bi bi-chat-dots"></i></th>
+                                            </tr>
+                                        </thead><tbody>`;
+                            data.postShortStats.forEach(post => {
+                                postTable += `<tr>
+                                            <td>${post.id}</td>
+                                            <td>${post.blogName}</td>
+                                            <td>${post.name}</td>
+                                            <td>${post.likeCount}</td>
+                                            <td>${post.notLikeCount}</td>
+                                            <td>${post.comentsCount}</td>
+                                        </tr>`;
+                            });
+                            postTable += `</tbody></table>`;
+                            $('#stats-container').append(postTable);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Ошибка при получении данных', error);
+                    }
+                });
+            }
+        });
+    </script>
+</body>

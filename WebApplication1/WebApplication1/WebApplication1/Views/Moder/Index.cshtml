@@ -4,38 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
+    <title>Moderation Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        #fileInput {
-            display: none;
-        }
-
-        #image {
-            cursor: pointer;
-            width: 200px; 
-            height: 200px; 
-            border: 2px solid #ccc; 
-            border-radius: 8px; 
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
-    <h2>Меню модерації</h2>
 
-     <input type="button" id="showUsers" value="Список користувачів" />
-     <input type="button" id="showPosts" value="Список постів на верифікацію" />
+<body class="bg-light">
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Moderation Panel</h2>
 
-        <div id="users">
-            <table border="1">
-                <thead>
+        <div class="d-flex justify-content-center mb-4 gap-2">
+            <button class="btn btn-dark" id="showUsers">User List</button>
+            <button class="btn btn-outline-secondary" id="showPosts">Posts Pending Review</button>
+        </div>
+
+        <!-- Users -->
+        <div id="users" class="card p-3">
+            <h4>User Management</h4>
+            <table class="table table-striped table-hover mt-2">
+                <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Имя</th>
+                        <th>Name</th>
                         <th>Email</th>
-                        <th>Попереджень</th>
-                        <th>Бан до</th>
+                        <th>Warnings</th>
+                        <th>Banned Until</th>
+                        <th>Ban</th>
+                        <th>Unban</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody id="usersTableBody"></tbody>
@@ -43,39 +40,83 @@
         </div>
 
 
-        <div id="posts">
-            <table border="1">
-                <thead>
+        <div id="posts" class="card p-3 mt-4">
+            <h4>Post Review</h4>
+            <table class="table table-striped table-hover mt-2">
+                <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Назва</th>
-                        <th>Автор</th>
-                        <th>Гра</th>
-                        <th>Блог</th>
-                        <th>Одобрення</th>
-                        <th>Причина</th>
-                        <th>Видалення</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Game</th>
+                        <th>Blog</th>
+                        <th>Approve</th>
+                        <th>Reason</th>
+                        <th>Reject</th>
                     </tr>
                 </thead>
                 <tbody id="postsTableBody"></tbody>
             </table>
         </div>
-
+    </div>
 
     <script>
+        $('#showUsers').click(function () {
+            loadUsers();
+            $('#users').show();
+            $('#posts').hide();
+            $('#showUsers').removeClass("btn-outline-dark").addClass("btn-dark");
+            $('#showPosts').removeClass("btn-secondary").addClass("btn-outline-secondary");
+        });
 
-       document.getElementById('showUsers').onclick = function() {
-           loadUsers();
-            document.getElementById('users').hidden = false;
-            document.getElementById('posts').hidden = true;
-       }
+        $('#showPosts').click(function () {
+            loadPosts();
+            $('#users').hide();
+            $('#posts').show();
+            $('#showUsers').removeClass("btn-dark").addClass("btn-outline-dark");
+            $('#showPosts').removeClass("btn-outline-secondary").addClass("btn-secondary");
+        });
+        function loadUsers() {
+            $.ajax({
+                url: '@Url.Action("GetUsers", "Auth")',
+                method: 'GET',
+                success: function (response) {
+                    if (response.success && response.message) {
+                        alert(response.message);
+                        return;
+                    }
 
-       document.getElementById('showPosts').onclick = function() {
-           loadPosts();
-            document.getElementById('users').hidden = true;
-            document.getElementById('posts').hidden = false;
-       }
+                    let tableBody = $('#usersTableBody');
+                    tableBody.empty();
 
+                    response.forEach(user => {
+                        let row = `<tr>
+                                    <td>${user.id}</td>
+                                    <td><a class="nav-link" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
+                                    <td>${user.email}</td>
+                                    <td>${user.warnings}</td>
+                                    <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Not Banned'}</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control form-control-sm mb-1" value="1" id="banDays-${user.id}" />
+                                            <button class="btn btn-sm btn-warning" onclick="banUser(${user.id})">Ban</button>
+                                        </div>
+                                        </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success" onclick="deBanUser(${user.id})">Unban</button>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm mb-1" id="reasonToBan-${user.id}" placeholder="Reason" />
+                                            <button class="btn btn-sm btn-danger" onclick="absoluteBanUser(${user.id})">Delete</button>
+                                         </div>
+                                    </td>
+                                </tr>`;
+                        tableBody.append(row);
+                    });
+                }
+            });
+        }
 
         function loadPosts() {
             $.ajax({
@@ -92,55 +133,14 @@
 
                     response.forEach(post => {
                         let row = `<tr>
-                                                <td>${post.id}</td>
-                                                <td><a class="nav-link text-dark" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
-                                                <td>${post.authorName}</td>
-                                                <td>${post.game}</td>
-                                                <td><a class="nav-link text-dark" href="/Posts/Index?id=${post.blogId}">${post.blogName}</a></td>
-                                                <td><button onclick="postApproval(${post.id})">Одобрено</button></td>
-                                                <td><input type="text" id="postProblem-${post.id}" /></td>
-                                                <td><button onclick="postNotApproval(${post.id})">Не одобрено</button></td>
-                                            </tr>`;
-                        tableBody.append(row);
-                    });
-
-                    console.log(response);
-                }
-            });
-        }
-
-
-        function loadUsers() {
-            $.ajax({
-                url: '@Url.Action("GetUsers", "Auth")',
-                method: 'GET',
-                success: function (response) {
-
-                    if (response.success && response.message) {
-                        alert(response.message);
-                        return;
-                    }
-
-                    let tableBody = $('#usersTableBody');
-                    tableBody.empty();
-                    response.forEach(user => {
-                        let row = `<tr>
-                                    <td>${user.id}</td>
-                                    <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
-                                    <td>${user.email}</td>
-                                    <td>${user.warnings}</td>
-                                    <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Не заблокирован'}</td>
-                                    <td>
-                                        <input type="text"  value="1" id="banDays-${user.id}" /> дней
-                                        <button onclick="banUser(${user.id})">Забанить</button>
-                                    </td>
-                                    <td>
-                                        <button onclick="deBanUser(${user.id})">Розбанити</button>
-                                    </td>
-                                    <td>
-                                        <input type="text"  id="reasonToBan-${user.id}" /> Причина
-                                        <button onclick="absoluteBanUser(${user.id})">Видалити</button>
-                                    </td>
+                                    <td>${post.id}</td>
+                                    <td><a class="nav-link" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
+                                    <td>${post.authorName}</td>
+                                    <td>${post.game}</td>
+                                    <td><a class="nav-link" href="/Posts/Index?id=${post.blogId}">${post.blogName}</a></td>
+                                    <td><button class="btn btn-sm btn-primary" onclick="postApproval(${post.id})">Approve</button></td>
+                                    <td><input type="text" class="form-control form-control-sm" id="postProblem-${post.id}" placeholder="Reason..." /></td>
+                                    <td><button class="btn btn-sm btn-danger" onclick="postNotApproval(${post.id})">Reject</button></td>
                                 </tr>`;
                         tableBody.append(row);
                     });
@@ -148,118 +148,47 @@
             });
         }
 
- 
-
         function banUser(userId) {
             let days = $(`#banDays-${userId}`).val();
-
-            $.ajax({
-                url: '@Url.Action("TemporaryBan", "Moder")',
-                method: 'POST',
-                data: 
-                    { userId: userId, 
-                    time: days },
-                success: function (response) {
-                    alert(response.message);
-                    if (response.success) {
-                        loadUsers();
-                    }
-                },
-                error: function () {
-                    alert('Ошибка при разбане пользователя!');
-                }
-            });
-        }
-
-        function postApproval(postId){
-            $.ajax({
-                url: '@Url.Action("PostApproval", "Posts")',
-                method: 'POST',
-                data:
-                {
-                    postId: postId
-                },
-                success: function (response) {
-                    alert(response.message);
-                    if (response.success) {
-                        loadPosts();
-                    }
-                },
-                error: function () {
-                    alert('Ошибка при изменении статуса публикации!');
-                }
-            });
-        }
-
-
-        function absoluteBanUser(userId) {
-            let reason = $(`#reasonToBan-${userId}`).val();
-            $.ajax({
-                url: '@Url.Action("AbsoluteBanUser", "Moder")',
-                method: 'POST',
-                data:
-                {
-                    userId: userId,
-                    reason: reason
-                },
-                success: function (response) {
-                    alert(response.message);
-                    if (response.success) {
-                        loadUsers();
-                    }
-                },
-                error: function () {
-                    alert('Ошибка при удалении пользывателя');
-                }
-            });
-        }
-
-
-        function postNotApproval(postId){
-            let reason = $(`#postProblem-${postId}`).val();
-            $.ajax({
-                url: '@Url.Action("PostNotApproval", "Posts")',
-                method: 'POST',
-                data:
-                {
-                    postId: postId,
-                    reason: reason
-                },
-                success: function (response) {
-                    alert(response.message);
-                    if (response.success) {
-                        loadPosts();
-                    }
-                },
-                error: function () {
-                    alert('Ошибка при изменении статуса публикации!');
-                }
+            $.post('@Url.Action("TemporaryBan", "Moder")', { userId, time: days }, function (response) {
+                alert(response.message);
+                if (response.success) loadUsers();
             });
         }
 
         function deBanUser(userId) {
-            $.ajax({
-                url: '@Url.Action("DeleteBan", "Moder")',
-                method: 'POST',
-                data: { userId: userId },
-                success: function (response) {
-                    alert(response.message);
-                    if (response.success) {
-                        loadUsers();
-                    }
-                },
-                error: function () {
-                    alert('Ошибка при разбане пользователя!');
-                }
+            $.post('@Url.Action("DeleteBan", "Moder")', { userId }, function (response) {
+                alert(response.message);
+                if (response.success) loadUsers();
+            });
+        }
+
+        function absoluteBanUser(userId) {
+            let reason = $(`#reasonToBan-${userId}`).val();
+            $.post('@Url.Action("AbsoluteBanUser", "Moder")', { userId, reason }, function (response) {
+                alert(response.message);
+                if (response.success) loadUsers();
+            });
+        }
+
+        function postApproval(postId) {
+            $.post('@Url.Action("PostApproval", "Posts")', { postId }, function (response) {
+                alert(response.message);
+                if (response.success) loadPosts();
+            });
+        }
+
+        function postNotApproval(postId) {
+            let reason = $(`#postProblem-${postId}`).val();
+            $.post('@Url.Action("PostNotApproval", "Posts")', { postId, reason }, function (response) {
+                alert(response.message);
+                if (response.success) loadPosts();
             });
         }
 
         $(document).ready(function () {
             loadUsers();
-            loadPosts();
-            document.getElementById('posts').hidden = true;
+            $('#posts').hide();
         });
     </script>
 </body>
-
-

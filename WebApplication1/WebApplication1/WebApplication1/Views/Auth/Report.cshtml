@@ -53,7 +53,6 @@
             display: block;
         }
     </style>
-    </style>
 </head>
 <body>
 
@@ -74,7 +73,7 @@
                         <label for="loginPassword" class="form-label">Problem description</label>
                         <textarea class="form-control" id="text"></textarea>
                     </div>
-                    <button id="send" class="btn btn-primary" onclick="sendReport()">Send</button>
+                    <button type="button" class="btn btn-primary" onclick="sendReport()">Submit Report</button>
                 </form>
             </div>
         </div>
@@ -98,7 +97,7 @@
                 alert(response.message);
             },
             error: function () {
-                alert('Помилка при відправки скарги');
+                alert('Error sending the report');
             }
         });
     }

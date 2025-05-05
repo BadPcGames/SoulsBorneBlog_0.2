@@ -1,4 +1,4 @@
-﻿async function getUserRole() {
+﻿export async function getUserRole() {
     try {
         const response = await $.ajax({
             url: '/Auth/GetUserRole', 
@@ -11,7 +11,7 @@
     }
 }
 
-async function getUserId() {
+export async function getUserId() {
     try {
         const response = await $.ajax({
             url: '/Auth/GetUserId',

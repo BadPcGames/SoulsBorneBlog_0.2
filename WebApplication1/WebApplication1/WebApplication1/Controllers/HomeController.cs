@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebApplication1.DbModels;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -16,6 +17,12 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Index()
         {
             return View();
+        }
+
+        public async Task<IActionResult> AboutUs()
+        {
+            List<Game> games = _context.Games.ToList();
+            return View(games);
         }
 
         public IActionResult Privacy()

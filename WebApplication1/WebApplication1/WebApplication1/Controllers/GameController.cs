@@ -68,10 +68,11 @@ public class GameController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id,string GameName, string Description, IFormFile? GameCharacter, string Color)
     {
-        if (GameName == "" || Description == "" || GameCharacter == null)
+        if (string.IsNullOrWhiteSpace(GameName) || string.IsNullOrWhiteSpace(Description))
         {
-            return RedirectToAction("Edit", new { id=id,message = "all data must be fuiled" });
+            return RedirectToAction("Edit", new { id = id, message = "All fields except image must be filled." });
         }
+
         var existingGame = await _context.Games.FindAsync(id);
         if (existingGame == null)
         {
@@ -79,11 +80,13 @@ public class GameController : Controller
         }
         existingGame.GameName = GameName;
         existingGame.Description = Description;
-        existingGame.GameCharacter = GameCharacter != null ? MyConvert.ConvertFileToByteArray(GameCharacter):null ;
+        if (GameCharacter != null)
+        {
+            existingGame.GameCharacter = MyConvert.ConvertFileToByteArray(GameCharacter);
+        }
         existingGame.Color = Color;
         _context.Update(existingGame);
         await _context.SaveChangesAsync();
-       
         return RedirectToAction("Index");
 
     }

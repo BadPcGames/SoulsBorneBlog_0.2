@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фиксированный макет с прокручиваемым центральным блоком</title>
+    <title>Fixed Layout with Scrollable Center Block</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
@@ -21,69 +21,83 @@
         }
     </style>
 </head>
-<body>
-    <a asp-action="Index" asp-controller="Game">Ігри платформи</a>
-    <br>
-    <a asp-action="Baner" asp-controller="Admin">Банери</a>
-    <br>
-    <a asp-action="Stats" asp-controller="Admin">Статистика</a>
-    <br>
+<body class="bg-light">
 
-    <input type="button" id="showUsers" value="Список користувачів" />
-    <input type="button" id="showModers" value="Список постів на верифікацію" />
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Admin Panel</h1>
 
-    <div id="users">
-        <p>
-            Name=<input type="text" id="nameOfUser"></input>  Email=<input type="text" id="emailOfUser"></input>  <button id="addModer">add</button>
-        </p>
+        <div class="d-flex justify-content-center mb-4 gap-2">
+            <a class="btn btn-dark" asp-action="Index" asp-controller="Game">Platform Games</a>
+            <a asp-action="Baner" class="btn btn-dark" asp-controller="Admin">Banners</a>
+            <a asp-action="Stats" class="btn btn-dark" asp-controller="Admin">Statistics</a>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center mb-4 gap-2">
+            <input type="button" class="btn btn-dark"  id="showUsers" value="User List" />
+            <input type="button" class="btn btn-outline-secondary" id="showModers" value="Moderator List" />
+        </div>
+   
+        <div id="users" class="card p-3">
+            <div class="input-group mb-3 justify-content-center">
+                <span class="input-group-text">Name</span>
+                <input type="text" class="form-control" id="nameOfUser" placeholder="Enter name">
+                <span class="input-group-text">Email</span>
+                <input type="text" class="form-control" id="emailOfUser" placeholder="Enter email">
+                <button class="btn btn-success" id="addModer">Add</button>
+            </div>
 
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Имя</th>
-                    <th>Email</th>
-                    <th>Попереджень</th>
-                    <th>Бан до</th>
-                </tr>
-            </thead>
-            <tbody id="usersTableBody"></tbody>
-        </table>
+            <table class="table table-striped table-hover mt-2" border="1">
+                <thead>
+                    <tr class="table-dark">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Warnings</th>
+                        <th>Banned Until</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="moders" class="card p-3">
+            <div class="input-group mb-3 justify-content-center">
+                <span class="input-group-text">Name</span>
+                <input type="text" class="form-control" id="nameOfModer" placeholder="Enter name">
+                <span class="input-group-text">Email</span>
+                <input type="text" class="form-control" id="emailOfModer" placeholder="Enter email">
+                <button class="btn btn-danger" id="deleteFromModer">Delete</button>
+            </div>
+            <table border="1" class="table table-striped table-hover mt-2">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Warnings</th>
+                        <th>Banned Until</th>
+                    </tr>
+                </thead>
+                <tbody id="modersTableBody"></tbody>
+            </table>
+        </div>
     </div>
-
-
-    <div id="moders">
-        <p>
-            Name=<input type="text" id="nameOfModer"></input>  Email=<input type="text" id="emailOfModer"></input>  <button id="deleteFromModer">Delete</button>
-        </p>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Имя</th>
-                    <th>Email</th>
-                    <th>Попереджень</th>
-                    <th>Бан до</th>
-                </tr>
-            </thead>
-            <tbody id="modersTableBody"></tbody>
-        </table>
-    </div>
-
 </body>
 
-
 <script>
-
     document.getElementById('showUsers').onclick = function () {
         document.getElementById('users').hidden = false;
         document.getElementById('moders').hidden = true;
+        $('#showUsers').removeClass("btn-outline-dark").addClass("btn-dark");
+        $('#showModers').removeClass("btn-secondary").addClass("btn-outline-secondary");
         loadUsers();
     }
 
     document.getElementById('showModers').onclick = function () {
         document.getElementById('users').hidden = true;
         document.getElementById('moders').hidden = false;
+        $('#showUsers').removeClass("btn-dark").addClass("btn-outline-dark");
+        $('#showModers').removeClass("btn-outline-secondary").addClass("btn-secondary");
         loadModers();
     }
 
@@ -91,9 +105,9 @@
         let name = $('#nameOfUser').val();
         let email = $('#emailOfUser').val();
         $.ajax({
-            url: '/Admin/AddModer', 
-            type: 'POST', 
-            data: ({ 
+            url: '/Admin/AddModer',
+            type: 'POST',
+            data: ({
                 name: name,
                 email: email
             }),
@@ -104,10 +118,11 @@
                 }
             },
             error: function () {
-                alert('Ошибка при изменении статуса публикации!');
+                alert('Error changing publication status!');
             }
         });
     }
+
     document.getElementById('deleteFromModer').onclick = function () {
         let name = $('#nameOfModer').val();
         let email = $('#emailOfModer').val();
@@ -125,7 +140,7 @@
                 }
             },
             error: function () {
-                alert('Ошибка при изменении статуса публикации!');
+                alert('Error changing publication status!');
             }
         });
     }
@@ -135,7 +150,6 @@
             url: '@Url.Action("GetUsers", "Auth")',
             method: 'GET',
             success: function (response) {
-
                 let tableBody = $('#usersTableBody');
                 tableBody.empty();
 
@@ -144,15 +158,14 @@
                     return;
                 }
 
-               
                 response.forEach(user => {
                     let row = `<tr>
-                                        <td>${user.id}</td>
-                                        <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
-                                        <td>${user.email}</td>
-                                        <td>${user.warnings}</td>
-                                        <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Не заблокирован'}</td>
-                                    </tr>`;
+                        <td>${user.id}</td>
+                        <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
+                        <td>${user.email}</td>
+                        <td>${user.warnings}</td>
+                        <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Not Banned'}</td>
+                    </tr>`;
                     tableBody.append(row);
                 });
             }
@@ -172,26 +185,22 @@
                     return;
                 }
 
-               
                 response.forEach(user => {
                     let row = `<tr>
-                                            <td>${user.id}</td>
-                                            <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
-                                            <td>${user.email}</td>
-                                            <td>${user.warnings}</td>
-                                            <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Не заблокирован'}</td>
-                                        </tr>`;
+                        <td>${user.id}</td>
+                        <td><a class="nav-link text-dark" href="/Profile/Index?id=${user.id}">${user.name}</a></td>
+                        <td>${user.email}</td>
+                        <td>${user.warnings}</td>
+                        <td>${user.banTime ? new Date(user.banTime).toLocaleString() : 'Not Banned'}</td>
+                    </tr>`;
                     tableBody.append(row);
                 });
             }
         });
     }
 
-
     $(document).ready(function () {
         loadUsers();
         document.getElementById('moders').hidden = true;
     });
 </script>
-
-
