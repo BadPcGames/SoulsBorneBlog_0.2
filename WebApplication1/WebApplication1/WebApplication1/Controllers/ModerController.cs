@@ -5,75 +5,95 @@ using WebApplication1;
 using WebApplication1.DbModels;
 using WebApplication1.Services;
 
-
 [Authorize(Roles = "Moder,Admin")]
 public class ModerController : Controller
 {
     private readonly AppDbContext _context;
     private readonly EmailService _emailService;
-    public ModerController(AppDbContext context,EmailService emailService)
+
+    public ModerController(AppDbContext context, EmailService emailService)
     {
         _context = context;
-        _emailService=emailService;
+        _emailService = emailService;
     }
 
     public IActionResult Index()
     {
         return View();
     }
-    public async Task<IActionResult> TemporaryBan(int userId,string? time)
+
+    public async Task<IActionResult> TemporaryBan(int userId, string? time)
     {
-        if (time == null || time == "")
+        if (string.IsNullOrEmpty(time))
         {
-            return Json(new { success = true, message = "Час не вказано" });
+            return Json(new { success = true, message = "Ban duration not specified" });
         }
+
         int banTime = 0;
         if (int.TryParse(time, out banTime))
         {
             if (banTime == 0)
             {
-                return Json(new { success = true, message = "Час не вказано" });
+                return Json(new { success = true, message = "Ban duration not specified" });
             }
+
             User user = _context.Users.First(user => user.Id == userId);
             user.BanTime = DateTime.Now.AddDays(banTime);
             user.Warnings += 1;
             _context.Update(user);
             await _context.SaveChangesAsync();
-            _emailService.SendEmail(user.Email, "Тимчасовий бан на платформі SoulsBorneBlogs", "Дорогий користувач вам було надано тимчасове обмеження на додаванян реакцій до публікацій користувачів до: " + user.BanTime);
-            return Json(new { success = true, message = "Користувач успішно забанин!" });
-        }
-        return Json(new { success = true, message = "Час вказано не вірно" });
 
+            _emailService.SendEmail(user.Email,
+                "Temporary Ban on SoulsBorneBlogs Platform",
+                "Dear user, you have received a temporary restriction on adding reactions to posts until: " + user.BanTime);
+
+            return Json(new { success = true, message = "User successfully banned!" });
+        }
+
+        return Json(new { success = true, message = "Invalid ban duration specified" });
     }
+
     public async Task<IActionResult> DeleteBan(int userId)
     {
         User user = _context.Users.First(user => user.Id == userId);
         user.BanTime = null;
-        user.Warnings = user.Warnings>0? user.Warnings - 1:0;
+        user.Warnings = user.Warnings > 0 ? user.Warnings - 1 : 0;
         _context.Update(user);
         await _context.SaveChangesAsync();
-        _emailService.SendEmail(user.Email, "Тимчасовий бан на платформі SoulsBorneBlogs", "Дорогий користувач з вас були зняті всі обмеження ");
-        return Json(new { success = true, message = "Пользователь успешно разбанен!" });
+
+        _emailService.SendEmail(user.Email,
+            "Ban Removed on SoulsBorneBlogs Platform",
+            "Dear user, all restrictions have been lifted from your account.");
+
+        return Json(new { success = true, message = "User successfully unbanned!" });
     }
 
-    public async Task<IActionResult> AbsoluteBanUser(int userId,string? reason)
+    public async Task<IActionResult> AbsoluteBanUser(int userId, string? reason)
     {
-        if (reason == null||reason=="")
+        if (string.IsNullOrEmpty(reason))
         {
-            return Json(new { success = true, message = "Причина не вказана" });
+            return Json(new { success = true, message = "Reason not specified" });
         }
+
         if (reason.Length < 15)
         {
-            return Json(new { success = true, message = "Причина не має бути менше 15 симовлів" });
+            return Json(new { success = true, message = "Reason must be at least 15 characters long" });
         }
+
         User user = _context.Users.First(user => user.Id == userId);
+
         if (user.Warnings == 0)
         {
-            _emailService.SendEmail(user.Email, "Скарга", "Дорогий користувач модератор надсилає вам скаргу з причини "+reason+". Наступна скарга може призвести до видалення вашого акаунту з платформи");
+            _emailService.SendEmail(user.Email,
+                "Warning",
+                "Dear user, a moderator has sent you a warning for the following reason: " + reason +
+                ". Further warnings may result in account deletion from the platform.");
+
             user.Warnings += 1;
             _context.Update(user);
             await _context.SaveChangesAsync();
-            return Json(new { success = true, message = "Користувачу надано попередження" });
+
+            return Json(new { success = true, message = "Warning issued to user" });
         }
         else
         {
@@ -132,13 +152,14 @@ public class ModerController : Controller
 
             _emailService.SendEmail(
                 user.Email,
-                "Ви були видалені з платформи SoulsBorneBlogs",
-                $"Дорогий користувач, вас видалено з платформи через: {reason}"
+                "You Have Been Removed from SoulsBorneBlogs Platform",
+                $"Dear user, your account has been deleted from the platform due to the following reason: {reason}"
             );
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
-        return Json(new { success = true, message = "Куристувач був видалений з платворми!" });
+
+        return Json(new { success = true, message = "User has been removed from the platform!" });
     }
 }

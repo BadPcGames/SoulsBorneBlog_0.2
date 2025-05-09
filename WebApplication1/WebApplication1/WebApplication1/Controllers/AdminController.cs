@@ -34,7 +34,7 @@ public class AdminController : Controller
     {
         if (image == null)
         {
-            return Json(new { success = false, message = "Банер не додано. Изображение не выбрано." });
+            return Json(new { success = false, message = "Banner not added. Image not selected." });
         }
 
 
@@ -60,7 +60,7 @@ public class AdminController : Controller
         _context.Baners.Add(baner);  
         await _context.SaveChangesAsync();
 
-        return Json(new { success = true, message = "Банер додано" });
+        return Json(new { success = true, message = "Banner added." });
     }
     public async Task<IActionResult> DeleteBaner(int id)
     {
@@ -75,7 +75,7 @@ public class AdminController : Controller
         }
         _context.Remove(baner);
         await _context.SaveChangesAsync();
-        return Json(new { success = true, message = "Банер видалено" });
+        return Json(new { success = true, message = "Banner deleted" });
     }
     public async Task<IActionResult> SelectBaner(int id)
     {
@@ -95,7 +95,7 @@ public class AdminController : Controller
         _context.UpdateRange(baners);
         await _context.SaveChangesAsync();
 
-        return Json(new { success = true, message = "Обраний банер обрано" });
+        return Json(new { success = true, message = "Selected banner selected" });
     }
 
     public async Task<IActionResult> GetBanners()
@@ -104,7 +104,7 @@ public class AdminController : Controller
 
         if (baners.Count == 0)
         {
-            return Json(new { success = true, message = "Банерів не завантажено" });
+            return Json(new { success = true, message = "No banners loaded" });
         }
 
         var result = baners.Select(b => new
@@ -129,36 +129,36 @@ public class AdminController : Controller
     {
         if ((name == "") || (email == ""))
         {
-            return Json(new { success = true, message = "Всі поля мають бути заповнені" });
+            return Json(new { success = true, message = "All fields must be filled in." });
         }
 
         var user = _context.Users.FirstOrDefault(u => (u.Name == name) && (u.Email == email));
         if (user == null)
         {
-            return Json(new { success = true, message = "Користувача з такими логіном та поштою не існує" });
+            return Json(new { success = true, message = "User with such login and email does not exist" });
         }
         user.Role = "Moder";
         _context.Users.Update(user);
         _context.SaveChanges();
-        return Json(new { success = true, message = $"{user.Name} став модератором" });
+        return Json(new { success = true, message = $"{user.Name} became moder" });
     }
 
     public async Task<IActionResult> DeleteModer(string Name, string Email)
     {
         if ((Name == "") || (Email == ""))
         {
-            return Json(new { success = true, message = "Всі поля мають бути заповнені" });
+            return Json(new { success = true, message = "All fields must be filled in." });
         }
 
         var user = _context.Users.FirstOrDefault(user => user.Name == Name && user.Email == Email&&user.Role=="Moder");
         if (user == null)
         {
-            return Json(new { success = true, message = "Модератора з такими логіном та поштою не існує" });
+            return Json(new { success = true, message = "There is no moderator with such login and email address." });
         }
         user.Role = "User";
         _context.Users.Update(user);
         _context.SaveChanges();
-        return Json(new { success = true, message = $"{user.Name} перестав бути модератором" });
+        return Json(new { success = true, message = $"{user.Name} stopped being a moderator" });
     }
 
 }

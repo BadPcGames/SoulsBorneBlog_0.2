@@ -6,7 +6,7 @@
         });
         return response;
     } catch (error) {
-        console.error("Ошибка при получении статуса пользователя:", error);
+        console.error("Error getting user status: ", error);
         return null;
     }
 }
@@ -19,7 +19,7 @@ export async function getUserId() {
         });
         return response;
     } catch (error) {
-        console.error("Ошибка при получении статуса пользователя:", error);
+        console.error("Error getting user status: ", error);
         return null;
     }
 }

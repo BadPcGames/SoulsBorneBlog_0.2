@@ -7,7 +7,6 @@ using NPOI.SS.UserModel;
 using QuestPDF.Helpers;
 using QuestPDF.Fluent;
 
-
 public class StatsController : Controller
 {
     private readonly AppDbContext _context;
@@ -17,10 +16,8 @@ public class StatsController : Controller
         _context = context;
     }
 
-
-    public async Task<StatsViewModel> MakeGlobalStats(DateTime from, DateTime to)
+    public async Task<StatsViewModel> GenerateGlobalStats(DateTime from, DateTime to)
     {
-
         if (to.Day == DateTime.Now.Day)
         {
             to = DateTime.Now;
@@ -29,14 +26,17 @@ public class StatsController : Controller
         {
             to = new DateTime(to.Year, to.Month, to.Day, 23, 59, 0);
         }
-        StatsViewModel stats = new StatsViewModel();
-        stats.Name = $"Stats from: {from} to: {to}";
+
+        StatsViewModel stats = new StatsViewModel
+        {
+            Name = $"Stats from: {from} to: {to}"
+        };
 
         var posts = _context.Posts.Where(post => post.CreatedAt >= from && post.CreatedAt <= to);
 
         stats.PostCount = await posts.CountAsync();
         stats.VerifyPostCount = await posts.CountAsync(post => post.Verify);
-        stats.NotVerifyPostCount = await posts.CountAsync(post => !post.Verify);
+        stats.NotVerifyPostCount= await posts.CountAsync(post => !post.Verify);
 
         stats.GameStats = await _context.Games
             .Select(game => new GameStatsViewModel
@@ -44,7 +44,6 @@ public class StatsController : Controller
                 Name = game.GameName,
                 PostsCount = _context.Posts.Count(post => post.Game == game.GameName)
             }).ToListAsync();
-
 
         stats.ThemesStats = await _context.Themes
             .Select(theme => new ThemeStatsViewModel
@@ -58,66 +57,7 @@ public class StatsController : Controller
                     .Count()
             }).ToListAsync();
 
-  
         stats.PostShortStats = await posts
-            .Select(post => new PostShortStatsViewModel
-            {
-                Name = post.Title,
-                Id = post.Id,
-                LikeCount = _context.Reactions.Count(reaction => reaction.Value == 1 && reaction.PostId == post.Id),
-                NotLikeCount = _context.Reactions.Count(reaction => reaction.Value == -1 && reaction.PostId == post.Id),
-                ComentsCount = _context.Coments.Count(com => com.PostId == post.Id),
-                BlogName=_context.Blogs.FirstOrDefault(blog=>blog.Id==post.BlogId).Name,
-                Verify=post.Verify,
-                CreateAt = post.CreatedAt
-            }).ToListAsync();
-
-        return stats;
-    }
-
-  
-
-    public async Task<PostShortStatsViewModel> MakePostStats(int postId)
-    {
-        PostShortStatsViewModel stats= new PostShortStatsViewModel();
-
-        var post = _context.Posts.FirstOrDefault(post=>post.Id==postId);
-
-        stats = new PostShortStatsViewModel()
-        {
-            Name = post.Title,
-            Id = post.Id,
-            LikeCount = _context.Reactions.Count(reaction => reaction.Value == 1 && reaction.PostId == post.Id),
-            NotLikeCount = _context.Reactions.Count(reaction => reaction.Value == -1 && reaction.PostId == post.Id),
-            ComentsCount = _context.Coments.Count(com => com.PostId == post.Id),
-            BlogName=_context.Blogs.FirstOrDefault(blog=>blog.Id==post.BlogId).Name,
-            Verify = post.Verify,
-            CreateAt=post.CreatedAt
-            
-        };
-        return stats;
-    }
-
-    public async Task<List<PostShortStatsViewModel>> MakeUserStats(DateTime from, DateTime to, int userId)
-    {
-        List<PostShortStatsViewModel> stats = new List<PostShortStatsViewModel>();
-
-        if(to.Day== DateTime.Now.Day)
-        {
-            to = DateTime.Now;
-        }
-        if (to.Day < DateTime.Now.Day)
-        {
-            to=new DateTime(to.Year,to.Month,to.Day,23,59,0);
-        }
-
-        var blogs = _context.Blogs
-                    .Where(blog => blog.AuthorId == userId)
-                    .Select(blog => blog.Id);
-
-        var posts = _context.Posts.Where(post => post.CreatedAt >= from && post.CreatedAt <= to && blogs.Contains(post.BlogId));
-
-        stats = await posts
             .Select(post => new PostShortStatsViewModel
             {
                 Name = post.Title,
@@ -133,139 +73,141 @@ public class StatsController : Controller
         return stats;
     }
 
-
-    public async Task<IActionResult> GetUserStats(string? TimeStart, string? TimeEnd, int userId)
+    public async Task<PostShortStatsViewModel> GeneratePostStats(int postId)
     {
-        if (TimeStart == "" || TimeStart == null || TimeEnd == "" || TimeEnd == null)
+        var post = _context.Posts.FirstOrDefault(p => p.Id == postId);
+
+        return new PostShortStatsViewModel
         {
-            return Json(new { success = true, message = "Всі поля мають бути заповені" });
+            Name = post.Title,
+            Id = post.Id,
+            LikeCount = _context.Reactions.Count(r => r.Value == 1 && r.PostId == post.Id),
+            NotLikeCount = _context.Reactions.Count(r => r.Value == -1 && r.PostId == post.Id),
+            ComentsCount = _context.Coments.Count(c => c.PostId == post.Id),
+            BlogName = _context.Blogs.FirstOrDefault(b => b.Id == post.BlogId).Name,
+            Verify = post.Verify,
+            CreateAt = post.CreatedAt
+        };
+    }
+
+    public async Task<List<PostShortStatsViewModel>> GenerateUserStats(DateTime from, DateTime to, int userId)
+    {
+        if (to.Day == DateTime.Now.Day)
+        {
+            to = DateTime.Now;
+        }
+        if (to.Day < DateTime.Now.Day)
+        {
+            to = new DateTime(to.Year, to.Month, to.Day, 23, 59, 0);
         }
 
-        DateTime from, to;
+        var blogIds = _context.Blogs.Where(blog => blog.AuthorId == userId).Select(blog => blog.Id);
 
-        if (!DateTime.TryParse(TimeStart, out from))
-        {
-            return Json(new { success = true, message = "Початковий час вказано не у вірному форматі" });
-        }
+        var posts = _context.Posts.Where(post => post.CreatedAt >= from && post.CreatedAt <= to && blogIds.Contains(post.BlogId));
 
-        if (!DateTime.TryParse(TimeEnd, out to))
-        {
-            return Json(new { success = true, message = "Остаточний час вказано не у вірному форматі" });
-        }
+        return await posts
+            .Select(post => new PostShortStatsViewModel
+            {
+                Name = post.Title,
+                Id = post.Id,
+                LikeCount = _context.Reactions.Count(r => r.Value == 1 && r.PostId == post.Id),
+                NotLikeCount = _context.Reactions.Count(r => r.Value == -1 && r.PostId == post.Id),
+                ComentsCount = _context.Coments.Count(c => c.PostId == post.Id),
+                BlogName = _context.Blogs.FirstOrDefault(b => b.Id == post.BlogId).Name,
+                Verify = post.Verify,
+                CreateAt = post.CreatedAt
+            }).ToListAsync();
+    }
+
+    public async Task<IActionResult> GetUserStats(string? timeStart, string? timeEnd, int userId)
+    {
+        if (string.IsNullOrWhiteSpace(timeStart) || string.IsNullOrWhiteSpace(timeEnd))
+            return Json(new { success = true, message = "All fields must be filled in" });
+
+        if (!DateTime.TryParse(timeStart, out var from))
+            return Json(new { success = true, message = "Start time is in an invalid format" });
+
+        if (!DateTime.TryParse(timeEnd, out var to))
+            return Json(new { success = true, message = "End time is in an invalid format" });
 
         if (from > to || from > DateTime.Now || to > DateTime.Now)
-        {
-            return Json(new { success = true, message = "Невірний часовий проміжок" });
-        }
-        var stats = await MakeUserStats(from, to,userId);
+            return Json(new { success = true, message = "Invalid time range" });
 
-        if (stats.Count() == 0)
-        {
-            return Json(new { success = true, message = "Статистики немає" });
-        }
+        var stats = await GenerateUserStats(from, to, userId);
+
+        if (!stats.Any())
+            return Json(new { success = true, message = "No statistics available" });
+
         return Json(stats);
     }
 
     public async Task<IActionResult> GetPostStats(int postId)
     {
-        var stats = await MakePostStats( postId);
+        var stats = await GeneratePostStats(postId);
         return Json(stats);
     }
 
-    public async Task<IActionResult> GetGlobalStats(string? TimeStart, string? TimeEnd)
+    public async Task<IActionResult> GetGlobalStats(string? timeStart, string? timeEnd)
     {
-        if (TimeStart == "" || TimeStart == null || TimeEnd == "" || TimeEnd == null)
-        {
-            return Json(new { success = true, message = "Всі поля мають бути заповені" });
-        }
+        if (string.IsNullOrWhiteSpace(timeStart) || string.IsNullOrWhiteSpace(timeEnd))
+            return Json(new { success = true, message = "All fields must be filled in" });
 
-        DateTime from, to;
+        if (!DateTime.TryParse(timeStart, out var from))
+            return Json(new { success = true, message = "Start time is in an invalid format" });
 
-        if (!DateTime.TryParse(TimeStart, out from))
-        {
-            return Json(new { success = true, message = "Початковий час вказано не у вірному форматі" });
-        }
-
-        if (!DateTime.TryParse(TimeEnd, out to))
-        {
-            return Json(new { success = true, message = "Остаточний час вказано не у вірному форматі" });
-        }
+        if (!DateTime.TryParse(timeEnd, out var to))
+            return Json(new { success = true, message = "End time is in an invalid format" });
 
         if (from > to || from > DateTime.Now || to > DateTime.Now)
-        {
-            return Json(new { success = true, message = "Невірний часовий проміжок" });
-        }
-        var stats = await MakeGlobalStats(from, to);
+            return Json(new { success = true, message = "Invalid time range" });
+
+        var stats = await GenerateGlobalStats(from, to);
         return Json(stats);
     }
 
-    public async Task<IActionResult> GetFileStats(string? TimeStart, string? TimeEnd,string type)
+    public async Task<IActionResult> GetFileStats(string? timeStart, string? timeEnd, string type)
     {
-        if (string.IsNullOrEmpty(TimeStart) || string.IsNullOrEmpty(TimeEnd))
-        {
-            return Json(new { success = false, message = "Всі поля мають бути заповені" });
-        }
+        if (string.IsNullOrEmpty(timeStart) || string.IsNullOrEmpty(timeEnd))
+            return Json(new { success = false, message = "All fields must be filled in" });
 
-        DateTime from, to;
+        if (!DateTime.TryParse(timeStart, out var from))
+            return Json(new { success = false, message = "Start time is in an invalid format" });
 
-        if (!DateTime.TryParse(TimeStart, out from))
-        {
-            return Json(new { success = false, message = "Початковий час вказано не у вірному форматі" });
-        }
-
-        if (!DateTime.TryParse(TimeEnd, out to))
-        {
-            return Json(new { success = false, message = "Остаточний час вказано не у вірному форматі" });
-        }
+        if (!DateTime.TryParse(timeEnd, out var to))
+            return Json(new { success = false, message = "End time is in an invalid format" });
 
         if (from > to || from > DateTime.Now || to > DateTime.Now)
-        {
-            return Json(new { success = false, message = "Невірний часовий проміжок" });
-        }
+            return Json(new { success = false, message = "Invalid time range" });
 
-        var stats = await MakeGlobalStats(from, to);
-        if (type == "ex")
-        {
-            var fileResult = await DownloadExcel(stats);
-            return fileResult;
-        }
-        else
-        {
-            var fileResult = await DownloadPdf(stats);
-            return fileResult;
-        }
-        
+        var stats = await GenerateGlobalStats(from, to);
+
+        return type == "ex" ? await DownloadExcel(stats) : await DownloadPdf(stats);
     }
 
     public async Task<IActionResult> DownloadExcel(StatsViewModel model)
     {
         using var workbook = new XSSFWorkbook();
-        var sheet = workbook.CreateSheet("Звіт");
+        var sheet = workbook.CreateSheet("Report");
 
         int rowIndex = 0;
 
-        rowIndex = AddTextRow(sheet, rowIndex, "Назва:", model.Name);
-        rowIndex = AddTextRow(sheet, rowIndex, "Всього постів:", model.PostCount.ToString());
-        rowIndex = AddTextRow(sheet, rowIndex, "Підтверждені пости:", model.VerifyPostCount.ToString());
-        rowIndex = AddTextRow(sheet, rowIndex, "Непідтвержедені пости:", model.NotVerifyPostCount.ToString());
+        rowIndex = AddTextRow(sheet, rowIndex, "Name:", model.Name);
+        rowIndex = AddTextRow(sheet, rowIndex, "Total posts:", model.PostCount.ToString());
+        rowIndex = AddTextRow(sheet, rowIndex, "Verified posts:", model.VerifyPostCount.ToString());
+        rowIndex = AddTextRow(sheet, rowIndex, "Unverified posts:", model.NotVerifyPostCount.ToString());
 
         rowIndex++;
 
-        rowIndex = AddTable(sheet, rowIndex, "Статистика по іграм", new List<string> { "Гра", "Кількість постів" },
-            model.GameStats, gs => new object[] { gs.Name, gs.PostsCount });
+        rowIndex = AddTable(sheet, rowIndex, "Game Statistics", new List<string> { "Game", "Post Count" }, model.GameStats, gs => new object[] { gs.Name, gs.PostsCount });
 
-        rowIndex = AddTable(sheet, rowIndex, "Статистика тем", new List<string> { "Тема", "Кількість постів" },
-            model.ThemesStats, ts => new object[] { ts.Name, ts.PostsCount });
+        rowIndex = AddTable(sheet, rowIndex, "Theme Statistics", new List<string> { "Theme", "Post Count" }, model.ThemesStats, ts => new object[] { ts.Name, ts.PostsCount });
 
-        rowIndex = AddTable(sheet, rowIndex, "Коротка інформація постів",
-            new List<string> { "ID","Назва блога", "Назва", "Лайки", "Дізлайки", "Коментарі","Одобрення" },
-            model.PostShortStats, ps => new object[] { ps.Id, ps.BlogName,ps.Name, ps.LikeCount, ps.NotLikeCount, ps.ComentsCount,ps.Verify });
+        rowIndex = AddTable(sheet, rowIndex, "Post Summary", new List<string> { "ID", "Blog Name", "Title", "Likes", "Dislikes", "Comments", "Approved" },
+            model.PostShortStats, ps => new object[] { ps.Id, ps.BlogName, ps.Name, ps.LikeCount, ps.NotLikeCount, ps.ComentsCount, ps.Verify });
 
         using var stream = new MemoryStream();
         workbook.Write(stream);
-        var content = stream.ToArray();
-
-        return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{model.Name}.xlsx");
+        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{model.Name}.xlsx");
     }
 
     private int AddTextRow(ISheet sheet, int rowIndex, string label, string value)
@@ -276,10 +218,9 @@ public class StatsController : Controller
         return rowIndex + 1;
     }
 
-    private int AddTable<T>(ISheet sheet, int rowIndex, string title, List<string> headers, List<T> data, System.Func<T, object[]> selector)
+    private int AddTable<T>(ISheet sheet, int rowIndex, string title, List<string> headers, List<T> data, Func<T, object[]> selector)
     {
-        if (data == null || data.Count == 0)
-            return rowIndex;
+        if (data == null || data.Count == 0) return rowIndex;
 
         var titleRow = sheet.CreateRow(rowIndex++);
         titleRow.CreateCell(0).SetCellValue(title);
@@ -296,13 +237,12 @@ public class StatsController : Controller
                 row.CreateCell(i).SetCellValue(values[i]?.ToString());
         }
 
-        rowIndex++;
-        return rowIndex;
+        return rowIndex + 1;
     }
 
     public async Task<IActionResult> DownloadPdf(StatsViewModel model)
     {
-        var pdfDocument = Document.Create(container =>
+        var pdf = Document.Create(container =>
         {
             container.Page(page =>
             {
@@ -310,14 +250,14 @@ public class StatsController : Controller
                 page.Margin(20);
                 page.Content().Column(col =>
                 {
-                    col.Item().Text($"Звіт: {model.Name}").FontSize(20).Bold();
-                    col.Item().Text($"Всього постів: {model.PostCount}");
-                    col.Item().Text($"Підтверждені пости: {model.VerifyPostCount}");
-                    col.Item().Text($"Непідтверждені пости: {model.NotVerifyPostCount}");
+                    col.Item().Text($"Report: {model.Name}").FontSize(20).Bold();
+                    col.Item().Text($"Total posts: {model.PostCount}");
+                    col.Item().Text($"Verified posts: {model.VerifyPostCount}");
+                    col.Item().Text($"Unverified posts: {model.NotVerifyPostCount}");
 
                     if (model.GameStats?.Any() == true)
                     {
-                        col.Item().Text("Статистика по іграм").FontSize(16).Bold();
+                        col.Item().Text("Game Statistics").FontSize(16).Bold();
                         col.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
@@ -328,8 +268,8 @@ public class StatsController : Controller
 
                             table.Header(header =>
                             {
-                                header.Cell().Text("Гра").Bold();
-                                header.Cell().Text("Кількість постів").Bold();
+                                header.Cell().Text("Game").Bold();
+                                header.Cell().Text("Post Count").Bold();
                             });
 
                             foreach (var game in model.GameStats)
@@ -342,7 +282,7 @@ public class StatsController : Controller
 
                     if (model.ThemesStats?.Any() == true)
                     {
-                        col.Item().Text("Статистика тем").FontSize(16).Bold();
+                        col.Item().Text("Theme Statistics").FontSize(16).Bold();
                         col.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
@@ -353,8 +293,8 @@ public class StatsController : Controller
 
                             table.Header(header =>
                             {
-                                header.Cell().Text("Тема").Bold();
-                                header.Cell().Text("Кількість постів").Bold();
+                                header.Cell().Text("Theme").Bold();
+                                header.Cell().Text("Post Count").Bold();
                             });
 
                             foreach (var theme in model.ThemesStats)
@@ -367,7 +307,7 @@ public class StatsController : Controller
 
                     if (model.PostShortStats?.Any() == true)
                     {
-                        col.Item().Text("Коротка статистика постів").FontSize(16).Bold();
+                        col.Item().Text("Post Summary").FontSize(16).Bold();
                         col.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
@@ -384,12 +324,12 @@ public class StatsController : Controller
                             table.Header(header =>
                             {
                                 header.Cell().Text("ID").Bold();
-                                header.Cell().Text("Назва блогу").Bold();
-                                header.Cell().Text("Назва").Bold();
-                                header.Cell().Text("Лайки").Bold();
-                                header.Cell().Text("Дізлайки").Bold();
-                                header.Cell().Text("Коментарі").Bold();
-                                header.Cell().Text("Одобрення").Bold();
+                                header.Cell().Text("Blog").Bold();
+                                header.Cell().Text("Title").Bold();
+                                header.Cell().Text("Likes").Bold();
+                                header.Cell().Text("Dislikes").Bold();
+                                header.Cell().Text("Comments").Bold();
+                                header.Cell().Text("Approved").Bold();
                             });
 
                             foreach (var post in model.PostShortStats)
@@ -398,8 +338,8 @@ public class StatsController : Controller
                                 table.Cell().Text(post.BlogName);
                                 table.Cell().Text(post.Name);
                                 table.Cell().Text(post.LikeCount.ToString());
-                                table.Cell().Text(post.NotLikeCount.ToString());
-                                table.Cell().Text(post.ComentsCount.ToString());
+                                table.Cell().Text(post.DislikeCount.ToString());
+                                table.Cell().Text(post.CommentCount.ToString());
                                 table.Cell().Text(post.Verify.ToString());
                             }
                         });
@@ -409,8 +349,7 @@ public class StatsController : Controller
         });
 
         using var stream = new MemoryStream();
-        pdfDocument.GeneratePdf(stream);
+        pdf.GeneratePdf(stream);
         return File(stream.ToArray(), "application/pdf", $"{model.Name}.pdf");
     }
-
 }

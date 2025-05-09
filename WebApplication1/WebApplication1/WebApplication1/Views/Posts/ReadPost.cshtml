@@ -116,7 +116,6 @@
 
 <script type="module">
     const postId = @Model.Id;
-    import { checkAccess, getUserId, getUserRole } from '/js/site.js';
 
     async function makeComent(text) {
         $.ajax({
@@ -255,7 +254,7 @@
         }
     });
 
-    // Cancel edit
+
     $(document).on('click', '.cancel-edit', function () {
         let commentDiv = $(this).closest('.comment');
         let originalText = commentDiv.find('.edit-text').val();
@@ -263,7 +262,6 @@
         commentDiv.find('.save-edit, .cancel-edit').remove();
     });
 
-    // Delete button
     $(document).on('click', '.delete-btn', function () {
         let commentId = $(this).data('id');
         let postId = $(this).data('post-id');
@@ -271,7 +269,6 @@
     });
 
     function deleteComment(commentId, postId) {
-        if (checkAccess()) {
             $.ajax({
                 url: '@Url.Action("DeleteComment", "Posts")',
                 method: 'POST',
@@ -284,7 +281,6 @@
                     alert('Error deleting comment.');
                 }
             });
-        }
     }
 
     async function updateReactions() {

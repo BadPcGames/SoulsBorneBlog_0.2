@@ -42,9 +42,7 @@ public class BlogsController : Controller
         {
             return View(blog);
         }
-        Console.WriteLine("adasdasdasd");
-        Console.WriteLine(userId);
-        Console.WriteLine("adasdasdasd");
+
         if (ModelState.IsValid)
         {
             blog.AuthorId = userId;
