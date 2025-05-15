@@ -80,10 +80,15 @@
                     else
                     {
                         var textContent = System.Text.Encoding.UTF8.GetString(content.Content);
-                        <p class="text-start">@textContent</p>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-info" id="speach@content.Id">Click to speak</button>
+                        </div>
+                        <p id="text@content.Id" class="text-start">@textContent</p>
+                       
                     }
                 }
             </div>
+     
 
             <div id="reactions" class="my-3 text-center">
                 <button id="like-button" class="btn btn-success reaction-btn">Like <i class="bi bi-hand-thumbs-up"></i>  <span id="like-count">0</span></button>
@@ -91,15 +96,24 @@
                 
             </div>
 
+            @{
+                var postUrl = $"{@ViewBag.adress}/Posts/ReadPost/{Model.Id}";
+                var encodedPostUrl = Uri.EscapeDataString(postUrl);
+                var message = Uri.EscapeDataString("Check this post!");
+            }
             <div class="mb-3 share-buttons text-center">
-                <a href="https://t.me/share/url?url=@@encodedPostUrl&text=@@message" style="color:white" class="btn btn-sm btn-info" target="_blank">Share on Telegram <i class="bi bi-telegram"></i></a>
-                <a href="https://twitter.com/intent/tweet?url=@@encodedPostUrl&text=@@message" style="color:white" class="btn btn-sm btn-dark" target="_blank">
+                <a href="https://t.me/share/url?url=@encodedPostUrl&text=@message" style="color:white" class="btn btn-sm btn-info" target="_blank">Share on Telegram 
+                    <i class="bi bi-telegram"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?url=@encodedPostUrl&text=@message" style="color:white" class="btn btn-sm btn-dark" target="_blank">
                     Share on X 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi" viewBox="0 0 24 24">
                         <path d="M4.3 3h5.6l3.1 4.7 3.2-4.7h5.4l-5.9 8.4L22 21h-5.5l-3.9-5.9L8.3 21H2.9l6.2-9L4.3 3z" />
                     </svg>
                 </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=@@encodedPostUrl" style="color:white" class="btn btn-sm btn-primary" target="_blank">Share on Facebook <i class="bi bi-facebook"></i></a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=@encodedPostUrl" style="color:white" class="btn btn-sm btn-primary" target="_blank">Share on Facebook 
+                    <i class="bi bi-facebook"></i>
+                </a>
             </div>
 
             <h3 class="mt-4">Comments</h3>
@@ -113,6 +127,25 @@
         </div>
     </div>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('button[id^="speach"]');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                window.speechSynthesis.cancel();
+                const textId = button.id.replace('speach', 'text');
+                const textElement = document.getElementById(textId);
+
+                if (textElement) {
+                    const utterance = new SpeechSynthesisUtterance(textElement.textContent);
+                    window.speechSynthesis.speak(utterance);
+                }
+            });
+        });
+    });
+</script>
 
 <script type="module">
     const postId = @Model.Id;

@@ -6,6 +6,7 @@ using WebApplication1.Models;
 using System.Text;
 using WebApplication1.Services;
 using Google.Apis.Gmail.v1.Data;
+using Microsoft.Extensions.Options;
 
 
 
@@ -15,13 +16,53 @@ public class PostsController : Controller
     private readonly UserService _userService;
     private readonly IConfiguration _configuration;
     private readonly EmailService _emailService;
+    private readonly DomainAdressOption _address;
 
-    public PostsController(AppDbContext context, UserService userService, IConfiguration configuration)
+    public PostsController(AppDbContext context, UserService userService, IConfiguration configuration, IOptions<DomainAdressOption> address)
     {
         _context = context;
         _userService = userService;
         _configuration = configuration;
         _emailService = new EmailService();
+        _address = address.Value;
+    }
+
+
+    public async Task<IActionResult> Index(int id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest("Invalid blog ID.");
+        }
+
+        ViewBag.BlogId = id;
+        var posts = await _context.Posts.Where(post => post.BlogId == id).ToListAsync();
+        if (_userService.GetUserId() != null)
+        {
+            ViewBag.CanChange = _userService.GetUserId() == _context.Blogs.First(blog => blog.Id == id).AuthorId;
+        }
+        else
+        {
+            ViewBag.CanChange = false;
+        }
+
+        var postsToShow = posts.Select(post => new PostViewModel
+        {
+            Id = post.Id,
+            Title = post.Title,
+            BlogId = post.BlogId,
+            Game = post.Game,
+            CreateAt = post.CreatedAt,
+            Color = _context.Games.First(game => game.GameName == post.Game).Color,
+            AuthorName = _context.Users.FirstOrDefault(
+                user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId)?.Name ?? "Unknown",
+            BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId)?.Name ?? "Unknown",
+            Contents = _context.Post_Contents.Where(postsContents => postsContents.PostId == post.Id).ToList()
+        }).ToList();
+
+        ViewBag.BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == id).Name;
+        ViewBag.adress = _address.Adress;
+        return View(postsToShow);
     }
 
     public async Task<IActionResult> GetPostsToVerify()
@@ -87,44 +128,9 @@ public class PostsController : Controller
         return Json(new { success = true, message = "Notification sent" });
     }
 
-    public async Task<IActionResult> Index(int id)
-    {
-        if (id <= 0)
-        {
-            return BadRequest("Invalid blog ID.");
-        }
-
-        ViewBag.BlogId = id;
-        var posts = await _context.Posts.Where(post => post.BlogId == id).ToListAsync();
-        if (_userService.GetUserId() != null)
-        {
-            ViewBag.CanChange = _userService.GetUserId() == _context.Blogs.First(blog => blog.Id == id).AuthorId;
-        }
-        else
-        {
-            ViewBag.CanChange = false;
-        }
-
-        var postsToShow = posts.Select(post => new PostViewModel
-        {
-            Id = post.Id,
-            Title = post.Title,
-            BlogId = post.BlogId,
-            Game = post.Game,
-            CreateAt = post.CreatedAt,
-            Color = _context.Games.First(game => game.GameName == post.Game).Color,
-            AuthorName = _context.Users.FirstOrDefault(
-                user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId)?.Name ?? "Unknown",
-            BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId)?.Name ?? "Unknown",
-            Contents = _context.Post_Contents.Where(postsContents => postsContents.PostId == post.Id).ToList()
-        }).ToList();
-
-        ViewBag.BlogName = _context.Blogs.FirstOrDefault(blog => blog.Id == id).Name;
-        return View(postsToShow);
-    }
-
     public async Task<IActionResult> ReadPost(int id)
     {
+        ViewBag.adress = _address.Adress;
         return View(getPost(id));
     }
 

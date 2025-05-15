@@ -46,7 +46,7 @@ public class AdminController : Controller
             var baners = _context.Baners.ToList();
             foreach (var b in baners)
             {
-                b.Selected = false;
+                b.Selected = false; 
             }
             _context.UpdateRange(baners);
             await _context.SaveChangesAsync();

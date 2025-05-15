@@ -9,13 +9,12 @@ namespace WebApplication1.Services
 {
     public class EmailService
     {
-        private readonly string _smtpServer = "smtp.gmail.com";
-        private readonly int _smtpPort = 587;
-
-        // Ensure credentials are securely retrieved, not hardcoded
+       
         private readonly string _email = "v.y.shumsjkyy@student.khai.edu";
         private readonly string _password = "olmh llbn zfwk bnyy";
 
+        private readonly string _smtpServer = "smtp.gmail.com";
+        private readonly int _smtpPort = 587;
         public async Task SendEmail(string to, string subject, string body)
         {
             var client = new System.Net.Mail.SmtpClient(_smtpServer, _smtpPort)
@@ -36,7 +35,7 @@ namespace WebApplication1.Services
         public async Task SendHtmlEmailAsync(string toEmail, string subject, string htmlContent)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Site Admin", _email)); // Change to your site admin email
+            message.From.Add(new MailboxAddress("Site Admin", _email)); 
             message.To.Add(new MailboxAddress("", toEmail));
             message.Subject = subject;
             message.Body = new TextPart(TextFormat.Html) { Text = htmlContent };

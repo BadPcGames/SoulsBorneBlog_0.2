@@ -338,8 +338,8 @@ public class StatsController : Controller
                                 table.Cell().Text(post.BlogName);
                                 table.Cell().Text(post.Name);
                                 table.Cell().Text(post.LikeCount.ToString());
-                                table.Cell().Text(post.DislikeCount.ToString());
-                                table.Cell().Text(post.CommentCount.ToString());
+                                table.Cell().Text(post.NotLikeCount.ToString());
+                                table.Cell().Text(post.ComentsCount.ToString());
                                 table.Cell().Text(post.Verify.ToString());
                             }
                         });

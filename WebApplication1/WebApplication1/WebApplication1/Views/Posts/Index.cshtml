@@ -215,30 +215,25 @@
 
 
         @{
-            var postUrl = $"https://localhost:7109/Posts/Index/{@ViewBag.BlogId}";
+            var postUrl = $"{ViewBag.adress}/Posts/Index/{ViewBag.BlogId}";
             var encodedPostUrl = Uri.EscapeDataString(postUrl);
-            var message = Uri.EscapeDataString("Переглянь цей пост!");
+            var message = Uri.EscapeDataString("Check this blog!");
         }
 
         <div class="d-flex justify-content-center mt-4">
             <div class="d-flex gap-2">
                 <a href="https://t.me/share/url?url=@encodedPostUrl&text=@message" target="_blank" class="btn btn-info text-white">
-                    Share on Telegram  <i class="bi bi-telegram"></i>
+                    Share on Telegram <i class="bi bi-telegram"></i>
                 </a>
-
                 <a href="https://twitter.com/intent/tweet?url=@encodedPostUrl&text=@message" target="_blank" class="btn btn-dark text-white">
-                    
                     Share on X
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi" viewBox="0 0 24 24">
                         <path d="M4.3 3h5.6l3.1 4.7 3.2-4.7h5.4l-5.9 8.4L22 21h-5.5l-3.9-5.9L8.3 21H2.9l6.2-9L4.3 3z" />
                     </svg>
                 </a>
-
                 <a href="https://www.facebook.com/sharer/sharer.php?u=@encodedPostUrl" target="_blank" class="btn btn-primary">
                     Share on Facebook  <i class="bi bi-facebook"></i>
                 </a>
-
-
             </div>
         </div>
 

@@ -40,6 +40,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<EmailService>();
 builder.Services.Configure<AdminEmailOptions>(builder.Configuration.GetSection("AdminEmail"));
+builder.Services.Configure<DomainAdressOption>(builder.Configuration.GetSection("DomainAdress"));
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 64 * 1024 * 1024; // 30 MB
