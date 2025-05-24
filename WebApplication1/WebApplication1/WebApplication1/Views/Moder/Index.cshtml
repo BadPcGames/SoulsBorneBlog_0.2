@@ -22,6 +22,11 @@
         <!-- Users -->
         <div id="users" class="card p-3">
             <h4>User Management</h4>
+            <div class="input-group mb-3 justify-content-center">
+                <span class="input-group-text">Name</span>
+                <input type="text" class="form-control" id="nameOfUser" placeholder="Enter name">
+                <button id="findUser" class="btn btn-dark">find</button>
+            </div>
             <table class="table table-striped table-hover mt-2">
                 <thead class="table-dark">
                     <tr>
@@ -61,8 +66,12 @@
     </div>
 
     <script>
+        document.getElementById('findUser').onclick = function () {
+            loadUsers($('#nameOfUser').val());
+        }
+
         $('#showUsers').click(function () {
-            loadUsers();
+            loadUsers(null);
             $('#users').show();
             $('#posts').hide();
             $('#showUsers').removeClass("btn-outline-dark").addClass("btn-dark");
@@ -76,9 +85,12 @@
             $('#showUsers').removeClass("btn-dark").addClass("btn-outline-dark");
             $('#showPosts').removeClass("btn-outline-secondary").addClass("btn-secondary");
         });
-        function loadUsers() {
+        function loadUsers(findName) {
             $.ajax({
                 url: '@Url.Action("GetUsers", "Auth")',
+                data: ({
+                    findName: findName
+                }),
                 method: 'GET',
                 success: function (response) {
                     if (response.success && response.message) {

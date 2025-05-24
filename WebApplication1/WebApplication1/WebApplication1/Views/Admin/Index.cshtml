@@ -41,6 +41,7 @@
             <div class="input-group mb-3 justify-content-center">
                 <span class="input-group-text">Name</span>
                 <input type="text" class="form-control" id="nameOfUser" placeholder="Enter name">
+                <button id="findUser" class="btn btn-dark">find</button>
                 <span class="input-group-text">Email</span>
                 <input type="text" class="form-control" id="emailOfUser" placeholder="Enter email">
                 <button class="btn btn-success" id="addModer">Add</button>
@@ -64,6 +65,7 @@
             <div class="input-group mb-3 justify-content-center">
                 <span class="input-group-text">Name</span>
                 <input type="text" class="form-control" id="nameOfModer" placeholder="Enter name">
+                <button id="findModer" class="btn btn-dark">find</button>
                 <span class="input-group-text">Email</span>
                 <input type="text" class="form-control" id="emailOfModer" placeholder="Enter email">
                 <button class="btn btn-danger" id="deleteFromModer">Delete</button>
@@ -85,12 +87,21 @@
 </body>
 
 <script>
+    document.getElementById('findUser').onclick = function () {
+        loadUsers($('#nameOfUser').val());
+    }
+    document.getElementById('findModer').onclick = function () {
+        loadModers($('#nameOfModer').val());
+    }
+
+
+
     document.getElementById('showUsers').onclick = function () {
         document.getElementById('users').hidden = false;
         document.getElementById('moders').hidden = true;
         $('#showUsers').removeClass("btn-outline-dark").addClass("btn-dark");
         $('#showModers').removeClass("btn-secondary").addClass("btn-outline-secondary");
-        loadUsers();
+        loadUsers(null);
     }
 
     document.getElementById('showModers').onclick = function () {
@@ -98,7 +109,7 @@
         document.getElementById('moders').hidden = false;
         $('#showUsers').removeClass("btn-dark").addClass("btn-outline-dark");
         $('#showModers').removeClass("btn-outline-secondary").addClass("btn-secondary");
-        loadModers();
+        loadModers(null);
     }
 
     document.getElementById('addModer').onclick = function () {
@@ -145,9 +156,12 @@
         });
     }
 
-    function loadUsers() {
+    function loadUsers(findName) {
         $.ajax({
             url: '@Url.Action("GetUsers", "Auth")',
+            data: ({
+                findName:findName
+            }),
             method: 'GET',
             success: function (response) {
                 let tableBody = $('#usersTableBody');
@@ -172,9 +186,12 @@
         });
     }
 
-    function loadModers() {
+    function loadModers(findName) {
         $.ajax({
             url: '@Url.Action("GetModers", "Auth")',
+            data: ({
+                findName: findName
+            }),
             method: 'GET',
             success: function (response) {
                 let tableBody = $('#modersTableBody');

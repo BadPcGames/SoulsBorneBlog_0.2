@@ -443,7 +443,8 @@ public class PostsController : Controller
 
         if (!string.IsNullOrEmpty(postName))
         {
-            query = query.Where(post => post.Title.Contains(postName));
+            postName = postName.ToLower();
+            query = query.Where(post => post.Title.ToLower().Contains(postName));
         }
 
         if (!string.IsNullOrEmpty(filterGame))

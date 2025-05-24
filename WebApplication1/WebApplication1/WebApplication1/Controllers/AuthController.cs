@@ -299,9 +299,15 @@ namespace WebApplication1.Controllers
             return new EmailAddressAttribute().IsValid(email);
         }
 
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers(string? findName)
         {
             List<User> users = _context.Users.Where(user => user.Role == "User").ToList();
+
+            if (findName != null)
+            {
+                findName = findName.ToLower();
+                users = users.Where(user => user.Name.ToLower().Contains(findName)).ToList();
+            }
 
             List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
             {
@@ -321,9 +327,15 @@ namespace WebApplication1.Controllers
             return Json(usersViewModel);
         }
 
-        public async Task<IActionResult> GetModers()
+        public async Task<IActionResult> GetModers(string? findName)
         {
             List<User> users = _context.Users.Where(user => user.Role == "Moder").ToList();
+
+            if (findName != null)
+            {
+                findName=findName.ToLower();
+                users = users.Where(user => user.Name.ToLower().Contains(findName)).ToList();
+            }
 
             List<UserViewModel> usersViewModel = users.Select(user => new UserViewModel
             {

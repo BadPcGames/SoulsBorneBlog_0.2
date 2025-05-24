@@ -7,7 +7,7 @@ namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _context; 
 
         public HomeController(AppDbContext context)
         {

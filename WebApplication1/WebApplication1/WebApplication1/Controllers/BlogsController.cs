@@ -200,7 +200,8 @@ public class BlogsController : Controller
 
         if (blogName != null)
         {
-            query = query.Where(blog => blog.Name.Contains(blogName));
+            blogName = blogName.ToLower();
+            query = query.Where(blog => blog.Name.ToLower().Contains(blogName));;
         }
 
         var blogs = query
