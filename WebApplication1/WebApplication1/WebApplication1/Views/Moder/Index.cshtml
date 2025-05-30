@@ -8,6 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .table-hover tbody tr:hover,
+        .table-hover tbody tr:hover td {
+            background-color: #f1f1f1 !important;
+            color: black !important;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
@@ -17,15 +25,16 @@
         <div class="d-flex justify-content-center mb-4 gap-2">
             <button class="btn btn-dark" id="showUsers">User List</button>
             <button class="btn btn-outline-secondary" id="showPosts">Posts Pending Review</button>
+            <button class="btn btn-outline-secondary" id="showVerifiedPosts">Verified Posts</button>
         </div>
 
         <!-- Users -->
-        <div id="users" class="card p-3">
+        <div style="overflow-x: auto;" id="users" class="card p-3">
             <h4>User Management</h4>
-            <div class="input-group mb-3 justify-content-center">
+            <div class="input-group mb-3">
                 <span class="input-group-text">Name</span>
                 <input type="text" class="form-control" id="nameOfUser" placeholder="Enter name">
-                <button id="findUser" class="btn btn-dark">find</button>
+                <button id="findUser" class="btn btn-dark">Find</button>
             </div>
             <table class="table table-striped table-hover mt-2">
                 <thead class="table-dark">
@@ -44,9 +53,9 @@
             </table>
         </div>
 
-
-        <div id="posts" class="card p-3 mt-4">
-            <h4>Post Review</h4>
+        <!--posts to check-->
+        <div style="overflow-x: auto;" id="posts" class="card p-3 mt-4">
+            <h4>Post Review </h4> 
             <table class="table table-striped table-hover mt-2">
                 <thead class="table-dark">
                     <tr>
@@ -63,6 +72,29 @@
                 <tbody id="postsTableBody"></tbody>
             </table>
         </div>
+
+        <!--posts verified-->
+        <div style="overflow-x: auto;" id="postsVerified" class="card p-3 mt-4">
+            <h4>Post Review </h4>
+            <div class="input-group">
+                <input type="text" class="form-control form-control-sm mb-1" id="title" placeholder="Title" />
+                <button id="showPostsWhithTitle" class="btn btn-sm btn-info">find</button>
+            </div>
+            <table class="table table-striped table-hover mt-2">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Game</th>
+                        <th>Blog</th>
+                        <th>Reason</th>
+                        <th>Reject</th>
+                    </tr>
+                </thead>
+                <tbody id="postsVerifiedTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -70,21 +102,46 @@
             loadUsers($('#nameOfUser').val());
         }
 
+        $('#showPostsWhithTitle').click(function () {
+            loadWithFind();
+        });
+
+        function loadWithFind(){
+            title = $('#title').val();
+            loadVerifiedPosts(title);
+        }
+
         $('#showUsers').click(function () {
             loadUsers(null);
             $('#users').show();
             $('#posts').hide();
+            $('#postsVerified').hide();
             $('#showUsers').removeClass("btn-outline-dark").addClass("btn-dark");
             $('#showPosts').removeClass("btn-secondary").addClass("btn-outline-secondary");
+            $('#showVerifiedPosts').removeClass("btn-secondary").addClass("btn-outline-secondary");
+  
         });
 
         $('#showPosts').click(function () {
             loadPosts();
             $('#users').hide();
             $('#posts').show();
-            $('#showUsers').removeClass("btn-dark").addClass("btn-outline-dark");
+            $('#postsVerified').hide();
+            $('#postsVerified').removeClass("btn-dark").addClass("btn-outline-dark");
             $('#showPosts').removeClass("btn-outline-secondary").addClass("btn-secondary");
+            $('#showVerifiedPosts').removeClass("btn-secondary").addClass("btn-outline-secondary");
         });
+
+        $('#showVerifiedPosts').click(function () {
+            loadVerifiedPosts(null);
+            $('#users').hide();
+            $('#posts').hide();
+            $('#postsVerified').show();
+            $('#showUsers').removeClass("btn-dark").addClass("btn-outline-dark");
+            $('#showVerifiedPosts').removeClass("btn-outline-secondary").addClass("btn-secondary");
+            $('#showPosts').removeClass("btn-secondary").addClass("btn-outline-secondary");
+        });
+
         function loadUsers(findName) {
             $.ajax({
                 url: '@Url.Action("GetUsers", "Auth")',
@@ -160,6 +217,39 @@
             });
         }
 
+        function loadVerifiedPosts(title) {
+            $.ajax({
+                url: '@Url.Action("GetPostsVerified", "Posts")',
+                method: 'GET',
+                data: {
+                    title:title
+                },
+                success: function (response) {
+                    let tableBody = $('#postsVerifiedTableBody');
+                    tableBody.empty();
+
+                    if (response.success && response.message) {
+                        alert(response.message);
+                        return;
+                    }
+
+                    response.forEach(post => {
+                        let row = `<tr>
+                                            <td>${post.id}</td>
+                                            <td><a class="nav-link" href="/Posts/ReadPost?id=${post.id}">${post.title}</a></td>
+                                            <td>${post.authorName}</td>
+                                            <td>${post.game}</td>
+                                            <td><a class="nav-link" href="/Posts/Index?id=${post.blogId}">${post.blogName}</a></td>
+                                            <td><input type="text" class="form-control form-control-sm" id="postVProblem-${post.id}" placeholder="Reason..." /></td>
+                                            <td><button class="btn btn-sm btn-danger" onclick="postBackToApprove(${post.id})">Reject</button></td>
+                                        </tr>`;
+                        tableBody.append(row);
+                    });
+                }
+            });
+        }
+
+
         function banUser(userId) {
             let days = $(`#banDays-${userId}`).val();
             $.post('@Url.Action("TemporaryBan", "Moder")', { userId, time: days }, function (response) {
@@ -198,9 +288,18 @@
             });
         }
 
+        function postBackToApprove(postId) {
+            let reason = $(`#postVProblem-${postId}`).val();
+            $.post('@Url.Action("PostBackToApprov", "Posts")', { postId, reason }, function (response) {
+                alert(response.message);
+                if (response.success) loadWithFind();
+            });
+        }
+
         $(document).ready(function () {
             loadUsers();
             $('#posts').hide();
+            $('#postsVerified').hide();
         });
     </script>
 </body>

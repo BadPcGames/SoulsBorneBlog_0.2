@@ -5,8 +5,11 @@ using WebApplication1.DbModels;
 using WebApplication1.Models;
 using System.Text;
 using WebApplication1.Services;
-using Google.Apis.Gmail.v1.Data;
 using Microsoft.Extensions.Options;
+using System.Drawing;
+using LazZiya.ImageResize;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
+using System.Drawing.Imaging;
 
 
 
@@ -92,6 +95,41 @@ public class PostsController : Controller
         return Json(postViewModels);
     }
 
+
+    public async Task<IActionResult> GetPostsVerified(string? title)
+    {
+        List<Post> posts = _context.Posts.Where(post => post.Verify == true).ToList();
+
+        if (title != null)
+        {
+            title = title.ToLower();
+            posts = posts.Where(post => post.Title.ToLower().Contains(title)).ToList();
+        }
+
+
+        List<PostViewModel> postViewModels = posts.Select(post => new PostViewModel
+        {
+            Id = post.Id,
+            Title = post.Title,
+            CreateAt = post.CreatedAt,
+            Game = post.Game,
+            Color = _context.Games.First(game => game.GameName == post.Game).Color,
+            BlogId = post.BlogId,
+            BlogName = _context.Blogs.Where(blog => blog.Id == post.BlogId).Select(blog => blog.Name).FirstOrDefault() ?? "Unknown",
+            AuthorName = _context.Users.Where(user => user.Id == _context.Blogs.Where(blog => blog.Id == post.BlogId).Select(blog => blog.AuthorId).FirstOrDefault())
+                               .Select(user => user.Name).FirstOrDefault() ?? "Unknown",
+            Contents = _context.Post_Contents.Where(postContents => postContents.PostId == post.Id).ToList(),
+            Verify = post.Verify
+        }).ToList();
+
+        if (postViewModels.Count() == 0)
+        {
+            return Json(new { success = true, message = "No publications found" });
+        }
+
+        return Json(postViewModels);
+    }
+
     public IActionResult Stats(int postId)
     {
         return View(postId);
@@ -128,9 +166,33 @@ public class PostsController : Controller
         return Json(new { success = true, message = "Notification sent" });
     }
 
+    public async Task<IActionResult> PostBackToApprov(int postId, string? reason)
+    {
+        if (string.IsNullOrWhiteSpace(reason))
+        {
+            return Json(new { success = true, message = "Reason not provided" });
+        }
+        if (reason.Length < 15)
+        {
+            return Json(new { success = true, message = "Please provide a more detailed reason" });
+        }
+
+        var post = _context.Posts.FirstOrDefault(post => post.Id == postId);
+        post.Verify = false;
+        _context.Update(post);
+        await _context.SaveChangesAsync();
+        User user = _context.Users.FirstOrDefault(user => user.Id == _context.Blogs.FirstOrDefault(blog => blog.Id == post.BlogId).AuthorId);
+        _emailService.SendEmail(user.Email, "Post " + post.Title, "Was hidden from recomendation for the following reason: " + reason);
+
+        return Json(new { success = true, message = "Notification sent" });
+    }
+
+
+
     public async Task<IActionResult> ReadPost(int id)
     {
         ViewBag.adress = _address.Adress;
+        ViewBag.canBan = _userService.GetUserRole()=="Admin"||_userService.GetUserRole() == "Moder";
         return View(getPost(id));
     }
 
@@ -186,9 +248,37 @@ public class PostsController : Controller
         {
             foreach (var content in contents)
             {
-                var contentData = content.ContentType == "Text"
-                    ? Encoding.UTF8.GetBytes(content.Content)
-                    : (content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null);
+                byte[] contentData=new byte[0];
+                if (content.ContentType == "Text")
+                {
+                    contentData = Encoding.UTF8.GetBytes(content.Content);
+                }
+                else if (content.ContentType == "Video")
+                {
+                    contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
+                }
+                else if(content.ContentType == "Image")
+                {
+                    IFormFile formFile = content.FormFile;
+                    Image img;
+
+                    if (content.FormFile != null)
+                    {
+                        using (var stream = formFile.OpenReadStream())
+                        {
+                            img = Image.FromStream(stream);
+                        }
+
+                        Image resizedImage = ImageResize.Scale(img, 300, 200);
+
+                        using (var ms = new MemoryStream())
+                        {
+                            resizedImage.Save(ms, ImageFormat.Png);
+                            contentData = ms.ToArray();
+                        }
+                    }
+                }
+  
 
                 _context.Post_Contents.Add(new Post_Content
                 {
@@ -234,10 +324,20 @@ public class PostsController : Controller
 
         foreach (var content in contents)
         {
-            var contentData = content.ContentType == "Text"
-                ? Encoding.UTF8.GetBytes(content.Content)
-                : (content.Content != null ? Convert.FromBase64String(content.Content) : null);
-
+            byte[] contentData = new byte[0];
+            if (content.ContentType == "Text")
+            {
+                contentData = Encoding.UTF8.GetBytes(content.Content);
+            }
+            else if (content.ContentType == "Video")
+            {
+                contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
+            }
+            else if (content.ContentType == "Image")
+            {
+                var img = (Image)content.FormFile;
+                contentData = ImageResize.Scale(img, 200, 200) != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
+            }
             _context.Post_Contents.Add(new Post_Content
             {
                 PostId = post.Id,

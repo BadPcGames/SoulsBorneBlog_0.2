@@ -80,10 +80,12 @@
                     else
                     {
                         var textContent = System.Text.Encoding.UTF8.GetString(content.Content);
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-info" id="speach@content.Id">Speech</button>
+                        <div class="speech-block mb-3">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-info speak-btn">Speech</button>
+                            </div>
+                            <p class="text-start speech-text">@textContent</p>
                         </div>
-                        <p id="text@content.Id" class="text-start">@textContent</p>
                        
                     }
                 }
@@ -124,27 +126,82 @@
                 <textarea id="comment-text" class="form-control mb-2" rows="3" placeholder="Your comment"></textarea>
                 <button id="submit-comment" class="btn btn-primary">Make comment <i class="bi bi-chat-dots"></i></button>
             </div>
+
+
+            @if (ViewBag.canBan)
+            {
+                <div class="mt-4">
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text">Reason</span>
+                        <input type="text" class="form-control" id="reason" />
+                        <button id="ban" class="btn btn-info">ban</button>
+                    </div>
+                </div>
+            }
+          
+
         </div>
     </div>
 </body>
 
 <script>
+    window.addEventListener('beforeunload', () => {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('button[id^="speach"]');
+        const synth = window.speechSynthesis;
+        let voices = [];
 
-        buttons.forEach(button => {
+        const initVoices = () => {
+            voices = synth.getVoices();
+        };
+
+        initVoices();
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = initVoices;
+        }
+
+        document.querySelectorAll('.speak-btn').forEach(button => {
             button.addEventListener('click', () => {
-                window.speechSynthesis.cancel();
-                const textId = button.id.replace('speach', 'text');
-                const textElement = document.getElementById(textId);
-
-                if (textElement) {
-                    const utterance = new SpeechSynthesisUtterance(textElement.textContent);
-                    window.speechSynthesis.speak(utterance);
+                if (synth.speaking) {
+                    synth.cancel(); 
                 }
+
+                const container = button.closest('.speech-block');
+                const textElement = container?.querySelector('.speech-text');
+
+                if (!textElement) return;
+
+                const utterance = new SpeechSynthesisUtterance(textElement.textContent);
+                utterance.lang = 'en-US';
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+
+                const voice = voices.find(v => v.lang === 'en-US');
+                if (voice) utterance.voice = voice;
+
+                synth.speak(utterance);
             });
         });
     });
+</script>
+
+<script>
+    $('#ban').click(function () {
+        postBackToApprove(@Model.Id);
+    });
+
+    function postBackToApprove(postId) {
+        let reason = $(`#reason`).val();
+        $.post('@Url.Action("PostBackToApprov", "Posts")', { postId, reason }, function (response) {
+            alert(response.message);
+            if (response.success) loadWithFind();
+        });
+    }
 </script>
 
 <script type="module">

@@ -37,7 +37,7 @@
             <input type="button" class="btn btn-outline-secondary" id="showModers" value="Moderator List" />
         </div>
    
-        <div id="users" class="card p-3">
+        <div style="overflow-x: auto;"  id="users" class="card p-3">
             <div class="input-group mb-3 justify-content-center">
                 <span class="input-group-text">Name</span>
                 <input type="text" class="form-control" id="nameOfUser" placeholder="Enter name">
@@ -61,7 +61,7 @@
             </table>
         </div>
 
-        <div id="moders" class="card p-3">
+        <div style="overflow-x: auto;" id="moders" class="card p-3">
             <div class="input-group mb-3 justify-content-center">
                 <span class="input-group-text">Name</span>
                 <input type="text" class="form-control" id="nameOfModer" placeholder="Enter name">
@@ -93,8 +93,6 @@
     document.getElementById('findModer').onclick = function () {
         loadModers($('#nameOfModer').val());
     }
-
-
 
     document.getElementById('showUsers').onclick = function () {
         document.getElementById('users').hidden = false;

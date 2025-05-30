@@ -151,6 +151,10 @@
               "target": "Package",
               "version": "[1.68.0.3427, )"
             },
+            "LazZiya.ImageResize": {
+              "target": "Package",
+              "version": "[4.1.4, )"
+            },
             "MailKit": {
               "target": "Package",
               "version": "[4.11.0, )"
