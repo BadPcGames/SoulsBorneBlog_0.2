@@ -193,6 +193,7 @@ public class PostsController : Controller
     {
         ViewBag.adress = _address.Adress;
         ViewBag.canBan = _userService.GetUserRole()=="Admin"||_userService.GetUserRole() == "Moder";
+        ViewBag.userId = _userService.GetUserId();
         return View(getPost(id));
     }
 
@@ -322,21 +323,26 @@ public class PostsController : Controller
         _context.Post_Contents.RemoveRange(oldContent);
         await _context.SaveChangesAsync();
 
+        contents= contents.OrderBy(c => c.Position).ToList();
+
         foreach (var content in contents)
         {
-            byte[] contentData = new byte[0];
+            byte[] contentData = Array.Empty<byte>();
+
             if (content.ContentType == "Text")
             {
                 contentData = Encoding.UTF8.GetBytes(content.Content);
             }
-            else if (content.ContentType == "Video")
+            else if (content.ContentType == "Image" || content.ContentType == "Video")
             {
-                contentData = content.FormFile != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
-            }
-            else if (content.ContentType == "Image")
-            {
-                var img = (Image)content.FormFile;
-                contentData = ImageResize.Scale(img, 200, 200) != null ? MyConvert.ConvertFileToByteArray(content.FormFile) : null;
+                if (content.FormFile != null)
+                {
+                    contentData = MyConvert.ConvertFileToByteArray(content.FormFile);
+                }
+                else if (!string.IsNullOrEmpty(content.Content))
+                {
+                    contentData = Convert.FromBase64String(content.Content);
+                }
             }
             _context.Post_Contents.Add(new Post_Content
             {
@@ -395,6 +401,8 @@ public class PostsController : Controller
         int likeCount = await _context.Reactions.Where(like => like.PostId == postId && like.Value < 0).CountAsync();
         return Ok(likeCount);
     }
+
+
 
     [HttpPost]
     public async Task<IActionResult> MakeReactions(int value, int postId)

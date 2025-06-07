@@ -110,6 +110,7 @@
                                 {
                                     <label>Image:</label>
                                     <input type="file" name="contents[@i].FormFile" class="form-control file-converter" data-index="@i" />
+                                    <input type="hidden" name="contents[@i].Content" value="@base64" />
                                     <div class="image-preview mb-2">
                                         <img src="data:@mimeType;base64,@base64" class="img-fluid" />
                                     </div>
@@ -118,6 +119,7 @@
                                 {
                                     <label>Video:</label>
                                     <input type="file" name="contents[@i].FormFile" class="form-control file-converter" data-index="@i" />
+                                    <input type="hidden" name="contents[@i].Content" value="@base64" />
                                     <div class="video-preview mb-2">
                                         <video controls>
                                             <source src="data:@mimeType;base64,@base64" type="@mimeType" />
@@ -128,10 +130,8 @@
                                 <input type="hidden" name="contents[@i].Content" value="@base64" />
                             }
 
-                            <label>Position:</label>
-                            <input type="number" name="contents[@Model.Contents[i].Position]" class="form-control position-input" value="@(Model.Contents[i].Position)" disabled required />
-                            <br>
 
+                            <br>
                             <div class="mt-2">
                                 <button type="button" class="btn btn-light move-up">Up</button>
                                 <button type="button" class="btn btn-secondary move-down">Down</button>
@@ -213,8 +213,6 @@
                         <input type="hidden" name="contents[${newIndex}].ContentType" value="${contentType}" />
                         <label>Text</label>
                         <textarea name="contents[${newIndex}].Content" class="form-control" required></textarea>
-                        <label>Position:</label>
-                            <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" disabled required />
                                <br>
                                <button type="button" class="move-up btn btn-light">Up</button>
                                     <button type="button" class="move-down btn btn-secondary">Down</button>
@@ -230,9 +228,7 @@
                         <div class="image-preview" style="display: none;">
                             <img src="" alt="Preview" class="img-fluid" />
                         </div>
-                        <label>Position:</label>
-                                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex }"  disabled required />
-                        <br>
+                               <br>
                         <button type="button" class="move-up btn btn-light">Up</button>
                         <button type="button" class="move-down btn btn-secondary">Down</button>
                         <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>
@@ -249,9 +245,7 @@
                                 <source src="" type="video/mp4" />
                             </video>
                         </div>
-                        <label>Position:</label>
-                                <input type="number" name="contents[${newIndex}].Position" class="form-control position-input" value="${newIndex}" disabled required />
-                             <br>
+                               <br>
                             <button type="button" class="move-up btn btn-light">Up</button>
                                 <button type="button" class="move-down btn btn-secondary">Down</button>
                             <button type="button" class="btn btn-danger" onclick="removeModule(this) ">Delete</button>

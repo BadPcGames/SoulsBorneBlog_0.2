@@ -10,8 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        .table-hover tbody tr:hover,
-        .table-hover tbody tr:hover td {
+        .table-hover:not(.table-dark) tbody tr:hover,
+        .table-hover:not(.table-dark) tbody tr:hover td {
             background-color: #f1f1f1 !important;
             color: black !important;
         }
@@ -80,7 +80,7 @@
                 <input type="text" class="form-control form-control-sm mb-1" id="title" placeholder="Title" />
                 <button id="showPostsWhithTitle" class="btn btn-sm btn-info">find</button>
             </div>
-            <table class="table table-striped table-hover mt-2">
+            <table class="table table-striped mt-2">
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>

@@ -19,6 +19,10 @@
         object-fit: cover;
     }
 
+        .reaction-btn.active {
+            border: 2px solid #000;
+            background-color: #cde;
+        }
     .comment-box {
         margin-top: 20px;
     }
@@ -36,16 +40,16 @@
         text-align: center;
     }
 
-        .post-media img,
-        .post-media video {
-            max-width: 80%;
-            max-height: 500px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
+            .post-media img,
+            .post-media video {
+                width: 70%;
+                height: auto;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
 
     .share-buttons a {
         margin-right: 8px;
@@ -204,6 +208,16 @@
     }
 </script>
 
+
+@{
+    int? userId = ViewBag.userId as int?;
+    bool? canBan = ViewBag.canBan as bool?;
+}
+<script>
+    const currentUserId = @Html.Raw(System.Text.Json.JsonSerializer.Serialize<int?>(userId));
+    const canBan = @Html.Raw(System.Text.Json.JsonSerializer.Serialize<bool?>(canBan));
+</script>
+
 <script type="module">
     const postId = @Model.Id;
 
@@ -253,7 +267,7 @@
     async function loadComments(postId) {
         try {
             let comments = await $.ajax({
-                url: '/Posts/GetComents',
+                url: '@Url.Action("GetComents", "Posts")',
                 method: 'GET',
                 data: { postId: postId }
             });
@@ -262,8 +276,8 @@
 
             for (let comment of comments) {
                 let canChangeText = comment.canChange ? "Editable" : "Not editable";
-                let role = await getUserRole();
-                let id = await getUserId();
+                let canBanComment = canBan;
+                let id = currentUserId;
 
                 let commentHtml = `
                         <div class="card mb-3 shadow-sm comment" data-id="${comment.id}">
@@ -277,7 +291,7 @@
                                     <p class="card-text comment-text">${comment.text}</p>
                                     <div class="mt-2">
                     `;
-                if (id == comment.authorId || role === "Admin" || role === "Moder") {
+                if (id == comment.authorId || canBanComment) {
                     commentHtml += `<button class="btn btn-danger btn-sm me-2 delete-btn" data-id="${comment.id}" data-post-id="${postId}">Delete</button>`;
                 }
 
@@ -373,25 +387,7 @@
             });
     }
 
-    async function updateReactions() {
-        $.ajax({
-            url: '@Url.Action("GetLikes", "Posts")',
-            method: 'GET',
-            data: { postId: postId },
-            success: function (data) {
-                $('#like-count').text(data);
-            }
-        });
 
-        $.ajax({
-            url: '@Url.Action("GetDisLikes", "Posts")',
-            method: 'GET',
-            data: { postId: postId },
-            success: function (data) {
-                $('#dislike-count').text(data);
-            }
-        });
-    }
 
     async function makeReaction(value) {
         $.ajax({
@@ -421,14 +417,35 @@
             }
         });
     }
-
     $('#like-button').click(function () {
+        console.log(1);
         makeReaction(1);
     });
 
     $('#dislike-button').click(function () {
+        console.log(-1);
         makeReaction(-1);
     });
+
+    async function updateReactions() {
+        $.ajax({
+            url: '@Url.Action("GetLikes", "Posts")',
+            method: 'GET',
+            data: { postId: postId },
+            success: function (data) {
+                $('#like-count').text(data);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetDisLikes", "Posts")',
+            method: 'GET',
+            data: { postId: postId },
+            success: function (data) {
+                $('#dislike-count').text(data);
+            }
+        });
+    }
 
     updateReactions();
 </script>

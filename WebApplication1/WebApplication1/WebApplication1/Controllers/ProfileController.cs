@@ -64,6 +64,10 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> Edit(string password)
         {
+            if(password == null||password=="")
+            {
+                return RedirectToAction("Index", "Profile");
+            }
             var user = _context.Users.First(user => user.Id == int.Parse(HttpContext.User.FindFirst(ClaimTypes.System).Value));
             if (ShifrService.HashPassword(password) == user.PasswordHash)
             {
